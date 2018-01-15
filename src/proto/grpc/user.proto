@@ -1,0 +1,83 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+syntax = "proto3";
+
+package com.qingzhenyun.grpc.user;
+
+option objc_class_prefix = "USER_AUTH";
+
+option java_multiple_files = false;
+
+message UserRegisterRequest {
+    // string  uuid;
+    string  name = 1;
+    string  password = 2;
+    // private final String  salt;
+    string  email = 3;
+    string  phone = 4;
+    // private final Long    createTime;
+    // private final String  createIp;
+    // private final String  ssid;
+    // private final Integer level;
+    // private final Integer type;
+    // private final Integer ban;
+    // private final Long    banTime;
+    // private final Long    refreshTime;
+    // private final Long    lastLoginTime;
+}
+
+message UserInfo {
+    string  uuid = 1;
+    string  name = 2;
+    // string  password = 2;
+    // private final String  salt;
+    string  email = 3;
+    string  phone = 4;
+    int64    createTime = 5;
+    // private final String  createIp;
+    string  ssid = 6;
+    int32 level = 7;
+    int32 type = 8;
+    int32 ban = 9;
+    int64    banTime = 10;
+    int64 refreshTime = 11;
+    int64 lastLoginTime = 12;
+}
+
+message UuidRequest {
+    string uuid = 1;
+}
+
+message EmailRequest {
+    string email = 1;
+}
+
+message PhoneRequest {
+    string phone = 1;
+}
+
+message NameRequest {
+    string name = 1;
+}
+
+service UserService {
+    // One request followed by one response.
+    rpc UserRegister(UserRegisterRequest) returns (UserInfo);
+    rpc GetUserByUuid(UuidRequest)returns(UserInfo);
+    rpc GetUserByEmail(EmailRequest)returns(UserInfo);
+    rpc GetUserByPhone(PhoneRequest)returns(UserInfo);
+    rpc GetUserByName(NameRequest)returns(UserInfo);
+}
