@@ -15,6 +15,7 @@ app.use(cookieParser())
 app.use(helmet())
 
 // parser json to object
+// app.use(bodyParser.text())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
