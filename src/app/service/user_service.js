@@ -5,7 +5,7 @@ const userServiceTypes = require('../thrift/user_service_types')
 const assert = require('assert');
 
 const transport = thrift.TFramedTransport
-const protocol = thrift.TBinaryProtocol;
+const protocol = thrift.TCompactProtocol;
 
 class UserService{
     constructor(){
@@ -18,6 +18,7 @@ class UserService{
             // assert(false, err);
             console.error('Connect to %s error. %s','localhost:9999', err)
         });
+        thrift.createClient
         this._client = thrift.createClient(RemoteUserService, this.connection)
     }
 

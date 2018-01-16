@@ -5,6 +5,7 @@ let ApiValidateException = require('../../../exception/api_validate_exception')
 let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
 let userService = require('../../../service/user_service')
+let demoService = require('../../../service/demo_service')
 var grpc = require('grpc')
 let validator = require('validator')
 
@@ -36,6 +37,23 @@ router.post('/register', (req, res) => {
     let ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
     userService.registerUser(name, password, email, phone, ip, (err, data) => {
         if (err) {
+            /*
+            { RegisterNotSuccessException: USER_NAME_EXIST
+    at UserService_registerUser_result.read (C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\src\app\thrift\UserService.js:180:19)
+    at exports.Client.UserServiceClient.recv_registerUser (C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\src\app\thrift\UserService.js:264:10)
+    at C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\node_modules\thrift\lib\nodejs\lib\thrift\connection.js:139:41
+    at Socket.<anonymous> (C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\node_modules\thrift\lib\nodejs\lib\thrift\framed_transport.js:60:7)
+    at Socket.emit (events.js:159:13)
+    at addChunk (_stream_readable.js:265:12)
+    at readableAddChunk (_stream_readable.js:252:11)
+    at Socket.Readable.push (_stream_readable.js:209:10)
+    at TCP.onread (net.js:608:20)
+  name: 'RegisterNotSuccessException',
+  message: 'USER_NAME_EXIST',
+  errorCode: 101 }
+  need
+            */
+            //TODO:need check
             console.log(err)
             ResponseUtil.Ok(req, res, 0)
             console.log(err.errorCode)
@@ -47,12 +65,36 @@ router.post('/register', (req, res) => {
 })
 
 
+router.post('/check', (req, res) => {
+    let value = req.body['value']
+    if (StringUtil.isEmpty(value)) {
+        throw new ApiValidateException("Check value required", '{VALUE}_REQUIRED')
+    }
+    let type = (req.body['type'] ? req.body['type'] : 0).toString()
+    // check
+    switch (type) {
+        case "0":
+            userService.checkUserExistsByName(value, (error, data) => ResponseUtil.OkOrError(req, res, error, data))
+            break;
+        case "1":
+            userService.checkUserExistsByEmail(value, (error, data) => ResponseUtil.OkOrError(req, res, error, data))
+            break;
+        case "2":
+            userService.checkUserExistsByPhone(value, (error, data) => ResponseUtil.OkOrError(req, res, error, data))
+            break;
+        default:
+            throw new ApiValidateException("Check type not validate", '{TYPE}_NOT_RECONGNISED')
+    }
+})
+
+
 router.post('/benchmark', (req, res) => {
 
     // Do Register RPC
+    
     let startTime = new Date().getTime();
     let max = 500000
-    bench = (i) => userService.registerUser('name', 'password', 'email', 'phone', '127.0.0.1', (err, data) => {
+    bench = (i) => demoService.out.execute('a','b').then((data) => {
         //
         if (i < max) {
             //console.log(i)
@@ -66,6 +108,8 @@ router.post('/benchmark', (req, res) => {
         }
     })
     bench(0)
+    
+    // ResponseUtil.Ok(req,res,data))
 })
 
 router.post('/:methodId', (req, res) => {

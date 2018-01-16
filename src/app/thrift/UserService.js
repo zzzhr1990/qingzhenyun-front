@@ -209,6 +209,330 @@ UserService_registerUser_result.prototype.write = function(output) {
   return;
 };
 
+var UserService_checkUserExistsByName_args = function(args) {
+  this.name = null;
+  if (args) {
+    if (args.name !== undefined && args.name !== null) {
+      this.name = args.name;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field name is unset!');
+    }
+  }
+};
+UserService_checkUserExistsByName_args.prototype = {};
+UserService_checkUserExistsByName_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UserService_checkUserExistsByName_args.prototype.write = function(output) {
+  output.writeStructBegin('UserService_checkUserExistsByName_args');
+  if (this.name !== null && this.name !== undefined) {
+    output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+    output.writeString(this.name);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var UserService_checkUserExistsByName_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+  }
+};
+UserService_checkUserExistsByName_result.prototype = {};
+UserService_checkUserExistsByName_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UserService_checkUserExistsByName_result.prototype.write = function(output) {
+  output.writeStructBegin('UserService_checkUserExistsByName_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var UserService_checkUserExistsByEmail_args = function(args) {
+  this.email = null;
+  if (args) {
+    if (args.email !== undefined && args.email !== null) {
+      this.email = args.email;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field email is unset!');
+    }
+  }
+};
+UserService_checkUserExistsByEmail_args.prototype = {};
+UserService_checkUserExistsByEmail_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.email = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UserService_checkUserExistsByEmail_args.prototype.write = function(output) {
+  output.writeStructBegin('UserService_checkUserExistsByEmail_args');
+  if (this.email !== null && this.email !== undefined) {
+    output.writeFieldBegin('email', Thrift.Type.STRING, 1);
+    output.writeString(this.email);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var UserService_checkUserExistsByEmail_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+  }
+};
+UserService_checkUserExistsByEmail_result.prototype = {};
+UserService_checkUserExistsByEmail_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UserService_checkUserExistsByEmail_result.prototype.write = function(output) {
+  output.writeStructBegin('UserService_checkUserExistsByEmail_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var UserService_checkUserExistsByPhone_args = function(args) {
+  this.phone = null;
+  if (args) {
+    if (args.phone !== undefined && args.phone !== null) {
+      this.phone = args.phone;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field phone is unset!');
+    }
+  }
+};
+UserService_checkUserExistsByPhone_args.prototype = {};
+UserService_checkUserExistsByPhone_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.phone = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UserService_checkUserExistsByPhone_args.prototype.write = function(output) {
+  output.writeStructBegin('UserService_checkUserExistsByPhone_args');
+  if (this.phone !== null && this.phone !== undefined) {
+    output.writeFieldBegin('phone', Thrift.Type.STRING, 1);
+    output.writeString(this.phone);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var UserService_checkUserExistsByPhone_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+  }
+};
+UserService_checkUserExistsByPhone_result.prototype = {};
+UserService_checkUserExistsByPhone_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UserService_checkUserExistsByPhone_result.prototype.write = function(output) {
+  output.writeStructBegin('UserService_checkUserExistsByPhone_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var UserServiceClient = exports.Client = function(output, pClass) {
     this.output = output;
     this.pClass = pClass;
@@ -272,6 +596,148 @@ UserServiceClient.prototype.recv_registerUser = function(input,mtype,rseqid) {
   }
   return callback('registerUser failed: unknown result');
 };
+UserServiceClient.prototype.checkUserExistsByName = function(name, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkUserExistsByName(name);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkUserExistsByName(name);
+  }
+};
+
+UserServiceClient.prototype.send_checkUserExistsByName = function(name) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkUserExistsByName', Thrift.MessageType.CALL, this.seqid());
+  var args = new UserService_checkUserExistsByName_args();
+  args.name = name;
+  args.write(output);
+  output.writeMessageEnd();
+  console.log('SEND_____')
+  return this.output.flush();
+};
+
+UserServiceClient.prototype.recv_checkUserExistsByName = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new UserService_checkUserExistsByName_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('checkUserExistsByName failed: unknown result');
+};
+UserServiceClient.prototype.checkUserExistsByEmail = function(email, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkUserExistsByEmail(email);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkUserExistsByEmail(email);
+  }
+};
+
+UserServiceClient.prototype.send_checkUserExistsByEmail = function(email) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkUserExistsByEmail', Thrift.MessageType.CALL, this.seqid());
+  var args = new UserService_checkUserExistsByEmail_args();
+  args.email = email;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+UserServiceClient.prototype.recv_checkUserExistsByEmail = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new UserService_checkUserExistsByEmail_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('checkUserExistsByEmail failed: unknown result');
+};
+UserServiceClient.prototype.checkUserExistsByPhone = function(phone, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkUserExistsByPhone(phone);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkUserExistsByPhone(phone);
+  }
+};
+
+UserServiceClient.prototype.send_checkUserExistsByPhone = function(phone) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkUserExistsByPhone', Thrift.MessageType.CALL, this.seqid());
+  var args = new UserService_checkUserExistsByPhone_args();
+  args.phone = phone;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+UserServiceClient.prototype.recv_checkUserExistsByPhone = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new UserService_checkUserExistsByPhone_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('checkUserExistsByPhone failed: unknown result');
+};
 var UserServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 }
@@ -325,6 +791,114 @@ UserServiceProcessor.prototype.process_registerUser = function(seqid, input, out
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("registerUser", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+UserServiceProcessor.prototype.process_checkUserExistsByName = function(seqid, input, output) {
+  var args = new UserService_checkUserExistsByName_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkUserExistsByName.length === 1) {
+    Q.fcall(this._handler.checkUserExistsByName, args.name)
+      .then(function(result) {
+        var result_obj = new UserService_checkUserExistsByName_result({success: result});
+        output.writeMessageBegin("checkUserExistsByName", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("checkUserExistsByName", Thrift.MessageType.EXCEPTION, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkUserExistsByName(args.name, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined')) {
+        result_obj = new UserService_checkUserExistsByName_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("checkUserExistsByName", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("checkUserExistsByName", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+UserServiceProcessor.prototype.process_checkUserExistsByEmail = function(seqid, input, output) {
+  var args = new UserService_checkUserExistsByEmail_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkUserExistsByEmail.length === 1) {
+    Q.fcall(this._handler.checkUserExistsByEmail, args.email)
+      .then(function(result) {
+        var result_obj = new UserService_checkUserExistsByEmail_result({success: result});
+        output.writeMessageBegin("checkUserExistsByEmail", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("checkUserExistsByEmail", Thrift.MessageType.EXCEPTION, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkUserExistsByEmail(args.email, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined')) {
+        result_obj = new UserService_checkUserExistsByEmail_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("checkUserExistsByEmail", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("checkUserExistsByEmail", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+UserServiceProcessor.prototype.process_checkUserExistsByPhone = function(seqid, input, output) {
+  var args = new UserService_checkUserExistsByPhone_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkUserExistsByPhone.length === 1) {
+    Q.fcall(this._handler.checkUserExistsByPhone, args.phone)
+      .then(function(result) {
+        var result_obj = new UserService_checkUserExistsByPhone_result({success: result});
+        output.writeMessageBegin("checkUserExistsByPhone", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("checkUserExistsByPhone", Thrift.MessageType.EXCEPTION, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkUserExistsByPhone(args.phone, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined')) {
+        result_obj = new UserService_checkUserExistsByPhone_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("checkUserExistsByPhone", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("checkUserExistsByPhone", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();
