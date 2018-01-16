@@ -29,17 +29,18 @@ router.post('/register', (req, res) => {
     if (StringUtil.isEmpty(phone)) {
         throw new ApiValidateException("User phone required", '{PHONE}_REQUIRED')
     }
-    if (!validator.isMobilePhone(phone,'any')) {
+    if (!validator.isMobilePhone(phone, 'any')) {
         throw new ApiValidateException("User phone not validate", '{PHONE}_NOT_VALIDATE')
     }
     // Do Register RPC
-    userService.registerUser( name, password, email, phone, (err, data) => {
-        if(err){
+    let ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+    userService.registerUser(name, password, email, phone, ip, (err, data) => {
+        if (err) {
             console.log(err)
             ResponseUtil.Ok(req, res, 0)
             console.log(err.errorCode)
         }
-        else{
+        else {
             ResponseUtil.Ok(req, res, data)
         }
     })
@@ -47,21 +48,21 @@ router.post('/register', (req, res) => {
 
 
 router.post('/benchmark', (req, res) => {
-    
+
     // Do Register RPC
-    let startTime = new Date().getTime(); 
+    let startTime = new Date().getTime();
     let max = 500000
-    bench = (i) => userService.registerUser( 'name', 'password', 'email', 'phone', (err, data) => {
+    bench = (i) => userService.registerUser('name', 'password', 'email', 'phone', '127.0.0.1', (err, data) => {
         //
-        if(i<max){
+        if (i < max) {
             //console.log(i)
-            bench(i+1)
-        }else{
+            bench(i + 1)
+        } else {
             let finTime = new Date().getTime();
             ms = finTime - startTime
             s = ms / 1000
             qps = max / s
-            ResponseUtil.Ok(req, res, {'ms':ms,'qps':qps})
+            ResponseUtil.Ok(req, res, { 'ms': ms, 'qps': qps })
         }
     })
     bench(0)

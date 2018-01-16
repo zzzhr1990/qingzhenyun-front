@@ -18,6 +18,7 @@ var UserService_registerUser_args = function(args) {
   this.password = null;
   this.email = null;
   this.phone = null;
+  this.ip = null;
   if (args) {
     if (args.name !== undefined && args.name !== null) {
       this.name = args.name;
@@ -38,6 +39,11 @@ var UserService_registerUser_args = function(args) {
       this.phone = args.phone;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field phone is unset!');
+    }
+    if (args.ip !== undefined && args.ip !== null) {
+      this.ip = args.ip;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field ip is unset!');
     }
   }
 };
@@ -83,6 +89,13 @@ UserService_registerUser_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.ip = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -112,6 +125,11 @@ UserService_registerUser_args.prototype.write = function(output) {
   if (this.phone !== null && this.phone !== undefined) {
     output.writeFieldBegin('phone', Thrift.Type.STRING, 4);
     output.writeString(this.phone);
+    output.writeFieldEnd();
+  }
+  if (this.ip !== null && this.ip !== undefined) {
+    output.writeFieldBegin('ip', Thrift.Type.STRING, 5);
+    output.writeString(this.ip);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -200,7 +218,7 @@ var UserServiceClient = exports.Client = function(output, pClass) {
 UserServiceClient.prototype = {};
 UserServiceClient.prototype.seqid = function() { return this._seqid; };
 UserServiceClient.prototype.new_seqid = function() { return this._seqid += 1; };
-UserServiceClient.prototype.registerUser = function(name, password, email, phone, callback) {
+UserServiceClient.prototype.registerUser = function(name, password, email, phone, ip, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -211,15 +229,15 @@ UserServiceClient.prototype.registerUser = function(name, password, email, phone
         _defer.resolve(result);
       }
     };
-    this.send_registerUser(name, password, email, phone);
+    this.send_registerUser(name, password, email, phone, ip);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_registerUser(name, password, email, phone);
+    this.send_registerUser(name, password, email, phone, ip);
   }
 };
 
-UserServiceClient.prototype.send_registerUser = function(name, password, email, phone) {
+UserServiceClient.prototype.send_registerUser = function(name, password, email, phone, ip) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('registerUser', Thrift.MessageType.CALL, this.seqid());
   var args = new UserService_registerUser_args();
@@ -227,6 +245,7 @@ UserServiceClient.prototype.send_registerUser = function(name, password, email, 
   args.password = password;
   args.email = email;
   args.phone = phone;
+  args.ip = ip;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
@@ -276,8 +295,8 @@ UserServiceProcessor.prototype.process_registerUser = function(seqid, input, out
   var args = new UserService_registerUser_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.registerUser.length === 4) {
-    Q.fcall(this._handler.registerUser, args.name, args.password, args.email, args.phone)
+  if (this._handler.registerUser.length === 5) {
+    Q.fcall(this._handler.registerUser, args.name, args.password, args.email, args.phone, args.ip)
       .then(function(result) {
         var result_obj = new UserService_registerUser_result({success: result});
         output.writeMessageBegin("registerUser", Thrift.MessageType.REPLY, seqid);
@@ -298,7 +317,7 @@ UserServiceProcessor.prototype.process_registerUser = function(seqid, input, out
         output.flush();
       });
   } else {
-    this._handler.registerUser(args.name, args.password, args.email, args.phone, function (err, result) {
+    this._handler.registerUser(args.name, args.password, args.email, args.phone, args.ip, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.RegisterNotSuccessException) {
         result_obj = new UserService_registerUser_result((err !== null || typeof err === 'undefined') ? err : {success: result});
