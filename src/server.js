@@ -4,13 +4,17 @@
 var app = require('./app')
 var debug = require('debug')('wxapp-monitor-server:server')
 var http = require('http')
+var program = require('commander');
 
+// get port
+program.version('0.1.0').option('-p, --port <n>', 'Port, Default 3000').parse(process.argv)
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || '3000')
+var port = normalizePort(process.env.PORT || program.port ||  '3000')
 app.set('port', port)
+
+console.log('Server listen on %d.', port)
 
 /**
  * Create HTTP server.
