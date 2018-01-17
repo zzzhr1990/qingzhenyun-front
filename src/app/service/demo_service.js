@@ -1,6 +1,8 @@
+/*
 const Ice = require("ice").Ice
 const Demo = require('../thrift/demo').Demo
 //const outer = {}
+
 class DemoService {
     constructor() {
         let ic = Ice.initialize()
@@ -9,10 +11,12 @@ class DemoService {
         //let out = {}
         Demo.testPrx.checkedCast(base).then((data) => {
             this._out = data
+            /*
             this._out.execute("a", "b").then((dat) => {
                 console.log('Recv deta %s', dat)
                 console.log(dat)
             })
+            
         })
     }
     get out(){
@@ -20,3 +24,4 @@ class DemoService {
     }
 }
 module.exports = new DemoService()
+*/

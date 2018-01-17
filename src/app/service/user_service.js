@@ -1,3 +1,41 @@
+/* ICE USER SERVERCE */
+const Ice = require("ice").Ice
+const user = require('../ice/userservice').user
+class UserService{
+    constructor(init_str) {
+        let ic = Ice.initialize()
+        this._out = {}
+        this._inited = false
+        let base = ic.stringToProxy(init_str?init_str:"UserServiceHandler:default -p 9999")
+        //let out = {}
+        user.UserServiceHandlerPrx.checkedCast(base).then((data) => {
+            this._out = data
+            /*
+            this._out.execute("a", "b").then((dat) => {
+                console.log('Recv deta %s', dat)
+                console.log(dat)
+            })
+            */
+            this._inited = true
+            console.log('UserServiceHandlerPrx comfirmed.')
+        }).catch((ex)=>{
+            this._inited = false
+            console.log('UserServiceHandlerPrx failed.')
+        })
+        
+    }
+    get out(){
+        return this._out
+    }
+    get caller(){
+        if(!this._inited){
+            throw new Error('UserServiceHandlerPrx not init.')
+        }
+        return this._out
+    }
+}
+module.exports = UserService
+/*
 let path = require('path')
 const thrift = require('thrift');
 const RemoteUserService = require('../thrift/UserService')
