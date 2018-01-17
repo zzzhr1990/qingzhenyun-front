@@ -6,7 +6,7 @@ let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
 let UserServiceRpc = require('../../../service/user_service')
 //let demoService = require('../../../service/demo_service')
-var grpc = require('grpc')
+//var grpc = require('grpc')
 let validator = require('validator')
 let userService = new UserServiceRpc()
 
