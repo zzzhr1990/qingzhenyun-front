@@ -28,6 +28,11 @@ app.use(function (req, res, next) {
         console.log('F@@@@@@@@@@@@@@@@@@@K')
         //console.log(req.session)
     }
+    if(!req.session.a){
+        req.session.a = 0
+    }else{
+        req.session.a = req.session.a + 1
+    }
     console.log(req.session)
     next() // otherwise continue
 })
