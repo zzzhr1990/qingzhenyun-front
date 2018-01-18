@@ -84,7 +84,7 @@ router.post('/login', (req, res) => {
     var caller = undefined
     if (validator.isEmail(value)) {
         caller = userService.caller.checkUserValidByEmail
-    } else if (validator.isMobilePhone(value)) {
+    } else if (validator.isMobilePhone(value, 'any')) {
         caller = userService.caller.checkUserValidByPhone
     } else {
         caller = userService.caller.checkUserValidByName
