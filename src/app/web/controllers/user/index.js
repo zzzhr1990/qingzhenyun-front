@@ -83,7 +83,7 @@ router.post('/login', (req, res) => {
             {
                 name: "BinMaing",
                 data: "============="
-            }, secretOrPrivateKey, {
+            }, 'shhhhhhared-secret', {
                 expiresIn: 60 * 1
             })
     )
