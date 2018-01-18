@@ -79,7 +79,7 @@ router.post('/login', (req, res) => {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
     ResponseUtil.Ok(req, res,
-        jwt.sign(
+        jwt.jwt.sign(
             {
                 name: "BinMaing",
                 data: "============="
