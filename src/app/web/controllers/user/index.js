@@ -9,7 +9,7 @@ let UserServiceRpc = require('../../../service/user_service')
 //var grpc = require('grpc')
 let validator = require('validator')
 let userService = new UserServiceRpc()
-let jwt = require('express-jwt')
+let jwt = require('jsonwebtoken')
 
 
 router.post('/register', (req, res) => {
@@ -79,7 +79,7 @@ router.post('/login', (req, res) => {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
     ResponseUtil.Ok(req, res,
-        jwt.jwt.sign(
+        jwt.sign(
             {
                 name: "BinMaing",
                 data: "============="
