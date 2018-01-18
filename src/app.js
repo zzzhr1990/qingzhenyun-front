@@ -22,7 +22,7 @@ app.use(session({
 }));
 */
 app.use(jwt({ secret: 'shhhhhhared-secret' })
-    .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout'] }))
+    .unless({ path: ['/v1/user/login'] }))
 // common config
 app.use(logger('dev'))
 app.use(cookieParser())
