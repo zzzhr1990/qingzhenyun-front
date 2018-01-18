@@ -13,7 +13,7 @@ var app = express()
 
 // session..
 app.use(session({
-    store: new RedisStore({'host':'172.18.130.158','port':'6396'}),
+    store: new RedisStore({ 'host': '172.18.130.158', 'port': '6396' }),
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true
@@ -22,6 +22,13 @@ app.use(session({
 app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
+app.use(function (req, res, next) {
+    if (!req.session) {
+        //return next(new Error('oh no')) // handle error
+        console.log('F@@@@@@@@@@@@@@@@@@@K')
+    }
+    next() // otherwise continue
+})
 
 // parser json to object
 // app.use(bodyParser.text())
