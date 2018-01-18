@@ -81,6 +81,7 @@ router.post('/login', (req, res) => {
     }
     // userService.caller
     // Check email first.
+    /*
     var caller = undefined
     if (validator.isEmail(value)) {
         caller = userService.caller.checkUserValidByEmail
@@ -89,8 +90,9 @@ router.post('/login', (req, res) => {
     } else {
         caller = userService.caller.checkUserValidByName
     }
+    */
     // Access
-    caller(value, password).then(dat => {
+    userService.caller.checkUserValidByName(value, password).then(dat => {
         //ResponseUtil.Error(req, res, error)
         if (dat) {
             ResponseUtil.Ok(req, res, dat)
