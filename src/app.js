@@ -1,3 +1,5 @@
+import { token } from '../../../Library/Caches/typescript/2.6/node_modules/@types/morgan';
+
 var express = require('express')
 // var path = require('path')
 // var favicon = require('serve-favicon')
@@ -6,6 +8,7 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 let ApiException = require('./app/exception/api_exception')
+const Constants = require('./app/const/constants')
 //let session = require('express-session');
 //let RedisStore = require('connect-redis')(session);
 let jwt = require('express-jwt')
@@ -21,7 +24,30 @@ app.use(session({
     saveUninitialized: true
 }));
 */
-app.use(jwt({ secret: 'shhhhhhared-secret' })
+app.use(jwt({
+    secret: Constants.JWT_SECRET_KEY, 'getToken': (req) => {
+        /*
+        var parts = req.headers.authorization.split(' ');
+        if (parts.length == 2) {
+            var scheme = parts[0];
+            var credentials = parts[1];
+
+            if (/^Bearer$/i.test(scheme)) {
+                return token;
+            }
+        } else {
+            return undefined
+        }
+        */
+        if (req.headers.authorization) {
+            return req.headers.authorization
+        }
+        if (req.query && req.query.token) {
+            return req.query.token;
+        }
+        return null
+    }
+})
     .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout'] }))
 // common config
 app.use(logger('dev'))

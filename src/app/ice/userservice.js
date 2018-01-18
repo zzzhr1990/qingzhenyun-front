@@ -143,7 +143,10 @@
         "getUserByUuid": [, , , , [user.UserResponse], [[7]], , , , ],
         "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
-        "checkUserExistsByPhone": [, , , , [1], [[7]], , , , ]
+        "checkUserExistsByPhone": [, , , , [1], [[7]], , , , ],
+        "checkUserValidByName": [, , , , [user.UserResponse], [[7], [7]], , , , ],
+        "checkUserValidByEmail": [, , , , [user.UserResponse], [[7], [7]], , , , ],
+        "checkUserValidByPhone": [, , , , [user.UserResponse], [[7], [7]], , , , ]
     });
     exports.user = user;
 }
