@@ -24,9 +24,11 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(function (req, res, next) {
     if (!req.session) {
-        //return next(new Error('oh no')) // handle error
+        // return next(new Error('oh no')) // handle error
         console.log('F@@@@@@@@@@@@@@@@@@@K')
+        //console.log(req.session)
     }
+    console.log(req.session)
     next() // otherwise continue
 })
 
