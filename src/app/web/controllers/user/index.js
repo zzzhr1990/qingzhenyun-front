@@ -95,7 +95,7 @@ router.post('/login', (req, res) => {
     }
 
     // Access
-    caller(value, password).then(dat => {
+    userService.caller.checkUserValidByEmail(value, password).then(dat => {
         //ResponseUtil.Error(req, res, error)
         req.user = {
             'uuid': dat.uuid,
