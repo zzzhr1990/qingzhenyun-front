@@ -90,7 +90,7 @@ router.post('/login', (req, res) => {
         caller = userService.caller.checkUserValidByName
     }
     // Access
-    caller(value, password).data(dat => {
+    caller(value, password).then(dat => {
         //ResponseUtil.Error(req, res, error)
         if (dat) {
             ResponseUtil.Ok(req, res, dat)
