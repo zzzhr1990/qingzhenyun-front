@@ -13,9 +13,9 @@ var app = express()
 
 // session..
 app.use(session({
-    store: new RedisStore({ 'host': '172.18.130.158', 'port': '6396' }),
+    //store: new RedisStore({ 'host': '172.18.130.158', 'port': '6396' }),
     secret: 'keyboard cat',
-    resave: false,
+    resave: true,
     saveUninitialized: true
 }));
 // common config
@@ -23,17 +23,13 @@ app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
 app.use(function (req, res, next) {
-    if (!req.session) {
-        // return next(new Error('oh no')) // handle error
-        console.log('F@@@@@@@@@@@@@@@@@@@K')
-        //console.log(req.session)
-    }
-    if(!req.session.a){
-        req.session.a = 0
-    }else{
-        req.session.a = req.session.a + 1
-    }
-    console.log(req.session.id)
+    if (req.session.views) {
+        req.session.views++
+        console.log('++')
+      } else {
+        req.session.views = 1
+        console.log('b')
+      }
     next() // otherwise continue
 })
 
