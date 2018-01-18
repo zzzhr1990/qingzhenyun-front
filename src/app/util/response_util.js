@@ -51,8 +51,8 @@ class ResponseUtil {
     static json(req, res, data) {
         if (req.user) {
             //Sign And put
-            dat = res.user
-            auth = jwt.sign({
+            let dat = res.user
+            let auth = jwt.sign({
                 'uuid': dat.uuid,
                 'name': dat.name,
                 'email': dat.email,
