@@ -79,6 +79,7 @@ router.post('/login', (req, res) => {
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
+    userService.caller.checkUserValidByEmail('a','b').then(data => { console.log(data) }).catch(err => {console.log(err)})
     // userService.caller
     // Check email first.
     /*
