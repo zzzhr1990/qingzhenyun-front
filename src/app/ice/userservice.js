@@ -140,6 +140,7 @@
         [
             user.RegisterFailedException
         ], , ],
+        "getUserByUuid": [, , , , [user.UserResponse], [[7]], , , , ],
         "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByPhone": [, , , , [1], [[7]], , , , ]
