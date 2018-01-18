@@ -9,6 +9,7 @@ let UserServiceRpc = require('../../../service/user_service')
 //var grpc = require('grpc')
 let validator = require('validator')
 let userService = new UserServiceRpc()
+let jwt = require('express-jwt')
 
 
 router.post('/register', (req, res) => {
@@ -40,10 +41,10 @@ router.post('/register', (req, res) => {
         .then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             //console.log(error)
-            if(error['innerCode']){
-                ResponseUtil.ApiError(req,res,new ApiException(error['innerMessage'],400,error['innerMessage']))
-            }else{
-                ResponseUtil.Error(req,res,error)
+            if (error['innerCode']) {
+                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+            } else {
+                ResponseUtil.Error(req, res, error)
             }
         })
 
@@ -67,6 +68,26 @@ need
 
 })
 
+router.post('/login', (req, res) => {
+    // login logic
+    let value = req.body['value']
+    let password = req.body['password']
+    if (StringUtil.isEmpty(value)) {
+        throw new ApiValidateException("Check value required", '{VALUE}_REQUIRED')
+    }
+    if (StringUtil.isEmpty(password)) {
+        throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
+    }
+    ResponseUtil.Ok(req, res,
+        jwt.sign(
+            {
+                name: "BinMaing",
+                data: "============="
+            }, secretOrPrivateKey, {
+                expiresIn: 60 * 1
+            })
+    )
+})
 
 router.post('/check', (req, res) => {
     let value = req.body['value']
