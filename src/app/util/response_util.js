@@ -52,6 +52,7 @@ class ResponseUtil {
         if (req.user) {
             //Sign And put
             let dat = res.user
+            console.log(dat)
             let auth = jwt.sign({
                 'uuid': dat.uuid,
                 'name': dat.name,
