@@ -40,6 +40,15 @@ app.use(jwt({
         if (req.headers.authorization) {
             return req.headers.authorization
         }
+        if (req.headers.Authorization) {
+            return req.headers.Authorization
+        }
+        if (req.query && req.query.authorization) {
+            return req.query.authorization;
+        }
+        if (req.query && req.query.auth) {
+            return req.query.auth;
+        }
         if (req.query && req.query.token) {
             return req.query.token;
         }
