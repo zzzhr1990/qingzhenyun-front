@@ -78,7 +78,15 @@ router.post('/login', (req, res) => {
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
-    ResponseUtil.Ok(req, res, "OK")
+    ResponseUtil.Ok(req, res,
+        jwt.sign(
+            {
+                name: "BinMaing",
+                data: "============="
+            }, secretOrPrivateKey, {
+                expiresIn: 60 * 1
+            })
+    )
 })
 
 router.post('/check', (req, res) => {
