@@ -1,5 +1,3 @@
-import { token } from '../../../Library/Caches/typescript/2.6/node_modules/@types/morgan';
-
 var express = require('express')
 // var path = require('path')
 // var favicon = require('serve-favicon')
@@ -8,11 +6,10 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 let ApiException = require('./app/exception/api_exception')
-const Constants = require('./app/const/constants')
 //let session = require('express-session');
 //let RedisStore = require('connect-redis')(session);
 let jwt = require('express-jwt')
-
+const Constants = require('./app/const/constants')
 var app = express()
 
 // session..
