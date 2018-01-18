@@ -22,22 +22,11 @@ app.use(session({
 }));
 */
 app.use(jwt({ secret: 'shhhhhhared-secret' })
-    .unless({ path: ['/v1/user/login'] }))
+    .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout'] }))
 // common config
 app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
-app.use(function (req, res, next) {
-    if (req.session.views) {
-        req.session.views++
-        console.log('++')
-    } else {
-        req.session.views = 1
-        console.log('b')
-    }
-    next() // otherwise continue
-})
-
 // parser json to object
 // app.use(bodyParser.text())
 app.use(bodyParser.json())
