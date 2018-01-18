@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
     }else{
         req.session.a = req.session.a + 1
     }
-    console.log(req.session)
+    console.log(req.session.id)
     next() // otherwise continue
 })
 
