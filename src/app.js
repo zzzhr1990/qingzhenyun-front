@@ -11,6 +11,7 @@ let ApiException = require('./app/exception/api_exception')
 let jwt = require('express-jwt')
 const Constants = require('./app/const/constants')
 var app = express()
+const ResponseUtil = require('./app/util/response_util')
 
 // session..
 /*
@@ -78,7 +79,7 @@ app.use(function (err, req, res, next) {
         data.code = 'INTERNAL_SERVER_ERROR'
     }
     data.status = status
-    res.json(data)
+    ResponseUtil.json(req, res, data)
 })
 
 module.exports = app

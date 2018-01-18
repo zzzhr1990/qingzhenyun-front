@@ -1,7 +1,9 @@
 const ApiException = require('../exception/api_exception')
+const jwt = require('jsonwebtoken')
+const Constants = require('../const/constants')
 class ResponseUtil {
     static Ok(req, res, data) {
-        res.json({ status: 200, result: data, code: "OK", success: true })
+        ResponseUtil.json(req, res, { status: 200, result: data, code: "OK", success: true })
     }
 
     static OkOrError(req, res, error, data) {
@@ -11,7 +13,7 @@ class ResponseUtil {
             ResponseUtil.Error(req, res, error)
             return
         }
-        res.json({ status: 200, result: data, code: "OK", success: true })
+        ResponseUtil.json(req, res, { status: 200, result: data, code: "OK", success: true })
     }
 
     static Error(req, res, error) {
@@ -19,7 +21,7 @@ class ResponseUtil {
             console.error(error)
         }
         res.status(500)
-        res.json({ status: 500, code: "INTERAL_ERROR", success: false })
+        ResponseUtil.json(req, res, { status: 500, code: "INTERAL_ERROR", success: false })
         //throw new ApiException('Internal Server Error', undefined, undefined, false)
         //res.json({ status: 200, result: data, code: "OK", success: true })
     }
@@ -41,9 +43,31 @@ class ResponseUtil {
             data.code = 'INTERNAL_SERVER_ERROR'
         }
         data.status = status
-        res.json(data)
+        ResponseUtil.json(req, res, data)
         //throw new ApiException('Internal Server Error', undefined, undefined, false)
         //res.json({ status: 200, result: data, code: "OK", success: true })
+    }
+
+    static json(req, res, data) {
+        if (req.user) {
+            //Sign And put
+            dat = res.user
+            auth = jwt.sign({
+                'uuid': dat.uuid,
+                'name': dat.name,
+                'email': dat.email,
+                'phone': dat.phone,
+                'lastLoginTime': dat.lastLoginTime,
+                'refreshTime': dat.refreshTime
+            }, Constants.JWT_SECRET_KEY, { expiresIn: '7d' })
+            res.header('Authorization', auth);
+            if (data) {
+                data['authorization'] = auth
+            } else {
+                data = { 'authorization': auth }
+            }
+        }
+        res.json(data)
     }
 }
 module.exports = ResponseUtil

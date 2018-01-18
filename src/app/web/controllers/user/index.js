@@ -97,10 +97,18 @@ router.post('/login', (req, res) => {
     // Access
     userService.caller.checkUserValidByName(value, password).then(dat => {
         //ResponseUtil.Error(req, res, error)
+        req.user = {
+            'uuid': dat.uuid,
+            'name': dat.name,
+            'email': dat.email,
+            'phone': dat.phone,
+            'lastLoginTime': dat.lastLoginTime,
+            'refreshTime': dat.refreshTime
+        }
         ResponseUtil.Ok(req, res, dat)
     }).catch(error => {
         if (error['innerCode']) {
-            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 403, "LOGIN_FAILED"))
+            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 401, "LOGIN_FAILED"))
         } else {
             ResponseUtil.Error(req, res, error)
         }
