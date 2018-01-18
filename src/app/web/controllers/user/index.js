@@ -1,3 +1,5 @@
+import { error } from 'util';
+
 let express = require('express')
 let router = express.Router()
 let ApiException = require('../../../exception/api_exception')
@@ -79,15 +81,28 @@ router.post('/login', (req, res) => {
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
-    ResponseUtil.Ok(req, res,
-        jwt.sign(
-            {
-                name: "BinMaing",
-                data: "============="
-            }, Constants.JWT_SECRET_KEY, {
-                expiresIn: 60 * 1
-            })
-    )
+    // userService.caller
+    // Check email first.
+    var caller = undefined
+    if (validator.isEmail(value)) {
+        caller = userService.caller.checkUserValidByEmail
+    } else if (validator.isMobilePhone(value)) {
+        caller = userService.caller.checkUserValidByPhone
+    } else {
+        caller = userService.caller.checkUserValidByName
+    }
+    // Access
+    caller(value, password).data(dat => {
+        //ResponseUtil.Error(req, res, error)
+        if (dat) {
+            ResponseUtil.Ok(req, res, dat)
+        } else {
+            //Login Failed
+            ResponseUtil.Error(req, res, new ApiException('Login failed.', 401, "LOGIN_FAILED"))
+        }
+    }).catch(error => {
+        ResponseUtil.Error(req, res, error)
+    })
 })
 
 router.post('/check', (req, res) => {
