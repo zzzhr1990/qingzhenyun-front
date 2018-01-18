@@ -13,7 +13,7 @@ var app = express()
 
 // session..
 app.use(session({
-    //store: new RedisStore({ 'host': '172.18.130.158', 'port': '6396' }),
+    store: new RedisStore({ 'host': '172.18.130.158', 'port': '6396' }),
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true
