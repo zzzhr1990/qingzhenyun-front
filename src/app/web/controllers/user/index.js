@@ -87,15 +87,15 @@ router.post('/login', (req, res) => {
 
     var caller = undefined
     if (validator.isEmail(value)) {
-        caller = userService.caller.checkUserValidByEmail
+        caller = userService.caller.checkUserValidByEmail(value, password)
     } else if (validator.isMobilePhone(value, 'any')) {
-        caller = userService.caller.checkUserValidByPhone
+        caller = userService.caller.checkUserValidByPhone(value, password)
     } else {
-        caller = userService.caller.checkUserValidByName
+        caller = userService.caller.checkUserValidByName(value, password)
     }
 
     // Access
-    userService.caller.checkUserValidByEmail(value, password).then(dat => {
+    caller.then(dat => {
         //ResponseUtil.Error(req, res, error)
         req.user = {
             'uuid': dat.uuid,
