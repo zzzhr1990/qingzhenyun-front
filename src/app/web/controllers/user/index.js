@@ -1,5 +1,3 @@
-import { error } from 'util';
-
 let express = require('express')
 let router = express.Router()
 let ApiException = require('../../../exception/api_exception')
