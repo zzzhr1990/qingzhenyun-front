@@ -63,6 +63,43 @@
         }
     };
 
+    user.LoginFailedException = class extends Ice.UserException
+    {
+        constructor(innerCode = 0, innerMessage = "", _cause = "")
+        {
+            super(_cause);
+            this.innerCode = innerCode;
+            this.innerMessage = innerMessage;
+        }
+
+        static get _parent()
+        {
+            return Ice.UserException;
+        }
+
+        static get _id()
+        {
+            return "::user::LoginFailedException";
+        }
+
+        _mostDerivedType()
+        {
+            return user.LoginFailedException;
+        }
+
+        _writeMemberImpl(ostr)
+        {
+            ostr.writeInt(this.innerCode);
+            ostr.writeString(this.innerMessage);
+        }
+
+        _readMemberImpl(istr)
+        {
+            this.innerCode = istr.readInt();
+            this.innerMessage = istr.readString();
+        }
+    };
+
     user.UserResponse = class
     {
         constructor(uuid = "", name = "", email = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0))
@@ -144,9 +181,18 @@
         "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByPhone": [, , , , [1], [[7]], , , , ],
-        "checkUserValidByName": [, , , , [user.UserResponse], [[7], [7]], , , , ],
-        "checkUserValidByEmail": [, , , , [user.UserResponse], [[7], [7]], , , , ],
-        "checkUserValidByPhone": [, , , , [user.UserResponse], [[7], [7]], , , , ]
+        "checkUserValidByName": [, , , , [user.UserResponse], [[7], [7]], ,
+        [
+            user.LoginFailedException
+        ], , ],
+        "checkUserValidByEmail": [, , , , [user.UserResponse], [[7], [7]], ,
+        [
+            user.LoginFailedException
+        ], , ],
+        "checkUserValidByPhone": [, , , , [user.UserResponse], [[7], [7]], ,
+        [
+            user.LoginFailedException
+        ], , ]
     });
     exports.user = user;
 }

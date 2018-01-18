@@ -79,10 +79,12 @@ router.post('/login', (req, res) => {
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
+    /*
     userService.caller.checkUserValidByEmail('a','b').then(data => { console.log(data) }).catch(err => {console.log(err)})
+    */
     // userService.caller
     // Check email first.
-    /*
+
     var caller = undefined
     if (validator.isEmail(value)) {
         caller = userService.caller.checkUserValidByEmail
@@ -91,18 +93,17 @@ router.post('/login', (req, res) => {
     } else {
         caller = userService.caller.checkUserValidByName
     }
-    */
+
     // Access
     userService.caller.checkUserValidByName(value, password).then(dat => {
         //ResponseUtil.Error(req, res, error)
-        if (dat) {
-            ResponseUtil.Ok(req, res, dat)
-        } else {
-            //Login Failed
-            ResponseUtil.Error(req, res, new ApiException('Login failed.', 401, "LOGIN_FAILED"))
-        }
+        ResponseUtil.Ok(req, res, dat)
     }).catch(error => {
-        ResponseUtil.Error(req, res, error)
+        if (error['innerCode']) {
+            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 403, "LOGIN_FAILED"))
+        } else {
+            ResponseUtil.Error(req, res, error)
+        }
     })
 })
 
