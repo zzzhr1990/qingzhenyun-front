@@ -7,8 +7,6 @@ let StringUtil = require('../../../util/string_util')
 let UserServiceRpc = require('../../../service/user_service')
 let validator = require('validator')
 let userService = new UserServiceRpc()
-let jwt = require('jsonwebtoken')
-const Constants = require('../../../const/constants')
 
 
 router.post('/register', (req, res) => {
