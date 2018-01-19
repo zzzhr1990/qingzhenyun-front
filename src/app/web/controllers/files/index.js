@@ -10,3 +10,5 @@ const ResponseUtil = require('../../../util/response_util')
 router.post('/list', (req, res) => {
     ResponseUtil.Ok(req.user)
 })
+
+module.exports = router
