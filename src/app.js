@@ -37,15 +37,29 @@ app.use(jwt({
             return undefined
         }
         */
-        if (req.headers.authorization) {
-            return req.headers.authorization
+        var pre = req.headers.authorization ? req.headers.authorization : (req.headers.Authorization ? req.headers.Authorization : undefined)
+        if (pre) {
+            let parts = pre.split(' ');
+            if (parts.length == 2) {
+                var scheme = parts[0];
+                var credentials = parts[1];
+
+                if (/^Bearer$/i.test(scheme)) {
+                    return token;
+                }
+            } else {
+                return undefined
+            }
+            return pre
         }
+        /*
         if (req.headers.Authorization) {
             return req.headers.Authorization
         }
         if (req.query && req.query.authorization) {
             return req.query.authorization;
         }
+        */
         if (req.query && req.query.auth) {
             return req.query.auth;
         }

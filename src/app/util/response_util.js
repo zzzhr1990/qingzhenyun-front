@@ -61,11 +61,11 @@ class ResponseUtil {
                 'lastLoginTime': dat.lastLoginTime,
                 'refreshTime': dat.refreshTime
             }, Constants.JWT_SECRET_KEY, { expiresIn: '30d' })
-            res.header('Authorization', auth);
+            res.header('Authorization', 'Bearer ' + auth);
             if (data) {
-                data['authorization'] = auth
+                data['token'] = auth
             } else {
-                data = { 'authorization': auth }
+                data = { 'token': auth }
             }
         }
         res.json(data)
