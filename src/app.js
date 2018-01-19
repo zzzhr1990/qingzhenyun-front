@@ -45,7 +45,9 @@ app.use(jwt({
                 var credentials = parts[1];
 
                 if (/^Bearer$/i.test(scheme)) {
-                    return token;
+                    return credentials;
+                }else{
+                    return next(new ApiException('Format is Authorization: Bearer [token]', 401, "BEARER_AUTHORIZATION_HEADER_INVALID"))
                 }
             } else {
                 return undefined
