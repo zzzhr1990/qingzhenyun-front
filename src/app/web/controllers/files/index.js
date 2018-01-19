@@ -8,7 +8,7 @@ const ResponseUtil = require('../../../util/response_util')
 
 // List User Files...
 router.post('/list', (req, res) => {
-    ResponseUtil.Ok(req.user)
+    ResponseUtil.Ok(req, res, req.user)
 })
 
 module.exports = router
