@@ -5,8 +5,6 @@ let ApiValidateException = require('../../../exception/api_validate_exception')
 let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
 let UserServiceRpc = require('../../../service/user_service')
-//let demoService = require('../../../service/demo_service')
-//var grpc = require('grpc')
 let validator = require('validator')
 let userService = new UserServiceRpc()
 let jwt = require('jsonwebtoken')
@@ -36,12 +34,13 @@ router.post('/register', (req, res) => {
     if (!validator.isMobilePhone(phone, 'any')) {
         throw new ApiValidateException("User phone not validate", '{PHONE}_NOT_VALIDATE')
     }
-    // Do Register RPC
-    let ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+    // Register RPC
+    // No front server like nginx.
+    //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
+    let ip = req.connection.remoteAddress
     userService.caller.registerUser(name, password, email, phone, ip)
         .then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
-            //console.log(error)
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
             } else {
@@ -87,11 +86,11 @@ router.post('/login', (req, res) => {
 
     var caller = undefined
     if (validator.isEmail(value)) {
-        caller = userService.caller.checkUserValidByEmail(value, password)
+        caller = userService.rpc.checkUserValidByEmail(value, password)
     } else if (validator.isMobilePhone(value, 'any')) {
-        caller = userService.caller.checkUserValidByPhone(value, password)
+        caller = userService.rpc.checkUserValidByPhone(value, password)
     } else {
-        caller = userService.caller.checkUserValidByName(value, password)
+        caller = userService.rpc.checkUserValidByName(value, password)
     }
 
     // Access

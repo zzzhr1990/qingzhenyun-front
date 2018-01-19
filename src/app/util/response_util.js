@@ -60,7 +60,7 @@ class ResponseUtil {
                 'phone': dat.phone,
                 'lastLoginTime': dat.lastLoginTime,
                 'refreshTime': dat.refreshTime
-            }, Constants.JWT_SECRET_KEY, { expiresIn: '7d' })
+            }, Constants.JWT_SECRET_KEY, { expiresIn: '30d' })
             res.header('Authorization', auth);
             if (data) {
                 data['authorization'] = auth

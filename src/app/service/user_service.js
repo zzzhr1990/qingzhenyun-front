@@ -24,14 +24,19 @@ class UserService{
         })
         
     }
+    /*
     get out(){
         return this._out
     }
+    */
     get caller(){
         if(!this._inited){
             throw new Error('UserServiceHandlerPrx not init.')
         }
         return this._out
+    }
+    get rpc(){
+        return this.caller
     }
 }
 module.exports = UserService
