@@ -3,10 +3,10 @@ const Ice = require("ice").Ice
 const user = require('../ice/userservice').user
 class UserService{
     constructor(init_str) {
-        let ic = Ice.initialize()
+        let ic = Ice.initialize(['--Ice.Default.Locator=IceGrid/Locator:tcp -h localhost -p 4061'])
         this._out = {}
         this._inited = false
-        let base = ic.stringToProxy(init_str?init_str:"UserServiceHandler:default -p 9999")
+        let base = ic.stringToProxy(init_str?init_str:"UserServiceHandler")
         //let out = {}
         user.UserServiceHandlerPrx.checkedCast(base).then((data) => {
             this._out = data
@@ -21,6 +21,7 @@ class UserService{
         }).catch((ex)=>{
             this._inited = false
             console.log('UserServiceHandlerPrx failed.')
+            console.log(ex)
         })
         
     }
