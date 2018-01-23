@@ -2,8 +2,9 @@
 const Ice = require("ice").Ice
 const user = require('../ice/userservice').user
 class UserService{
-    constructor(init_str) {
-        let ic = Ice.initialize(['--Ice.Default.Locator=IceGrid/Locator:tcp -h localhost -p 4061'])
+    constructor(args,init_str) {
+        //--Ice.Default.Locator=IceGrid/Locator:tcp -h localhost -p 4061
+        let ic = Ice.initialize(args)
         this._out = {}
         this._inited = false
         let base = ic.stringToProxy(init_str?init_str:"UserServiceHandler")
