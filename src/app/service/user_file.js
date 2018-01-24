@@ -9,12 +9,16 @@ class UserFileService{
         this._out = {}
         this._inited = false
         let base = ic.stringToProxy(init_str?init_str:"UserFileServiceHandler")
+        let base2 = ic.stringToProxy(init_str?init_str:"UserServiceHandler")
         //let out = {}
-
-        /*
         userfile.UserFileServiceHandlerPrx.checkedCast(base).then((data) => {
             this._out = data
-            
+            /*
+            this._out.execute("a", "b").then((dat) => {
+                console.log('Recv deta %s', dat)
+                console.log(dat)
+            })
+            */
             this._inited = true
             console.log('UserFileServiceHandlerPrx comfirmed.')
             data.createDirectory('','44ea6235-299e-44bc-93c1-943acc19362d','abc').then(dat => console.log(dat)).catch(exc => console.log(exc))
@@ -23,9 +27,8 @@ class UserFileService{
             console.log('UserFileServiceHandlerPrx failed.')
             console.log(ex)
         })
-        */
 
-        user.UserServiceHandlerPrx.checkedCast(base).then((ppp) => {
+        user.UserServiceHandlerPrx.checkedCast(base2).then((ppp) => {
             //this._out = data
             /*
             this._out.execute("a", "b").then((dat) => {
