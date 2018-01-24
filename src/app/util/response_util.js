@@ -77,6 +77,10 @@ class ResponseUtil {
         const keys = Object.keys(obj)
         if (keys.includes('high') && keys.includes('low') && obj['toNumber'] === 'function') {
             return true
+        }else{
+            if (keys.includes('high') && keys.includes('low')) {
+                console.log('f@@@@@@@k')
+            }
         }
         return false
     }
