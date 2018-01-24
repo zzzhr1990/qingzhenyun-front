@@ -71,9 +71,9 @@ class ResponseUtil {
         res.json(ResponseUtil.preProcessObject(data))
     }
 
-    static isObj = (obj) => typeof obj === 'object' && obj !== null
+    static isObj(obj) { return typeof obj === 'object' && obj !== null }
 
-    static needConvert = (obj) => {
+    static needConvert(obj) {
         const keys = Object.keys(obj)
         if (keys.includes('high') && keys.includes('low') && obj['toNumber'] === 'function') {
             return true
@@ -81,7 +81,7 @@ class ResponseUtil {
         return false
     }
 
-    static preProcessObject = (obj) => {
+    static preProcessObject(obj) {
         if (!isObj(obj)) return obj
         if (needConvert(obj)) {
             return obj.toNumber()
