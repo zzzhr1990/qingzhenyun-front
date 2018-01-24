@@ -14,6 +14,12 @@ router.post('/register', (req, res) => {
     if (StringUtil.isEmpty(name)) {
         throw new ApiValidateException("User name required", '{NAME}_REQUIRED')
     }
+    if (alidator.isEmail(name)) {
+        throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
+    }
+    if (alidator.isMobilePhone(name, 'any')) {
+        throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
+    }
     let password = req.body['password']
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
