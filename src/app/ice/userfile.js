@@ -197,7 +197,7 @@
         [
             userfile.FileOperationException
         ], , ],
-        "createDirectory": [, , , , [1], [[7], [7], [7]], , , , ],
+        "createDirectory": [, , , , [userfile.UserFileResponse], [[7], [7], [7]], , , , ],
         "getFilePath": [, , , , ["userfile.UserFileResponseListHelper"], [[7], [7]], , , , ],
         "get": [, , , , [userfile.UserFileResponse], [[7], [7]], ,
         [
