@@ -82,18 +82,18 @@ class ResponseUtil {
     }
 
     static preProcessObject(obj) {
-        if (!isObj(obj)) return obj
-        if (needConvert(obj)) {
+        if (!ResponseUtil.isObj(obj)) return obj
+        if (ResponseUtil.needConvert(obj)) {
             return obj.toNumber()
         }
         for (let [key, value] of Object.entries(obj)) {
-            if (isObj(value)) {
+            if (ResponseUtil.isObj(value)) {
                 //
-                if (needConvert(value)) {
+                if (ResponseUtil.needConvert(value)) {
                     obj[key] = value.toNumber()
                 }
                 else{
-                    obj[key] = preProcessObject(value)
+                    obj[key] = ResponseUtil.preProcessObject(value)
                 }
             }
         }
