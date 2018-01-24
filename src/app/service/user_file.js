@@ -27,17 +27,17 @@ class UserFileService{
             console.log(ex)
         })
 
-        user.UserServiceHandlerPrx.checkedCast(base).then((data) => {
-            this._out = data
+        user.UserServiceHandlerPrx.checkedCast(base).then((ppp) => {
+            //this._out = data
             /*
             this._out.execute("a", "b").then((dat) => {
                 console.log('Recv deta %s', dat)
                 console.log(dat)
             })
             */
-            this._inited = true
+            ///this._inited = true
             console.log('UserServiceHandlerPrx comfirmed.')
-            console.log(data.getUserByUuid)
+            console.log(ppp)
         }).catch((ex)=>{
             this._inited = false
             console.log('UserServiceHandlerPrx failed.')
