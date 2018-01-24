@@ -1,6 +1,7 @@
 /* ICE USER FILE SERVERCE */
 const Ice = require("ice").Ice
 const userfile = require('../ice/userfile').userfile
+const user = require('../ice/userservice').user
 class UserFileService{
     constructor(args,init_str) {
         //--Ice.Default.Locator=IceGrid/Locator:tcp -h localhost -p 4061
@@ -24,6 +25,23 @@ class UserFileService{
             console.log('UserFileServiceHandlerPrx failed.')
             console.log(ex)
         })
+
+        user.UserServiceHandlerPrx.checkedCast(base).then((data) => {
+            this._out = data
+            /*
+            this._out.execute("a", "b").then((dat) => {
+                console.log('Recv deta %s', dat)
+                console.log(dat)
+            })
+            */
+            this._inited = true
+            console.log('UserServiceHandlerPrx comfirmed.')
+        }).catch((ex)=>{
+            this._inited = false
+            console.log('UserServiceHandlerPrx failed.')
+            console.log(ex)
+        })
+
         
     }
     /*
