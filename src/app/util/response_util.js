@@ -1,5 +1,3 @@
-import { static } from '../../../../../Library/Caches/typescript/2.6/node_modules/@types/express';
-
 const ApiException = require('../exception/api_exception')
 const jwt = require('jsonwebtoken')
 const Constants = require('../const/constants')
