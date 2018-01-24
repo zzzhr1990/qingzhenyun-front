@@ -1,3 +1,5 @@
+import { static } from '../../../../../Library/Caches/typescript/2.6/node_modules/@types/express';
+
 const ApiException = require('../exception/api_exception')
 const jwt = require('jsonwebtoken')
 const Constants = require('../const/constants')
@@ -68,7 +70,49 @@ class ResponseUtil {
                 data = { 'token': auth }
             }
         }
-        res.json(data)
+        res.json(ResponseUtil.preProcessObject(data))
     }
+
+    static isObj = (obj) => typeof obj === 'object' && obj !== null
+
+    static needConvert = (obj) => {
+        const keys = Object.keys(obj)
+        if (keys.includes('high') && keys.includes('low') && obj['toNumber'] === 'function') {
+            return true
+        }
+        return false
+    }
+
+    static preProcessObject = (obj) => {
+        if (!isObj(obj)) return obj
+        if (needConvert(obj)) {
+            return obj.toNumber()
+        }
+        for (let [key, value] of Object.entries(obj)) {
+            if (isObj(value)) {
+                //
+                if (needConvert(value)) {
+                    obj[key] = value.toNumber()
+                }
+                else{
+                    obj[key] = preProcessObject(value)
+                }
+            }
+        }
+        return obj
+    }
+
+    /*
+    static preProcessObject(obj) {
+        //
+        if (typeof (obj) == 'object') {
+            if (typeof (obj['toNumber']) == 'function') {
+                return obj.toNumber()
+            }
+            // Foreach
+        }
+        return onk
+    }
+    */
 }
 module.exports = ResponseUtil
