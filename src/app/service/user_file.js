@@ -20,6 +20,7 @@ class UserFileService{
             */
             this._inited = true
             console.log('UserFileServiceHandlerPrx comfirmed.')
+            data.createDirectory('','44ea6235-299e-44bc-93c1-943acc19362d','abc').then(dat => console.log(dat)).catch(exc => console.log(exc))
         }).catch((ex)=>{
             this._inited = false
             console.log('UserFileServiceHandlerPrx failed.')
@@ -36,6 +37,7 @@ class UserFileService{
             */
             this._inited = true
             console.log('UserServiceHandlerPrx comfirmed.')
+            data.getUserByUuid('44ea6235-299e-44bc-93c1-943acc19362d').then(dat => console.log(dat)).catch(exc => console.log(exc))
         }).catch((ex)=>{
             this._inited = false
             console.log('UserServiceHandlerPrx failed.')
