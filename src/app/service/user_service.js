@@ -18,8 +18,13 @@ class UserService{
                 console.log(dat)
             })
             */
-            this._inited = true
-            console.log('UserServiceHandlerPrx comfirmed.')
+            if(data != null){
+                this._inited = true
+                console.log('UserServiceHandlerPrx comfirmed.')
+            }else{
+                console.log('UserServiceHandlerPrx failed.(Server responses null)')
+                this._inited = false
+            }
         }).catch((ex)=>{
             this._inited = false
             console.log('UserServiceHandlerPrx failed.')

@@ -18,8 +18,14 @@ class UserFileService{
                 console.log(dat)
             })
             */
-            this._inited = true
-            console.log('UserFileServiceHandlerPrx comfirmed.')
+            if(data != null){
+                this._inited = true
+                console.log('UserFileServiceHandlerPrx comfirmed.')
+            }else{
+                console.log('UserFileServiceHandlerPrx failed.(Server responses null)')
+                this._inited = false
+            }
+            
         }).catch((ex)=>{
             this._inited = false
             console.log('UserFileServiceHandlerPrx failed.')
