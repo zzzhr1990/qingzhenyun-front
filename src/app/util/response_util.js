@@ -86,7 +86,7 @@ class ResponseUtil {
         if (ResponseUtil.needConvert(obj)) {
             return obj.toNumber()
         }
-        for (let key of Object.entries(obj)) {
+        for (let key of Object.keys(obj)) {
             let value = obj[key]
             if (ResponseUtil.isObj(value)) {
                 //
