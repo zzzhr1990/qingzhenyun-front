@@ -1,13 +1,14 @@
 /* ICE USER SERVERCE */
 const Ice = require("ice").Ice
 const user = require('../ice/userservice').user
+const ICE = require('../const/constants').ICE
 class UserService{
-    constructor(args,init_str) {
+    constructor(init_str) {
         //--Ice.Default.Locator=IceGrid/Locator:tcp -h localhost -p 4061
-        let ic = Ice.initialize(args)
+        //let ic = Ice.initialize(args)
         this._out = {}
         this._inited = false
-        let base = ic.stringToProxy(init_str?init_str:"UserServiceHandler")
+        let base = ICE.stringToProxy(init_str?init_str:"UserServiceHandler")
         //let out = {}
         user.UserServiceHandlerPrx.checkedCast(base).then((data) => {
             this._out = data

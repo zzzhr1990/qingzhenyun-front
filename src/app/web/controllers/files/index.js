@@ -5,7 +5,7 @@ const ApiValidateException = require('../../../exception/api_validate_exception'
 const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
 let UserFileServiceRpc = require('../../../service/user_file')
-let userFileService = new UserFileServiceRpc(process.argv)
+let userFileService = new UserFileServiceRpc()
 
 
 

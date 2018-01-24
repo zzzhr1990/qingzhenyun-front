@@ -10,6 +10,8 @@ let ApiException = require('./app/exception/api_exception')
 //let RedisStore = require('connect-redis')(session);
 let jwt = require('express-jwt')
 const Constants = require('./app/const/constants')
+const ice = require('ice').Ice
+Constants.ICE = ice.initialize(process.argv)
 var app = express()
 const ResponseUtil = require('./app/util/response_util')
 

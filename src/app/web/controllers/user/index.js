@@ -6,7 +6,7 @@ let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
 let UserServiceRpc = require('../../../service/user_service')
 let validator = require('validator')
-let userService = new UserServiceRpc(process.argv)
+let userService = new UserServiceRpc()
 
 
 router.post('/register', (req, res) => {
