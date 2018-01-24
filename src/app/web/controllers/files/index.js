@@ -28,14 +28,14 @@ router.post('/page', (req, res) => {
     //
     var pageSizeStr = req.body['pageSize'] + ''
     if (!validator.isInt(pageSizeStr)) {
-        pageStr = '20'
+        pageSizeStr = '20'
     }
     var pageSize = parseInt(pageSizeStr)
     if (pageSize < 1) {
-        page = 20
+        pageSize = 20
     }
     if (pageSize > 999) {
-        page = 999
+        pageSize = 999
     }
     var parent = req.body['parent']
     if (!parent) {
