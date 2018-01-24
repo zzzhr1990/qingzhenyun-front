@@ -80,6 +80,7 @@ class ResponseUtil {
         }else{
             if (keys.includes('high') && keys.includes('low')) {
                 console.log('f@@@@@@@k')
+                console.log(Object.keys(obj))
             }
         }
         return false
