@@ -16,7 +16,7 @@ router.post('/list', (req, res) => {
 })
 
 router.post('/get', (req, res) => {
-    var uuid = req.body['uuid'] + ''
+    var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     if (!uuid) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
@@ -33,12 +33,12 @@ router.post('/get', (req, res) => {
 })
 
 router.post('/move', (req, res) => {
-    var uuid = req.body['uuid'] + ''
+    var uuid = req.body['uuid']
     if (!uuid) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
-    let parent = req.body['parent'] + ''
+    let parent = req.body['parent'] ? req.body['parent'] + '' : ''
 
     //get
     userFileService.rpc.move(uuid, parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
@@ -52,7 +52,7 @@ router.post('/move', (req, res) => {
 })
 
 router.post('/recycle', (req, res) => {
-    var uuid = req.body['uuid'] + ''
+    var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     if (!uuid) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
@@ -70,7 +70,7 @@ router.post('/recycle', (req, res) => {
 
 router.post('/page', (req, res) => {
     //ResponseUtil.Ok(req, res, req.user)
-    var pageStr = req.body['page'] + ''
+    var pageStr = req.body['page'] ? req.body['page'] + '' : ''
     if (!validator.isInt(pageStr)) {
         pageStr = '1'
     }
@@ -79,7 +79,7 @@ router.post('/page', (req, res) => {
         page = 1
     }
     //
-    var pageSizeStr = req.body['pageSize'] + ''
+    var pageSizeStr = req.body['pageSize'] ? req.body['pageSize'] + '' : ''
     if (!validator.isInt(pageSizeStr)) {
         pageSizeStr = '20'
     }
