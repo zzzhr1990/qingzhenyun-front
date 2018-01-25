@@ -15,6 +15,23 @@ router.post('/list', (req, res) => {
     ResponseUtil.Ok(req, res, req.user)
 })
 
+router.post('/get', (req, res) => {
+    var uuid = req.body['uuid'] + ''
+    if (!uuid) {
+        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+    }
+    let userId = req.user.uuid
+    //get
+    userFileService.rpc.get(parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
+        .catch((error) => {
+            if (error['innerCode']) {
+                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+            } else {
+                ResponseUtil.Error(req, res, error)
+            }
+        })
+})
+
 router.post('/page', (req, res) => {
     //ResponseUtil.Ok(req, res, req.user)
     var pageStr = req.body['page'] + ''
