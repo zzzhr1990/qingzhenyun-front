@@ -180,7 +180,7 @@
 
     userfile.UserFilePageResponse = class
     {
-        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0, list = null, path = null)
+        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0, list = null, path = null, info = null)
         {
             this.page = page;
             this.pageSize = pageSize;
@@ -188,6 +188,7 @@
             this.totalPage = totalPage;
             this.list = list;
             this.path = path;
+            this.info = info;
         }
 
         _write(ostr)
@@ -198,6 +199,7 @@
             ostr.writeInt(this.totalPage);
             userfile.UserFileResponseListHelper.write(ostr, this.list);
             userfile.UserFileResponseListHelper.write(ostr, this.path);
+            ostr.writeValue(this.info);
         }
 
         _read(istr)
@@ -208,11 +210,12 @@
             this.totalPage = istr.readInt();
             this.list = userfile.UserFileResponseListHelper.read(istr);
             this.path = userfile.UserFileResponseListHelper.read(istr);
+            istr.readValue(obj => this.info = obj, userfile.UserFileResponse);
         }
 
         static get minWireSize()
         {
-            return  18;
+            return  19;
         }
     };
 
