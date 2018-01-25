@@ -22,7 +22,7 @@ router.post('/get', (req, res) => {
     }
     let userId = req.user.uuid
     //get
-    userFileService.rpc.get(parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.rpc.get(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
