@@ -66,10 +66,16 @@
         }
     };
 
-    userfile.UserFileResponse = class
+    const iceC_userfile_UserFileResponse_ids = [
+        "::Ice::Object",
+        "::userfile::UserFileResponse"
+    ];
+
+    userfile.UserFileResponse = class extends Ice.Value
     {
         constructor(uuid = "", storeId = "", userId = "", size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", name = "", ext = "", preview = "", flag = 0, recycle = 0)
         {
+            super();
             this.uuid = uuid;
             this.storeId = storeId;
             this.userId = userId;
@@ -88,7 +94,7 @@
             this.recycle = recycle;
         }
 
-        _write(ostr)
+        _iceWriteMemberImpl(ostr)
         {
             ostr.writeString(this.uuid);
             ostr.writeString(this.storeId);
@@ -108,7 +114,7 @@
             ostr.writeInt(this.recycle);
         }
 
-        _read(istr)
+        _iceReadMemberImpl(istr)
         {
             this.uuid = istr.readString();
             this.storeId = istr.readString();
@@ -127,16 +133,50 @@
             this.flag = istr.readInt();
             this.recycle = istr.readInt();
         }
+    };
 
-        static get minWireSize()
+    Slice.defineValue(userfile.UserFileResponse, iceC_userfile_UserFileResponse_ids[1], false);
+
+    userfile.UserFileResponseDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(userfile.UserFileResponseDisp, undefined, iceC_userfile_UserFileResponse_ids, 1);
+
+    Slice.defineSequence(userfile, "UserFileResponseListHelper", "Ice.ObjectHelper", false, "userfile.UserFileResponse");
+
+    const iceC_userfile_UserFileResponseEx_ids = [
+        "::Ice::Object",
+        "::userfile::UserFileResponse",
+        "::userfile::UserFileResponseEx"
+    ];
+
+    userfile.UserFileResponseEx = class extends userfile.UserFileResponse
+    {
+        constructor(uuid, storeId, userId, size, parent, mime, type, atime, mtime, ctime, alias, name, ext, preview, flag, recycle, path = null)
         {
-            return  53;
+            super(uuid, storeId, userId, size, parent, mime, type, atime, mtime, ctime, alias, name, ext, preview, flag, recycle);
+            this.path = path;
+        }
+
+        _iceWriteMemberImpl(ostr)
+        {
+            userfile.UserFileResponseListHelper.write(ostr, this.path);
+        }
+
+        _iceReadMemberImpl(istr)
+        {
+            this.path = userfile.UserFileResponseListHelper.read(istr);
         }
     };
 
-    Slice.defineStruct(userfile.UserFileResponse, true, true);
+    Slice.defineValue(userfile.UserFileResponseEx, iceC_userfile_UserFileResponseEx_ids[2], false);
 
-    Slice.defineSequence(userfile, "UserFileResponseListHelper", "userfile.UserFileResponse", false);
+    userfile.UserFileResponseExDisp = class extends userfile.UserFileResponseDisp
+    {
+    };
+
+    Slice.defineOperations(userfile.UserFileResponseExDisp, undefined, iceC_userfile_UserFileResponseEx_ids, 2);
 
     userfile.UserFilePageResponse = class
     {
@@ -176,7 +216,7 @@
         }
     };
 
-    Slice.defineStruct(userfile.UserFilePageResponse, true, true);
+    Slice.defineStruct(userfile.UserFilePageResponse, false, true);
 
     const iceC_userfile_UserFileServiceHandler_ids = [
         "::Ice::Object",
@@ -196,19 +236,19 @@
         "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [7], [3], [3], [3]], ,
         [
             userfile.FileOperationException
-        ], , ],
-        "createDirectory": [, , , , [userfile.UserFileResponse], [[7], [7], [7]], ,
+        ], , true],
+        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [7]], ,
         [
             userfile.FileOperationException
-        ], , ],
+        ], , true],
         "getFilePath": [, , , , ["userfile.UserFileResponseListHelper"], [[7], [7]], ,
         [
             userfile.FileOperationException
-        ], , ],
-        "get": [, , , , [userfile.UserFileResponse], [[7], [7]], ,
+        ], , true],
+        "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [7]], ,
         [
             userfile.FileOperationException
-        ], , ]
+        ], , true]
     });
     exports.userfile = userfile;
 }
