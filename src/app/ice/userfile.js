@@ -251,7 +251,15 @@
         "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [7]], ,
         [
             userfile.FileOperationException
-        ], , true]
+        ], , true],
+        "move": [, , , , [3], [[7], [7], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
+        "recycle": [, , , , [3], [[7], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , ]
     });
     exports.userfile = userfile;
 }
