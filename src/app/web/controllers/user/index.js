@@ -109,7 +109,8 @@ router.post('/login', (req, res) => {
             'refreshTime': dat.refreshTime
         }
         //data.user?
-        console.log(data.uuid)
+        console.log(dat.uuid)
+        console.log(typeof(dat.uuid))
         ResponseUtil.Ok(req, res, dat)
     }).catch(error => {
         if (error['innerCode']) {
