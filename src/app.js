@@ -87,6 +87,7 @@ app.use((req, res, next) => {
     if(req.user){
         if(req.user.version != USER_VERSION){
             var err = new ApiException('User JWT version not match. please login again', 401, 'USER_VERSION_NOT_MATCH')
+            console.log(req.user)
             next(err)
         }else{
             next()
