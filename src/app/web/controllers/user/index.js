@@ -107,7 +107,7 @@ router.post('/login', (req, res) => {
             'phone': dat.phone,
             'lastLoginTime': dat.lastLoginTime,
             'refreshTime': dat.refreshTime,
-            'version':dat.version
+            'version': dat.version
         }
         // console.log(req.user)
         ResponseUtil.Ok(req, res, dat)
@@ -182,7 +182,10 @@ router.post('/:methodId', (req, res) => {
 
 router.get('/date', (req, res) => {
     let time = Date.now()
-    ResponseUtil.Ok(req, res, time)
+    let userId = 1
+    userService.caller.getUserByUuid(userId)
+        .then((data) => ResponseUtil.Ok(req, res, data))
+        .catch((error) => ResponseUtil.OkOrError(req, res, error))
 })
 
 router.get('/test', (req, res) => {
