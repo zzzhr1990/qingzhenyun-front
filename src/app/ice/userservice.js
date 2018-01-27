@@ -102,7 +102,7 @@
 
     user.UserResponse = class
     {
-        constructor(uuid = "", name = "", email = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0))
+        constructor(uuid = "", name = "", email = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
         {
             this.uuid = uuid;
             this.name = name;
@@ -116,6 +116,9 @@
             this.banTime = banTime;
             this.refreshTime = refreshTime;
             this.lastLoginTime = lastLoginTime;
+            this.validateAddon = validateAddon;
+            this.validate = validate;
+            this.version = version;
         }
 
         _write(ostr)
@@ -132,6 +135,9 @@
             ostr.writeLong(this.banTime);
             ostr.writeLong(this.refreshTime);
             ostr.writeLong(this.lastLoginTime);
+            ostr.writeString(this.validateAddon);
+            ostr.writeInt(this.validate);
+            ostr.writeInt(this.version);
         }
 
         _read(istr)
@@ -148,11 +154,14 @@
             this.banTime = istr.readLong();
             this.refreshTime = istr.readLong();
             this.lastLoginTime = istr.readLong();
+            this.validateAddon = istr.readString();
+            this.validate = istr.readInt();
+            this.version = istr.readInt();
         }
 
         static get minWireSize()
         {
-            return  49;
+            return  58;
         }
     };
 
@@ -177,7 +186,7 @@
         [
             user.RegisterFailedException
         ], , ],
-        "getUserByUuid": [, , , , [user.UserResponse], [[7]], , , , ],
+        "getUserByUuid": [, , , , [user.UserResponse], [[4]], , , , ],
         "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByPhone": [, , , , [1], [[7]], , , , ],

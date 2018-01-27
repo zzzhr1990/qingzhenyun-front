@@ -73,7 +73,7 @@
 
     userfile.UserFileResponse = class extends Ice.Value
     {
-        constructor(uuid = "", storeId = "", userId = "", size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", name = "", ext = "", preview = "", flag = 0, recycle = 0)
+        constructor(uuid = "", storeId = "", userId = new Ice.Long(0, 0), size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", name = "", ext = "", preview = "", flag = 0, recycle = 0)
         {
             super();
             this.uuid = uuid;
@@ -98,7 +98,7 @@
         {
             ostr.writeString(this.uuid);
             ostr.writeString(this.storeId);
-            ostr.writeString(this.userId);
+            ostr.writeLong(this.userId);
             ostr.writeLong(this.size);
             ostr.writeString(this.parent);
             ostr.writeString(this.mime);
@@ -118,7 +118,7 @@
         {
             this.uuid = istr.readString();
             this.storeId = istr.readString();
-            this.userId = istr.readString();
+            this.userId = istr.readLong();
             this.size = istr.readLong();
             this.parent = istr.readString();
             this.mime = istr.readString();
@@ -236,27 +236,27 @@
 
     Slice.defineOperations(userfile.UserFileServiceHandler, userfile.UserFileServiceHandlerPrx, iceC_userfile_UserFileServiceHandler_ids, 1,
     {
-        "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [7], [3], [3], [3]], ,
+        "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [4], [3], [3], [3]], ,
         [
             userfile.FileOperationException
         ], , true],
-        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [7]], ,
+        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7]], ,
         [
             userfile.FileOperationException
         ], , true],
-        "getFilePath": [, , , , ["userfile.UserFileResponseListHelper"], [[7], [7]], ,
+        "getFilePath": [, , , , ["userfile.UserFileResponseListHelper"], [[7], [4]], ,
         [
             userfile.FileOperationException
         ], , true],
-        "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [7]], ,
+        "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4]], ,
         [
             userfile.FileOperationException
         ], , true],
-        "move": [, , , , [3], [[7], [7], [7]], ,
+        "move": [, , , , [3], [[7], [7], [4]], ,
         [
             userfile.FileOperationException
         ], , ],
-        "recycle": [, , , , [3], [[7], [7]], ,
+        "recycle": [, , , , [3], [[7], [4]], ,
         [
             userfile.FileOperationException
         ], , ]
