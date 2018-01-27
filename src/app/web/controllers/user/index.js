@@ -182,7 +182,7 @@ router.post('/:methodId', (req, res) => {
 
 router.get('/date', (req, res) => {
     let time = Date.now()
-    let userId = 1
+    let userId = {"high":0}
     userService.caller.getUserByUuid(userId)
         .then((data) => ResponseUtil.Ok(req, res, data))
         .catch((error) => ResponseUtil.OkOrError(req, res, error))
