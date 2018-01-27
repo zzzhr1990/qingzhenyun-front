@@ -102,7 +102,7 @@
 
     user.UserResponse = class
     {
-        constructor(uuid = "", name = "", email = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
+        constructor(uuid = new Ice.Long(0, 0), name = "", email = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
         {
             this.uuid = uuid;
             this.name = name;
@@ -123,7 +123,7 @@
 
         _write(ostr)
         {
-            ostr.writeString(this.uuid);
+            ostr.writeLong(this.uuid);
             ostr.writeString(this.name);
             ostr.writeString(this.email);
             ostr.writeString(this.phone);
@@ -142,7 +142,7 @@
 
         _read(istr)
         {
-            this.uuid = istr.readString();
+            this.uuid = istr.readLong();
             this.name = istr.readString();
             this.email = istr.readString();
             this.phone = istr.readString();
@@ -161,7 +161,7 @@
 
         static get minWireSize()
         {
-            return  58;
+            return  65;
         }
     };
 

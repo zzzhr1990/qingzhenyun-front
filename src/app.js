@@ -48,7 +48,7 @@ app.use(jwt({
 
                 if (/^Bearer$/i.test(scheme)) {
                     return credentials;
-                }else{
+                } else {
                     throw new ApiException('Format is Authorization: Bearer [token]', 401, "BEARER_AUTHORIZATION_HEADER_INVALID")
                 }
             } else {
@@ -82,7 +82,20 @@ app.use(helmet())
 // app.use(bodyParser.text())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
+const USER_VERSION = 1
+app.use((req, res, next) => {
+    if(req.user){
+        if(req.user.version != USER_VERSION){
+            var err = new ApiException('User JWT version not match. please login again', 401, 'USER_VERSION_NOT_MATCH')
+            next(err)
+        }else{
+            next()
+        }
+    }else{
+        next()
+    }
+    
+})
 // controller
 app.use('/v1', require('./app/web/controllers'))
 
