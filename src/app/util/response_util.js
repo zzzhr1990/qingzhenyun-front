@@ -60,7 +60,8 @@ class ResponseUtil {
                 'email': dat.email,
                 'phone': dat.phone,
                 'lastLoginTime': dat.lastLoginTime,
-                'refreshTime': dat.refreshTime
+                'refreshTime': dat.refreshTime,
+                'version': dat.version
             }, Constants.JWT_SECRET_KEY, { expiresIn: '30d' })
             res.header('Authorization', 'Bearer ' + auth);
             if (data) {
