@@ -73,7 +73,7 @@ app.use(jwt({
         return null
     }
 })
-    .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout', '/v1/store/callback/ws'] }))
+    .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout', '/v1/store/callback/wcs'] }))
 // common config
 app.use(logger('dev'))
 app.use(cookieParser())
