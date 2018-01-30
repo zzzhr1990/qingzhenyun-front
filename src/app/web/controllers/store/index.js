@@ -26,4 +26,9 @@ router.post('/token', (req, res) => {
         })
 })
 
+router.post('/callback/wcs', (req, res) => {
+    console.log('WCS Callback %s',req.body.callbackBody)
+    result = { 'callbackTime': (new Date()).getTime }
+    res.json(result)
+})
 module.exports = router
