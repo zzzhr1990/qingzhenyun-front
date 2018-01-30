@@ -17,7 +17,7 @@ class CommonRpc{
                     let v = data[xx]
                     if(typeof(v) == 'function'){
                         if(!xx.startsWith("ice_")){
-                            CommonRpc.prototype[xx] = (...args) => data[xx](...args)
+                            this[xx] = (...args) => data[xx](...args)
                         }
                     }
                 }

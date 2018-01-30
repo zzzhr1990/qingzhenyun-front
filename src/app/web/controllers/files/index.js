@@ -4,8 +4,8 @@ const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
-let UserFileServiceRpc = require('../../../service/user_file')
-let userFileService = new UserFileServiceRpc()
+//let UserFileServiceRpc = require('../../../service/user_file')
+let userFileService = require('../../../const/rpc').userFileRpc
 let validator = require('validator')
 
 
@@ -22,7 +22,7 @@ router.post('/get', (req, res) => {
     }
     let userId = req.user.uuid
     //get
-    userFileService.rpc.get(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.get(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
@@ -41,7 +41,7 @@ router.post('/move', (req, res) => {
     let parent = req.body['parent'] ? req.body['parent'] + '' : ''
 
     //get
-    userFileService.rpc.move(uuid, parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.move(uuid, parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
@@ -58,7 +58,7 @@ router.post('/recycle', (req, res) => {
     }
     let userId = req.user.uuid
     //get
-    userFileService.rpc.recycle(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.recycle(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
@@ -95,7 +95,7 @@ router.post('/page', (req, res) => {
         parent = ''
     }
     let userId = req.user.uuid
-    userFileService.rpc.listDirectoryPage(parent, userId, 0, page, pageSize).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.listDirectoryPage(parent, userId, 0, page, pageSize).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
@@ -117,7 +117,7 @@ router.post('/createDirectory', (req, res) => {
         name = "New Directory Created by:" + new Date()
     }
     // call rpc
-    userFileService.rpc.createDirectory(parent, userId, name).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.createDirectory(parent, userId, name).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))

@@ -10,8 +10,19 @@ let ApiException = require('./app/exception/api_exception')
 //let RedisStore = require('connect-redis')(session);
 let jwt = require('express-jwt')
 const Constants = require('./app/const/constants')
+const rpc = require('./app/const/rpc')
+const CommonRpc = require('./app/service/common_rpc')
+/** INIT RPCs **/
 const ice = require('ice').Ice
 Constants.ICE = ice.initialize(process.argv)
+rpc.cloudStoreRpc = new CommonRpc("CloudStoreServiceHandler", require('./app/ice/cloudstore')
+    .store.CloudStoreServiceHandlerPrx)
+rpc.userFileRpc = new CommonRpc("UserFileServiceHandler", require('./app/ice/userfile')
+    .userfile.UserFileServiceHandlerPrx)
+
+rpc.userRpc = new CommonRpc("UserServiceHandler", require('./app/ice/userservice')
+    .user.UserServiceHandlerPrx)
+/** INIT RPCs **/
 var app = express()
 const ResponseUtil = require('./app/util/response_util')
 

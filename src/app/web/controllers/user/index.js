@@ -4,9 +4,8 @@ let ApiException = require('../../../exception/api_exception')
 let ApiValidateException = require('../../../exception/api_validate_exception')
 let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
-let UserServiceRpc = require('../../../service/user_service')
 let validator = require('validator')
-let userService = new UserServiceRpc()
+let userService = require('../../../const/rpc').userRpc
 
 
 router.post('/register', (req, res) => {
@@ -42,7 +41,7 @@ router.post('/register', (req, res) => {
     // No front server like nginx.
     //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
     let ip = req.connection.remoteAddress
-    userService.caller.registerUser(name, password, email, phone, ip)
+    userService.registerUser(name, password, email, phone, ip)
         .then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
@@ -82,19 +81,15 @@ router.post('/login', (req, res) => {
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
-    /*
-    userService.caller.checkUserValidByEmail('a','b').then(data => { console.log(data) }).catch(err => {console.log(err)})
-    */
-    // userService.caller
     // Check email first.
 
     var caller = undefined
     if (validator.isEmail(value)) {
-        caller = userService.rpc.checkUserValidByEmail(value, password)
+        caller = userService.checkUserValidByEmail(value, password)
     } else if (validator.isMobilePhone(value, 'any')) {
-        caller = userService.rpc.checkUserValidByPhone(value, password)
+        caller = userService.checkUserValidByPhone(value, password)
     } else {
-        caller = userService.rpc.checkUserValidByName(value, password)
+        caller = userService.checkUserValidByName(value, password)
     }
 
     // Access
@@ -129,17 +124,17 @@ router.post('/check', (req, res) => {
     // check
     switch (type) {
         case "0":
-            userService.caller.checkUserExistsByName(value)
+            userService.checkUserExistsByName(value)
                 .then((data) => ResponseUtil.Ok(req, res, data))
                 .catch((error) => ResponseUtil.OkOrError(req, res, error))
             break;
         case "1":
-            userService.caller.checkUserExistsByEmail(value)
+            userService.checkUserExistsByEmail(value)
                 .then(data => ResponseUtil.Ok(req, res, data))
                 .catch((error) => ResponseUtil.OkOrError(req, res, error))
             break;
         case "2":
-            userService.caller.checkUserExistsByPhone(value)
+            userService.checkUserExistsByPhone(value)
                 .then(data => ResponseUtil.OkOrError(req, res, error, data))
                 .catch((error) => ResponseUtil.OkOrError(req, res, error))
             break;
@@ -183,7 +178,7 @@ router.post('/:methodId', (req, res) => {
 router.get('/date', (req, res) => {
     let time = Date.now()
     let userId = {"high":0,"low":0}
-    userService.caller.getUserByUuid(userId)
+    userService.getUserByUuid(userId)
         .then((data) => ResponseUtil.Ok(req, res, data))
         .catch((error) => ResponseUtil.OkOrError(req, res, error))
 })
