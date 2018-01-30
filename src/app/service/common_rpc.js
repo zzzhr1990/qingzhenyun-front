@@ -14,7 +14,7 @@ class CommonRpc{
             if(data != null){
                 //this._inited = true
                 console.log('%s comfirmed.',adapterName)
-                console.log(data)
+                console.log(typeof(data["createUploadToken"]))
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
                 //this._inited = false..
