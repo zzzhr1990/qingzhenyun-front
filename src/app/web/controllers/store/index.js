@@ -4,16 +4,17 @@ const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
-let CloudStoreServiceRpc = require('../../../service/cloud_store')
+//let CloudStoreServiceRpc = require('../../../service/cloud_store')
+let CommonRpc = require('../../../service/common_rpc')
+let cloudStoreServicePrx = require('../../../ice/cloudstore').store.CloudStoreServiceHandlerPrx
+let handlerName = "CloudStoreServiceHandler"
+let cloudStoreRpc = new CommonRpc(handlerName,cloudStoreServicePrx)
+
+/*
 let cloudStoreServiceRpc = new CloudStoreServiceRpc()
 
+
 router.post('/token', (req, res) => {
-    /*
-    var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
-    if (!uuid) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
-    }
-    */
     let userId = req.user.uuid
     //get
     cloudStoreServiceRpc.rpc.createUploadToken(userId).then((result) => ResponseUtil.Ok(req, res, result))
@@ -31,4 +32,5 @@ router.post('/callback/wcs', (req, res) => {
     result = { 'callbackTime': (new Date()).getTime }
     res.json(result)
 })
+*/
 module.exports = router
