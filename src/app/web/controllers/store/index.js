@@ -10,14 +10,14 @@ let cloudStoreServicePrx = require('../../../ice/cloudstore').store.CloudStoreSe
 let handlerName = "CloudStoreServiceHandler"
 let cloudStoreRpc = new CommonRpc(handlerName,cloudStoreServicePrx)
 
-/*
-let cloudStoreServiceRpc = new CloudStoreServiceRpc()
+
+//let cloudStoreServiceRpc = new CloudStoreServiceRpc()
 
 
 router.post('/token', (req, res) => {
     let userId = req.user.uuid
     //get
-    cloudStoreServiceRpc.rpc.createUploadToken(userId).then((result) => ResponseUtil.Ok(req, res, result))
+    cloudStoreRpc.createUploadToken(userId).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
@@ -32,5 +32,5 @@ router.post('/callback/wcs', (req, res) => {
     result = { 'callbackTime': (new Date()).getTime }
     res.json(result)
 })
-*/
+
 module.exports = router
