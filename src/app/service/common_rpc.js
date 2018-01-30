@@ -14,10 +14,10 @@ class CommonRpc{
             if(data != null){
                 //this._inited = true
                 console.log('%s comfirmed.',adapterName)
-                console.log(typeof(data["createUploadToken"]))
+                //console.log(typeof(data["createUploadToken"]))
                 for(let xx in data){
                     console.log(xx)
-                    console.log(data[xx])
+                    console.log(typeof(data[xx]))
                 }
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
