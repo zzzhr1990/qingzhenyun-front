@@ -14,9 +14,7 @@ class CommonRpc{
             if(data != null){
                 //this._inited = true
                 console.log('%s comfirmed.',adapterName)
-                for(let func in Object.keys(data)){
-                    console.log("%s - %s",func, typeof(data[func]))
-                }
+                console.log(data)
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
                 //this._inited = false..
