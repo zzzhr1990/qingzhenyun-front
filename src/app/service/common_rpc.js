@@ -1,18 +1,15 @@
 const Ice = require("ice").Ice
-//const ICE = require('../const/constants').ICE
-
 class CommonRpc{
     constructor(ice,adapterName,prx){
         let base = ice.stringToProxy(adapterName)
         prx.checkedCast(base).then(data => {
-            //get sth..
             if(data != null){
                 console.log('%s comfirmed.',adapterName)
-                for(let xx in data){
-                    let v = data[xx]
-                    if(typeof(v) == 'function'){
-                        if(!xx.startsWith("ice_")){
-                            this[xx] = (...args) => data[xx](...args)
+                for(let functionName in data){
+                    let f = data[functionName]
+                    if(typeof(f) == 'function'){
+                        if(!functionName.startsWith("ice_")){
+                            this[functionName] = (...args) => f(...args)
                         }
                     }
                 }
