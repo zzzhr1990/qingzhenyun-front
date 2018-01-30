@@ -17,7 +17,7 @@ class CommonRpc{
                 console.log(typeof(data["createUploadToken"]))
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
-                //this._inited = false..
+                //this._inited = false.
             }
 
         }).catch((ex)=>{
