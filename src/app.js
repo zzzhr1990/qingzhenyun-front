@@ -17,8 +17,8 @@ const ice = require('ice').Ice
 const communicator = ice.initialize(process.argv)
 const store = require('./app/ice/cloudstore').store
 rpc.cloudStoreRpc = new CommonRpc(communicator, "CloudStoreServiceHandler", store.CloudStoreServiceHandlerPrx)
-//const userfile = require('./app/ice/userfile').userfile
-//rpc.userFileRpc = new CommonRpc(communicator, userfile.UserFileServiceHandlerPrx)
+const user_file = require('./app/ice/userfile').userfile
+rpc.userFileRpc = new CommonRpc(communicator, user_file.UserFileServiceHandlerPrx)
 const user = require('./app/ice/userservice').user
 rpc.userRpc = new CommonRpc(communicator, "UserServiceHandler", user.UserServiceHandlerPrx)
 /** INIT RPCs **/
