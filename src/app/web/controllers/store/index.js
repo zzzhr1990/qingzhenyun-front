@@ -21,7 +21,7 @@ router.post('/token', (req, res) => {
         name = "qzy-upload-noname." + (new Date()).getTime().toString() + ".tmp"
     }
     // check file name and directory.
-    userFileRpc.couldCreateFile(parent, userId, name, CONSTANTS).then(cdata => {
+    userFileRpc.couldCreateFile(parent, userId, name, CONSTANTS.FILE_TYPE).then(cdata => {
         cloudStoreRpc.createUploadToken(userId, parent, name).then((result) => ResponseUtil.Ok(req, res, result))
             .catch((error) => {
                 if (error['innerCode']) {
