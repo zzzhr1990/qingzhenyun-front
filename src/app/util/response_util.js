@@ -96,7 +96,7 @@ class ResponseUtil {
             if (ResponseUtil.isObj(value)) {
                 //
                 if (ResponseUtil.needConvert(value)) {
-                    obj[key] = ResponseUtil.long2Number(value)
+                    obj[key] = IceUtil.iceLong2Number(value)
                 }
                 else {
                     obj[key] = ResponseUtil.preProcessObject(value)
