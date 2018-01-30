@@ -73,7 +73,7 @@ app.use(jwt({
         return null
     }
 })
-    .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout'] }))
+    .unless({ path: ['/v1/user/login', '/v1/user/register', '/v1/user/check', '/v1/user/logout', '/v1/store/callback/wcs'] }))
 // common config
 app.use(logger('dev'))
 app.use(cookieParser())
@@ -84,18 +84,18 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 const USER_VERSION = 1
 app.use((req, res, next) => {
-    if(req.user){
-        if(req.user.version != USER_VERSION){
+    if (req.user) {
+        if (req.user.version != USER_VERSION) {
             var err = new ApiException('User JWT version not match. please login again', 401, 'USER_VERSION_NOT_MATCH')
             //console.log(req.user)
             next(err)
-        }else{
+        } else {
             next()
         }
-    }else{
+    } else {
         next()
     }
-    
+
 })
 // controller
 app.use('/v1', require('./app/web/controllers'))
