@@ -1,14 +1,11 @@
 const Ice = require("ice").Ice
-const ICE = require('../const/constants').ICE
+//const ICE = require('../const/constants').ICE
 
 class CommonRpc{
-    constructor(adapterName,prx){
-        if(!ICE){
-            console.error("ICE not initialized")
-            return
-        }
+    constructor(ice,adapterName,prx){
+        
         // check
-        let base = ICE.stringToProxy(adapterName)
+        let base = ice.stringToProxy(adapterName)
         prx.checkedCast(base).then(data => {
             //get sth..
             if(data != null){
