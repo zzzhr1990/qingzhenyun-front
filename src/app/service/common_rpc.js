@@ -3,8 +3,6 @@ const Ice = require("ice").Ice
 
 class CommonRpc{
     constructor(ice,adapterName,prx){
-        
-        // check
         let base = ice.stringToProxy(adapterName)
         prx.checkedCast(base).then(data => {
             //get sth..
@@ -20,7 +18,6 @@ class CommonRpc{
                 }
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
-                //this._inited = false.
             }
 
         }).catch((ex)=>{
