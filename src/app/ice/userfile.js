@@ -252,7 +252,10 @@
         [
             userfile.FileOperationException
         ], , true],
-        "couldCreateFile": [, , , , [1], [[7], [4], [7], [3]], , , , ],
+        "couldCreateFile": [, , , , [1], [[7], [4], [7], [3]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
         "createUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7], [7], [4], [7], [3]], , , , true],
         "move": [, , , , [3], [[7], [7], [4]], ,
         [
