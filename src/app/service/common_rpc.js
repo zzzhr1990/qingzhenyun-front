@@ -12,14 +12,11 @@ class CommonRpc{
         prx.checkedCast(base).then(data => {
             //get sth..
             if(data != null){
-                //this._inited = true
                 console.log('%s comfirmed.',adapterName)
-                //console.log(typeof(data["createUploadToken"]))
                 for(let xx in data){
                     let v = data[xx]
                     if(typeof(v) == 'function'){
                         if(!xx.startsWith("ice_")){
-                            //console.log(xx)
                             CommonRpc.prototype[xx] = (...args) => data[xx](...args)
                         }
                     }
