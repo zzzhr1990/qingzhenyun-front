@@ -2,6 +2,7 @@ const ApiException = require('../exception/api_exception')
 const jwt = require('jsonwebtoken')
 const Constants = require('../const/constants')
 const Long = require('ice').Ice.Long
+const IceUtil = require('./ice_util')
 class ResponseUtil {
     static Ok(req, res, data) {
         ResponseUtil.json(req, res, { status: 200, result: data, code: "OK", success: true })
@@ -85,14 +86,10 @@ class ResponseUtil {
         return typeof (obj)['high'] === 'number' && typeof (obj)['low'] === 'number'
     }
 
-    static long2Number(obj) {
-        return (new Long(obj['high'], obj['low'])).toNumber()
-    }
-
     static preProcessObject(obj) {
         if (!ResponseUtil.isObj(obj)) return obj
         if (ResponseUtil.needConvert(obj)) {
-            return ResponseUtil.long2Number(obj)
+            return IceUtil.iceLong2Number(obj)
         }
         for (let key of Object.keys(obj)) {
             let value = obj[key]
