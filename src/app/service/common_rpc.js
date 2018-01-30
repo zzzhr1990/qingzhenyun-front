@@ -16,8 +16,12 @@ class CommonRpc{
                 console.log('%s comfirmed.',adapterName)
                 //console.log(typeof(data["createUploadToken"]))
                 for(let xx in data){
-                    console.log(xx)
-                    console.log(typeof(data[xx]))
+                    let v = data[xx]
+                    if(typeof(v) == 'function'){
+                        if(!xx.startsWith("ice_")){
+                            console.log(xx)
+                        }
+                    }
                 }
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
