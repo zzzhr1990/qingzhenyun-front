@@ -17,6 +17,7 @@ class CommonRpc{
                 console.log(typeof(data["createUploadToken"]))
                 for(let xx in data){
                     console.log(xx)
+                    console.log(data[xx])
                 }
             }else{
                 console.log('%s failed.(Server responses null)',adapterName)
