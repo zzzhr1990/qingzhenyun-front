@@ -50,6 +50,28 @@ class ResponseUtil {
         //res.json({ status: 200, result: data, code: "OK", success: true })
     }
 
+    static ApiErrorAsOk(req, res, err) {
+        if (!err) {
+            ResponseUtil.Ok(req, res, err)
+            return
+        }
+        if (!err["supress"]) {
+            console.error(err.stack)
+        }
+        //let status = err.status || 500
+        //res.status(status)
+        let data = { success: false, message: err.message }
+        if (err['code']) {
+            data.code = err["code"]
+        } else {
+            data.code = 'INTERNAL_SERVER_ERROR'
+        }
+        data.status = status
+        ResponseUtil.json(req, res, data)
+        //throw new ApiException('Internal Server Error', undefined, undefined, false)
+        //res.json({ status: 200, result: data, code: "OK", success: true })
+    }
+
     static json(req, res, data) {
         if (req.user) {
             //Sign And put
