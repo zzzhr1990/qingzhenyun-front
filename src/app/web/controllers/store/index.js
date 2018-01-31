@@ -45,7 +45,26 @@ router.post('/callback/wcs', (req, res) => {
     cloudStoreRpc.uploadFile(req.body.callbackBody).then(data => {
         //
         // result = { 'callbackTime': (new Date()).getTime }
-        res.json(data)
+        //res.json(data)
+        // createUserFile(string parent,long userId,string name,string storeId,long size,string mime,int fileType);
+        let names = data.originalFilename.split("|@qzy_inner@|")
+        let parent = names[0]
+        let name = names[1]
+        let userId = data.uploadUser
+        let storeId = data.fileHash
+        let size = data.fileSize
+        let mime = data.mime
+        let fileType = 0
+        userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, fileType).then(fileData => {
+            ResponseUtil.Ok(req, res, fileData)
+        }).catch(fileError => {
+            if (fileError['innerCode']) {
+                ResponseUtil.ApiError(req, res, new ApiException(fileError['innerMessage'], 400, fileError['innerMessage']))
+            } else {
+                ResponseUtil.Error(req, res, fileError)
+            }
+        })
+
     }).catch(error => {
         if (error['innerCode']) {
             ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
