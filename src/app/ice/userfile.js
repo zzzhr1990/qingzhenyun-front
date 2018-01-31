@@ -256,7 +256,10 @@
         [
             userfile.FileOperationException
         ], , ],
-        "createUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7], [7], [4], [7], [3]], , , , true],
+        "createUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7], [7], [4], [7], [3]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
         "move": [, , , , [3], [[7], [7], [4]], ,
         [
             userfile.FileOperationException
