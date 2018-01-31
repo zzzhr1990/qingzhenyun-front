@@ -58,7 +58,7 @@ class ResponseUtil {
         if (!err["supress"]) {
             console.error(err.stack)
         }
-        //let status = err.status || 500
+        let status = err.status || 500
         //res.status(status)
         let data = { success: false, message: err.message }
         if (err['code']) {
