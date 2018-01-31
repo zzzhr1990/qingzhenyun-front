@@ -103,6 +103,67 @@
 
     Slice.defineStruct(store.CloudStoreTokenResponse, true, true);
 
+    store.CloudStoreResponse = class
+    {
+        constructor(fileHash = "", fileSize = new Ice.Long(0, 0), mime = "", uploadUser = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), originalFilename = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, previewAddon = "", uploadIp = "", flag = 0)
+        {
+            this.fileHash = fileHash;
+            this.fileSize = fileSize;
+            this.mime = mime;
+            this.uploadUser = uploadUser;
+            this.ctime = ctime;
+            this.originalFilename = originalFilename;
+            this.fileBucket = fileBucket;
+            this.fileKey = fileKey;
+            this.storeType = storeType;
+            this.preview = preview;
+            this.previewAddon = previewAddon;
+            this.uploadIp = uploadIp;
+            this.flag = flag;
+        }
+
+        _write(ostr)
+        {
+            ostr.writeString(this.fileHash);
+            ostr.writeLong(this.fileSize);
+            ostr.writeString(this.mime);
+            ostr.writeLong(this.uploadUser);
+            ostr.writeLong(this.ctime);
+            ostr.writeString(this.originalFilename);
+            ostr.writeString(this.fileBucket);
+            ostr.writeString(this.fileKey);
+            ostr.writeInt(this.storeType);
+            ostr.writeInt(this.preview);
+            ostr.writeString(this.previewAddon);
+            ostr.writeString(this.uploadIp);
+            ostr.writeInt(this.flag);
+        }
+
+        _read(istr)
+        {
+            this.fileHash = istr.readString();
+            this.fileSize = istr.readLong();
+            this.mime = istr.readString();
+            this.uploadUser = istr.readLong();
+            this.ctime = istr.readLong();
+            this.originalFilename = istr.readString();
+            this.fileBucket = istr.readString();
+            this.fileKey = istr.readString();
+            this.storeType = istr.readInt();
+            this.preview = istr.readInt();
+            this.previewAddon = istr.readString();
+            this.uploadIp = istr.readString();
+            this.flag = istr.readInt();
+        }
+
+        static get minWireSize()
+        {
+            return  43;
+        }
+    };
+
+    Slice.defineStruct(store.CloudStoreResponse, true, true);
+
     const iceC_store_CloudStoreServiceHandler_ids = [
         "::Ice::Object",
         "::store::CloudStoreServiceHandler"
@@ -119,6 +180,10 @@
     Slice.defineOperations(store.CloudStoreServiceHandler, store.CloudStoreServiceHandlerPrx, iceC_store_CloudStoreServiceHandler_ids, 1,
     {
         "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
+        "uploadFile": [, , , , [store.CloudStoreResponse], [[7]], ,
         [
             store.RemoteOperationFailedException
         ], , ]
