@@ -58,18 +58,20 @@ router.post('/callback/wcs', (req, res) => {
         userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, fileType).then(fileData => {
             ResponseUtil.Ok(req, res, fileData)
         }).catch(fileError => {
+            console.log(fileError)
             if (fileError['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(fileError['innerMessage'], 400, fileError['innerMessage']))
+                ResponseUtil.Ok(req, res, new ApiException(fileError['innerMessage'], 400, fileError['innerMessage']))
             } else {
-                ResponseUtil.Error(req, res, fileError)
+                ResponseUtil.Ok(req, res, fileError)
             }
         })
 
     }).catch(error => {
+        console.log(error)
         if (error['innerCode']) {
-            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+            ResponseUtil.Ok(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
         } else {
-            ResponseUtil.Error(req, res, error)
+            ResponseUtil.Ok(req, res, error)
         }
     })
 
