@@ -41,8 +41,19 @@ router.post('/token', (req, res) => {
 
 router.post('/callback/wcs', (req, res) => {
     console.log('WCS Callback %s', req.body.callbackBody)
-    result = { 'callbackTime': (new Date()).getTime }
-    res.json(result)
+    // save file
+    cloudStoreRpc.uploadFile(req.body.callbackBody).then(data => {
+        //
+        // result = { 'callbackTime': (new Date()).getTime }
+        res.json(data)
+    }).catch(error => {
+        if (error['innerCode']) {
+            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+        } else {
+            ResponseUtil.Error(req, res, error)
+        }
+    })
+
 })
 
 module.exports = router
