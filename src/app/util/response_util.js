@@ -23,7 +23,7 @@ class ResponseUtil {
             console.error(error)
         }
         res.status(500)
-        ResponseUtil.json(req, res, { status: 500, code: "INTERAL_ERROR", success: false })
+        ResponseUtil.json(req, res, { status: 500, code: "INTERNAL_ERROR", success: false })
         //throw new ApiException('Internal Server Error', undefined, undefined, false)
         //res.json({ status: 200, result: data, code: "OK", success: true })
     }
