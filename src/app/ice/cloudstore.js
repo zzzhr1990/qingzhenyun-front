@@ -164,6 +164,52 @@
 
     Slice.defineStruct(store.CloudStoreResponse, true, true);
 
+    store.PreviewTaskResponse = class
+    {
+        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, actionTime = new Ice.Long(0, 0))
+        {
+            this.taskId = taskId;
+            this.fileHash = fileHash;
+            this.mime = mime;
+            this.fileBucket = fileBucket;
+            this.fileKey = fileKey;
+            this.storeType = storeType;
+            this.preview = preview;
+            this.actionTime = actionTime;
+        }
+
+        _write(ostr)
+        {
+            ostr.writeLong(this.taskId);
+            ostr.writeString(this.fileHash);
+            ostr.writeString(this.mime);
+            ostr.writeString(this.fileBucket);
+            ostr.writeString(this.fileKey);
+            ostr.writeInt(this.storeType);
+            ostr.writeInt(this.preview);
+            ostr.writeLong(this.actionTime);
+        }
+
+        _read(istr)
+        {
+            this.taskId = istr.readLong();
+            this.fileHash = istr.readString();
+            this.mime = istr.readString();
+            this.fileBucket = istr.readString();
+            this.fileKey = istr.readString();
+            this.storeType = istr.readInt();
+            this.preview = istr.readInt();
+            this.actionTime = istr.readLong();
+        }
+
+        static get minWireSize()
+        {
+            return  28;
+        }
+    };
+
+    Slice.defineStruct(store.PreviewTaskResponse, true, true);
+
     const iceC_store_CloudStoreServiceHandler_ids = [
         "::Ice::Object",
         "::store::CloudStoreServiceHandler"
@@ -184,6 +230,14 @@
             store.RemoteOperationFailedException
         ], , ],
         "uploadFile": [, , , , [store.CloudStoreResponse], [[7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
+        "updateFilePreviewStatus": [, , , , [store.CloudStoreResponse], [[4], [7], [7], [3], [7], [7], [7], [3]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
+        "fetchPreviewTask": [, , , , [store.PreviewTaskResponse], [[3], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ]
