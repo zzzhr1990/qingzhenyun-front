@@ -252,6 +252,10 @@
         [
             userfile.FileOperationException
         ], , true],
+        "rename": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
         "couldCreateFile": [, , , , [1], [[7], [4], [7], [3]], ,
         [
             userfile.FileOperationException
