@@ -51,6 +51,28 @@ router.post('/move', (req, res) => {
         })
 })
 
+router.post('/rename', (req, res) => {
+    var uuid = req.body['uuid']
+    if (!uuid) {
+        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+    }
+    let userId = req.user.uuid
+    var name = req.body['name']
+    if (!name) {
+        throw new ApiValidateException("File name required", '{NAME}_REQUIRED')
+    }
+
+    //get
+    userFileService.rename(uuid, userId, name).then((result) => ResponseUtil.Ok(req, res, result))
+        .catch((error) => {
+            if (error['innerCode']) {
+                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+            } else {
+                ResponseUtil.Error(req, res, error)
+            }
+        })
+})
+
 router.post('/recycle', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     if (!uuid) {
