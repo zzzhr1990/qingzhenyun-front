@@ -17,12 +17,13 @@ router.post('/list', (req, res) => {
 
 router.post('/get', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
-    if (!uuid) {
+    var name = req.body['name'] ? req.body['name'] + '' : ''
+    if (!uuid && !name) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     //get
-    userFileService.get(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.get(uuid, userId, name).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))

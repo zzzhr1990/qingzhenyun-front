@@ -248,7 +248,7 @@
         [
             userfile.FileOperationException
         ], , true],
-        "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4]], ,
+        "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4], [7]], ,
         [
             userfile.FileOperationException
         ], , true],
