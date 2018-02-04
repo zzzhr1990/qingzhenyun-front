@@ -166,7 +166,7 @@
 
     store.PreviewTaskResponse = class
     {
-        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, actionTime = new Ice.Long(0, 0))
+        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, previewType = 0, actionTime = new Ice.Long(0, 0))
         {
             this.taskId = taskId;
             this.fileHash = fileHash;
@@ -175,6 +175,7 @@
             this.fileKey = fileKey;
             this.storeType = storeType;
             this.preview = preview;
+            this.previewType = previewType;
             this.actionTime = actionTime;
         }
 
@@ -187,6 +188,7 @@
             ostr.writeString(this.fileKey);
             ostr.writeInt(this.storeType);
             ostr.writeInt(this.preview);
+            ostr.writeInt(this.previewType);
             ostr.writeLong(this.actionTime);
         }
 
@@ -199,12 +201,13 @@
             this.fileKey = istr.readString();
             this.storeType = istr.readInt();
             this.preview = istr.readInt();
+            this.previewType = istr.readInt();
             this.actionTime = istr.readLong();
         }
 
         static get minWireSize()
         {
-            return  28;
+            return  32;
         }
     };
 
@@ -233,11 +236,11 @@
         [
             store.RemoteOperationFailedException
         ], , ],
-        "updateFilePreviewStatus": [, , , , [store.CloudStoreResponse], [[4], [7], [7], [3], [7], [7], [7], [3]], ,
+        "updateFilePreviewStatus": [, , , , [store.CloudStoreResponse], [[4], [7], [7], [3], [7], [7], [7], [3], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ],
-        "fetchPreviewTask": [, , , , [store.PreviewTaskResponse], [[3], [3]], ,
+        "fetchPreviewTask": [, , , , [store.PreviewTaskResponse], [[3], [3], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ]
