@@ -122,7 +122,7 @@ router.post('/page', (req, res) => {
     }
 
     let userId = req.user.uuid
-    userFileService.listDirectoryPage(parent, userId, type, 0, page, pageSize).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.listDirectoryPage(parent, userId, 0, 0, page, pageSize).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
