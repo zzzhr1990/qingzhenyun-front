@@ -236,7 +236,7 @@
 
     Slice.defineOperations(userfile.UserFileServiceHandler, userfile.UserFileServiceHandlerPrx, iceC_userfile_UserFileServiceHandler_ids, 1,
     {
-        "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [4], [3], [3], [3]], ,
+        "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [4], [3], [3], [3], [3]], ,
         [
             userfile.FileOperationException
         ], , true],
