@@ -117,7 +117,7 @@ router.post('/page', (req, res) => {
         parent = ''
     }
     var type = parseInt(req.body['type'])
-    if (type == NaN) {
+    if (isNaN(type)) {
         type = -1
     }
     console.log(type)
