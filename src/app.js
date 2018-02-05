@@ -125,6 +125,9 @@ app.use((req, res, next) => {
 app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
     var data = '';
     //req.setEncoding('utf8');
+    req.on('data', (chunk)=>{
+        console.log("chunk")
+    })
     req.on('end', data => {
         console.log("OM")
         next()
