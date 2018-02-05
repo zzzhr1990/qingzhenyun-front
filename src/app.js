@@ -108,7 +108,7 @@ app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
     });
 
     req.on('end', function () {
-        req.body = data;
+        //req.body = data;
         console.log('end..')
         next();
     });
