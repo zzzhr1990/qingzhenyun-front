@@ -101,20 +101,7 @@ app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
 
-app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
-    var data = '';
-    //req.setEncoding('utf8');
-    req.on('data', (chunk) => {
-        console.log("chunk")
-        console.log(typeof(chunk))
-    })
-    req.on('end', data => {
-        console.log("OM")
-
-    }
-    )
-    next()
-});
+app.use('/v1/store/callback/wcsm3u8',bodyParser.text());
 
 // parser json to object
 // app.use(bodyParser.text())
