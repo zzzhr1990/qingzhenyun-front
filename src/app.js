@@ -100,10 +100,22 @@ app.use(jwt({
 app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
+app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
+    var data = '';
+    req.setEncoding('utf8');
+    req.on('data', function (chunk) {
+        data += chunk;
+    });
+
+    req.on('end', function () {
+        req.body = data;
+        next();
+    });
+}, '');
 // parser json to object
 // app.use(bodyParser.text())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json()).unless({ path: ['/v1/store/callback/wcsm3u8'] })
+app.use(bodyParser.urlencoded({ extended: false })).unless({ path: ['/v1/store/callback/wcsm3u8'] })
 const USER_VERSION = 1
 app.use((req, res, next) => {
     if (req.user) {
