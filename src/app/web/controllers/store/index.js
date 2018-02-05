@@ -41,6 +41,7 @@ router.post('/token', (req, res) => {
 
 router.post('/callback/wcsm3u8', (req, res) => {
     console.log('WCS m3u8 Callback %s', req.body)
+    ResponseUtil.Ok(req,res,{})
 })
 
 router.post('/callback/wcs', (req, res) => {
