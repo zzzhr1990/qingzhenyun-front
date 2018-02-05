@@ -102,7 +102,7 @@ app.use(cookieParser())
 app.use(helmet())
 app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
     var data = '';
-    req.setEncoding('utf8');
+    //req.setEncoding('utf8');
     req.on('data', function (chunk) {
         data += chunk;
     });
