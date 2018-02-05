@@ -106,6 +106,7 @@ app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
     //req.setEncoding('utf8');
     req.on('data', (chunk) => {
         console.log("chunk")
+        console.log(typeof(chunk))
     })
     req.on('end', data => {
         console.log("OM")
