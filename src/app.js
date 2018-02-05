@@ -114,8 +114,8 @@ app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
 });
 // parser json to object
 // app.use(bodyParser.text())
-app.use(bodyParser.json()).unless({ path: ['/v1/store/callback/wcsm3u8'] })
-app.use(bodyParser.urlencoded({ extended: false })).unless({ path: ['/v1/store/callback/wcsm3u8'] })
+app.use(bodyParser.json().unless({ path: ['/v1/store/callback/wcsm3u8'] }))
+app.use(bodyParser.urlencoded({ extended: false }).unless({ path: ['/v1/store/callback/wcsm3u8'] }))
 const USER_VERSION = 1
 app.use((req, res, next) => {
     if (req.user) {
