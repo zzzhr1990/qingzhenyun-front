@@ -102,6 +102,7 @@ app.use(cookieParser())
 app.use(helmet())
 
 app.use('/v1/store/callback/wcsm3u8',bodyParser.text());
+app.use('/v1/store/callback/wcsm3u8',bodyParser.raw());
 
 // parser json to object
 // app.use(bodyParser.text())
