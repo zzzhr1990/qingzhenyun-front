@@ -9,6 +9,7 @@ let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
 
 
+
 router.post('/token', (req, res) => {
     let userId = req.user.uuid
 
@@ -40,18 +41,11 @@ router.post('/token', (req, res) => {
 })
 
 router.post('/callback/wcsm3u8', (req, res) => {
-    var data = ""
-    req.on('data', function (chunk) {
-        data += chunk;
-    });
-
-    req.on('end', function () {
-        //req.body = data;
-        console.log('end..')
-        //next();
-    });
-    console.log('WCS m3u8 Callback')
-    console.log(req.body)
+    if(!req.body){
+        console.warn("Wcs callback empty.")
+    }
+    jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
+    console.log(jsonStr)
     ResponseUtil.Ok(req, res, {})
 })
 
