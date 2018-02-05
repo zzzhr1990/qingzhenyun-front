@@ -111,7 +111,7 @@ app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
         req.body = data;
         next();
     });
-}, '');
+});
 // parser json to object
 // app.use(bodyParser.text())
 app.use(bodyParser.json()).unless({ path: ['/v1/store/callback/wcsm3u8'] })
