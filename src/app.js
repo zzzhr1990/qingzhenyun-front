@@ -100,19 +100,13 @@ app.use(jwt({
 app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
+/*
 app.use('/v1/store/callback/wcsm3u8', (req, res, next) => {
     var data = '';
     //req.setEncoding('utf8');
-    req.on('data', function (chunk) {
-        data += chunk;
-    });
-
-    req.on('end', function () {
-        //req.body = data;
-        console.log('end..')
-        next();
-    });
+    
 });
+*/
 // parser json to object
 // app.use(bodyParser.text())
 app.use(bodyParser.json())
