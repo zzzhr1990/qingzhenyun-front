@@ -39,6 +39,10 @@ router.post('/token', (req, res) => {
     })
 })
 
+router.post('/callback/wcsm3u8', (req, res) => {
+    console.log('WCS m3u8 Callback %s', req.body)
+})
+
 router.post('/callback/wcs', (req, res) => {
     console.log('WCS Callback %s', req.body.callbackBody)
     // save file
