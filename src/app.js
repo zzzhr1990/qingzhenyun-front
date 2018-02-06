@@ -91,7 +91,8 @@ app.use(jwt({
                 '/v1/user/check',
                 '/v1/user/logout',
                 '/v1/store/callback/wcs',
-                '/v1/store/callback/wcsm3u8'
+                '/v1/store/callback/wcsm3u8',
+                '/v1/store/play'
             ]
     }
     )
