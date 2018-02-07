@@ -91,8 +91,8 @@ app.use(jwt({
                 '/v1/user/check',
                 '/v1/user/logout',
                 '/v1/store/callback/wcs',
+                /^\/v1\/store\/callback\/wcsm3u8\/.*/,
                 '/v1/store/callback/wcsm3u8',
-                '/v1/store/callback/wcsm3u8/*',
                 '/v1/store/play',
                 /^\/v1\/store\/play\/.*/
             ]
@@ -105,6 +105,7 @@ app.use(cookieParser())
 app.use(helmet())
 
 app.use('/v1/store/callback/wcsm3u8',bodyParser.text());
+app.use(/^\/v1\/store\/callback\/wcsm3u8\/.*/,bodyParser.text());
 //app.use('/v1/store/callback/wcsm3u8',bodyParser.raw());
 
 // parser json to object
