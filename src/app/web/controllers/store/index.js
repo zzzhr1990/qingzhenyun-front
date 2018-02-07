@@ -1,3 +1,5 @@
+import { error } from 'util';
+
 const express = require('express')
 const router = express.Router()
 const ApiException = require('../../../exception/api_exception')
@@ -127,6 +129,44 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         console.log(error)
     }
     ResponseUtil.Ok(req, res, {})
+})
+
+router.get('/play/:encoded', (req, res) => {
+    var key = "2033a59f29d8750"
+    try {
+        let encode = JSON.parse(
+            AwesomeBase64.decode(req.params.encoded)
+                .toString('utf8')
+        )
+        fileHash = encode['hash']
+        cloudStoreRpc.getFile(storeId).then(fileData => {
+            let previewAddon = fileData['previewAddon']
+            let preview = fileData['preview']
+            if (preview != 100) {
+                res.send(key)
+                return
+            }
+            var decodeObj = {}
+            try {
+                decodeObj = JSON.parse(previewAddon)
+            } catch (err) {
+                console.error(err)
+                res.send(key)
+                return
+            }
+            if(decodeObj['encodeKey']){
+                key = decodeObj['encodeKey']
+            }
+            res.send(key)
+        }).catch(error => {
+            console.error(error)
+            res.send(key)
+        })
+    }
+    catch (error) {
+        console.error(error)
+        res.send(key)
+    }
 })
 
 router.get('/play', (req, res) => {
