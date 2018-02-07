@@ -54,8 +54,9 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         console.warn("Wcs callback empty.")
     }
     let encode = AwesomeBase64.decode(req.params.encoded).toString('utf8')
+    let callback = AwesomeBase64.decode(req.body).toString('utf8')
     //jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
-    console.log(req.body)
+    console.log(callback)
     console.log(encode)
     ResponseUtil.Ok(req, res, {})
 })
