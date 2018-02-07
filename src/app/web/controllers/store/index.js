@@ -73,7 +73,8 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let wcsTaskId = callback['id']
         let callbackCode = callback['id']
         if (callbackCode != 3) {
-            console.error("Task %s failed convert. info %s", taskId, JSON.stringify(callback))
+            console.error("Task %s failed convert(code %s). info %s",
+                taskId, code, JSON.stringify(callback))
         }
         let previewData = {
             'taskId': taskId,
@@ -84,7 +85,9 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let videos = []
         for (let single of callback["items"]) {
             if (single["code"] != "3" && single['key']) {
-                console.error("Task piece %s failed convert. info %s", taskId, JSON.stringify(single))
+                console.error("Task piece %s failed convert.code %s info %s",
+                 taskId, single["code"],
+                 JSON.stringify(single))
             } else {
                 success = true
                 let duration = parseFloat(single["duration"])
@@ -113,10 +116,10 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let previewAddonData = JSON.stringify(previewData)
         // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
         cloudStoreRpc.updatePreviewTaskStatus(IceUtil.number2IceLong(taskId), fileHash, successCode, previewType, previewAddonData).then(data => {
-            if(data['fileHash']!=fileHash){
-                console.error("%s file hash does not match.",taskId)
+            if (data['fileHash'] != fileHash) {
+                console.error("%s file hash does not match.", taskId)
             }
-        }).catch(error=>{
+        }).catch(error => {
             console.error(error)
         })
 
