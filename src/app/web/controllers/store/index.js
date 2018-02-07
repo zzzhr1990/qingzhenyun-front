@@ -8,7 +8,7 @@ const IceUtil = require('../../../util/ice_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
-const AwesomeBase64 = require('awesome-urlsafe-base64');
+const AwesomeBase64 = require('awesome-urlsafe-base64')
 
 
 router.post('/token', (req, res) => {
