@@ -50,7 +50,7 @@ router.post('/video', (req, res) => {
             var decodeObj = {}
             try {
                 decodeObj = JSON.parse(previewAddon)
-            } catch{
+            } catch(err) {
                 ResponseUtil.ApiError(req, res, new ApiException("PREVIEW_NOT_SUCCESS",
                     400,
                     "PREVIEW_NOT_SUCCESS")
