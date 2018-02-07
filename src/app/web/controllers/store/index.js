@@ -131,6 +131,7 @@ router.get('/play', (req, res) => {
     let callback = JSON.parse(dat)
     var success = false
     let videos = []
+    var durationCount = 0
     for (let single of callback["items"]) {
         if (single["code"] != "3" && single['key']) {
             console.error("Task piece %s failed convert. info %s", taskId, JSON.stringify(single))
