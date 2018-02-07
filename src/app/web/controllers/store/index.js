@@ -49,6 +49,16 @@ router.post('/callback/wcsm3u8', (req, res) => {
     ResponseUtil.Ok(req, res, {})
 })
 
+router.post('/callback/wcsm3u8/:encoded', (req, res) => {
+    if(!req.body){
+        console.warn("Wcs callback empty.")
+    }
+    //jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
+    console.log(req.body)
+    console.log(req.params.encoded)
+    ResponseUtil.Ok(req, res, {})
+})
+
 router.get('/play', (req, res) => {
     //console.log(res.format())
     res.send("1234567890123456")
