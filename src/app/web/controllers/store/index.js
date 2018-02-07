@@ -86,8 +86,8 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         for (let single of callback["items"]) {
             if (single["code"] != "3" && single['key']) {
                 console.error("Task piece %s failed convert.code %s info %s",
-                 taskId, single["code"],
-                 JSON.stringify(single))
+                    taskId, single["code"],
+                    JSON.stringify(single))
             } else {
                 success = true
                 let duration = parseFloat(single["duration"])
