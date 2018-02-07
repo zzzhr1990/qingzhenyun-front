@@ -84,7 +84,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let videos = []
         for (let single of callback["items"]) {
             if (single["code"] != "3" && single['key']) {
-                console.error("Task %s failed convert. info %s", taskId, JSON.stringify(single))
+                console.error("Task piece %s failed convert. info %s", taskId, JSON.stringify(single))
             } else {
                 success = true
                 let duration = parseFloat(single["duration"])
