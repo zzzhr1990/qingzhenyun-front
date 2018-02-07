@@ -94,7 +94,7 @@ app.use(jwt({
                 '/v1/store/callback/wcsm3u8',
                 '/v1/store/callback/wcsm3u8/*',
                 '/v1/store/play',
-                '/v1/store/play/*'
+                /^\/\v1\/store\/play\/.*/
             ]
     }
     )
