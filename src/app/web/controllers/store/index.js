@@ -12,7 +12,6 @@ const AwesomeBase64 = require('awesome-urlsafe-base64');
 
 router.post('/token', (req, res) => {
     let userId = req.user.uuid
-
     var name = req.body.name
     var parent = req.body.parent
     if (!parent) {
@@ -41,7 +40,7 @@ router.post('/token', (req, res) => {
 })
 
 router.post('/callback/wcsm3u8', (req, res) => {
-    if(!req.body){
+    if (!req.body) {
         console.warn("Wcs callback empty.")
     }
     jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
@@ -50,12 +49,79 @@ router.post('/callback/wcsm3u8', (req, res) => {
 })
 
 router.post('/callback/wcsm3u8/:encoded', (req, res) => {
-    if(!req.body){
+    if (!req.body) {
         console.warn("Wcs callback empty.")
     }
-    let encode = AwesomeBase64.decode(req.params.encoded).toString('utf8')
-    let callback = AwesomeBase64.decode(req.body).toString('utf8')
+
     //jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
+    try {
+        let encode = JSON.parse(
+            AwesomeBase64.decode(req.params.encoded)
+                .toString('utf8')
+        )
+        let callback = JSON.parse(
+            AwesomeBase64.decode(req.body).toString('utf8')
+        )
+        // generate play info
+        let taskId = encode['task_id']
+        let maxReslov = encode['reslov']
+        let fileHash = encode['hash']
+        let fileBucket = encode['hash']
+        let encodeKey = encode['key']
+        var success = false
+        let wcsTaskId = callback['id']
+        let callbackCode = callback['id']
+        if (callbackCode != 3) {
+            console.error("Task %s failed convert. info %s", taskId, JSON.stringify(callback))
+        }
+        let previewData = {
+            'taskId': taskId,
+            'maxClear': maxReslov,
+            'encodeKey': encodeKey
+        }
+        var durationCount = 0
+        let videos = []
+        for (let single of callback["items"]) {
+            if (single["code"] != "3" && single['key']) {
+                console.error("Task %s failed convert. info %s", taskId, JSON.stringify(single))
+            } else {
+                success = true
+                let duration = parseFloat(single["duration"])
+                if (durationCount < duration) {
+                    durationCount = duration
+                }
+                let rawKey = single['key']
+                let idx = rawKey.indexOf(':')
+                let bucket = rawKey.substring(0, idx)
+                let key = rawKey.substring(idx + 1, rawKey.length)
+                let storeType = 0
+                let clear = rawKey.substring(rawKey.lastIndexOf('-') + 1, rawKey.lastIndexOf('.'))
+                videos.push({
+                    'duration': duration,
+                    'bucket': bucket,
+                    'key': key,
+                    'storeType': storeType,
+                    'clear': clear
+                })
+            }
+        }
+        previewData['duration'] = durationCount
+        previewData['video'] = videos
+        let successCode = success ? 100 : -100
+        let previewType = 38
+        let previewAddonData = JSON.stringify(previewData)
+        // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
+        cloudStoreRpc.updatePreviewTaskStatus(taskId, fileHash, successCode, previewType, previewAddonData).then(data => {
+            if(data['fileHash']!=fileHash){
+                console.error("%s file hash does not match.",taskId)
+            }
+        }).catch(error=>{
+            console.error(error)
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
     console.log(callback)
     console.log(encode)
     ResponseUtil.Ok(req, res, {})

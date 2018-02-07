@@ -248,7 +248,7 @@
         [
             store.RemoteOperationFailedException
         ], , ],
-        "updatePreviewTaskStatus": [, , , , [store.PreviewTaskResponse], [[4], [3], [3]], ,
+        "updatePreviewTaskStatus": [, , , , [store.PreviewTaskResponse], [[4], [7], [3], [3], [7]], ,
         [
             store.RemoteOperationFailedException
         ], , ]
