@@ -74,7 +74,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let callbackCode = callback['id']
         if (callbackCode != 3) {
             console.error("Task %s failed convert(code %s). info %s",
-                taskId, code, JSON.stringify(callback))
+                taskId, callbackCode, JSON.stringify(callback))
         }
         let previewData = {
             'taskId': taskId,
