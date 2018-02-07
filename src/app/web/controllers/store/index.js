@@ -136,8 +136,8 @@ router.get('/play/:encoded', (req, res) => {
             AwesomeBase64.decode(req.params.encoded)
                 .toString('utf8')
         )
-        fileHash = encode['hash']
-        cloudStoreRpc.getFile(storeId).then(fileData => {
+        let fileHash = encode['hash']
+        cloudStoreRpc.getFile(fileHash).then(fileData => {
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
             if (preview != 100) {
