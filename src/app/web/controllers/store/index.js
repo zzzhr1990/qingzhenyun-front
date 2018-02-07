@@ -131,6 +131,9 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
 
 router.get('/play/:encoded', (req, res) => {
     var key = "2033a59f29d8750"
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
