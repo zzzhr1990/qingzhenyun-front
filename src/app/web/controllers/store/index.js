@@ -4,6 +4,7 @@ const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
+const IceUtil = require('../../../util/ice_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
@@ -111,7 +112,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let previewType = 38
         let previewAddonData = JSON.stringify(previewData)
         // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
-        cloudStoreRpc.updatePreviewTaskStatus(taskId, fileHash, successCode, previewType, previewAddonData).then(data => {
+        cloudStoreRpc.updatePreviewTaskStatus(IceUtil.number2IceLong(taskId), fileHash, successCode, previewType, previewAddonData).then(data => {
             if(data['fileHash']!=fileHash){
                 console.error("%s file hash does not match.",taskId)
             }
@@ -122,8 +123,6 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     } catch (error) {
         console.log(error)
     }
-    console.log(callback)
-    console.log(encode)
     ResponseUtil.Ok(req, res, {})
 })
 
