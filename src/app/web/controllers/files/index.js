@@ -67,8 +67,11 @@ router.post('/download', (req, res) => {
             let fileKey = fileData['fileKey']
             let fileSize = fileData['fileSize']
             let mime = fileData['mime']
-            let userId = IceUtil.iceLong2Number(userId).toString()
-            let url = 'http://other.qiecdn.com/' + fileKey + '?key=' + time + '?userId=' + userId
+            let url = 'http://other.qiecdn.com/'
+                + fileKey
+                + '?key='
+                + time
+                + '?userId=' + IceUtil.iceLong2Number(userId).toString()
             let name = result['name']
             ResponseUtil.Ok(req, res, {
                 'fileSize': fileSize,
