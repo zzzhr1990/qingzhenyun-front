@@ -51,7 +51,7 @@ router.post('/callback/wcsm3u8', (req, res) => {
 
 router.get('/play', (req, res) => {
     //console.log(res.format())
-    res.send("123456789012345A")
+    res.send("1234567890123456")
 })
 
 router.post('/callback/wcs', (req, res) => {

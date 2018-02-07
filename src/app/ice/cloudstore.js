@@ -236,11 +236,19 @@
         [
             store.RemoteOperationFailedException
         ], , ],
+        "getFile": [, , , , [store.CloudStoreResponse], [[7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
         "updateFilePreviewStatus": [, , , , [store.CloudStoreResponse], [[4], [7], [7], [3], [7], [7], [7], [3], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ],
         "fetchPreviewTask": [, , , , [store.PreviewTaskResponse], [[3], [3], [3]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
+        "updatePreviewTaskStatus": [, , , , [store.PreviewTaskResponse], [[4], [3], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ]

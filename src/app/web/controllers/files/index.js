@@ -3,9 +3,11 @@ const router = express.Router()
 const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 const StringUtil = require('../../../util/string_util')
+const IceUtil = require('../../../util/ice_util')
 const ResponseUtil = require('../../../util/response_util')
 //let UserFileServiceRpc = require('../../../service/user_file')
 let userFileService = require('../../../const/rpc').userFileRpc
+let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let validator = require('validator')
 
 
@@ -31,6 +33,63 @@ router.post('/get', (req, res) => {
                 ResponseUtil.Error(req, res, error)
             }
         })
+})
+
+router.post('/download', (req, res) => {
+    var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
+    var name = req.body['name'] ? req.body['name'] + '' : ''
+    if (!uuid && !name) {
+        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+    }
+    let userId = req.user.uuid
+    //get
+    userFileService.get(uuid, userId, name).then((result) => {
+        // get file
+        //
+        let storeId = result["storeId"]
+        if (!storeId) {
+            if (result["type"] !== 0) {
+                ResponseUtil.ApiError(req, res,
+                    new ApiException("DOWNLOAD_DIRECTORY_NOT_SUPPORTED",
+                        400,
+                        "DOWNLOAD_DIRECTORY_NOT_SUPPORTED")
+                )
+                return
+            }
+            ResponseUtil.ApiError(req, res, new ApiException("FILE_NOT_FOUND",
+                400,
+                "FILE_NOT_FOUND")
+            )
+            return
+        }
+        cloudStoreRpc.getFile(storeId).then(fileData => {
+            let time = (new Date()).getTime().toString()
+            let fileKey = fileData['fileKey']
+            let fileSize = fileData['fileSize']
+            let mime = fileData['mime']
+            let userId = IceUtil.iceLong2Number(userId).toString()
+            let url = 'http://other.qiecdn.com/' + fileKey + '?key=' + time + '?userId=' + userId
+            let name = result['name']
+            ResponseUtil.Ok(req, res, {
+                'fileSize': fileSize,
+                'name': name,
+                'mime': mime,
+                'url': url
+            })
+        }).catch((error) => {
+            if (error['innerCode']) {
+                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+            } else {
+                ResponseUtil.Error(req, res, error)
+            }
+        })
+    }).catch((error) => {
+        if (error['innerCode']) {
+            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+        } else {
+            ResponseUtil.Error(req, res, error)
+        }
+    })
 })
 
 router.post('/move', (req, res) => {
