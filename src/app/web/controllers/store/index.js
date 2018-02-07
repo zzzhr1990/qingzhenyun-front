@@ -71,7 +71,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let encodeKey = encode['key']
         var success = false
         let wcsTaskId = callback['id']
-        let callbackCode = callback['id']
+        let callbackCode = callback['code']
         if (callbackCode != 3) {
             console.error("Task %s failed convert(code %s). info %s",
                 taskId, callbackCode, JSON.stringify(callback))
@@ -84,7 +84,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         var durationCount = 0
         let videos = []
         for (let single of callback["items"]) {
-            if (single["code"] != "3" && single['key']) {
+            if (single["code"] != "3" || !single['key']) {
                 console.error("Task piece %s failed convert.code %s info %s",
                     taskId, single["code"],
                     JSON.stringify(single))
@@ -165,7 +165,7 @@ router.get('/play', (req, res) => {
 })
 
 router.post('/callback/wcs', (req, res) => {
-    console.log('WCS Callback %s', req.body.callbackBody)
+    // console.log('WCS Callback %s', req.body.callbackBody)
     // save file
     cloudStoreRpc.uploadFile(req.body.callbackBody).then(data => {
         //
