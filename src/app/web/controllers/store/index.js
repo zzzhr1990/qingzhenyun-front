@@ -7,7 +7,7 @@ const ResponseUtil = require('../../../util/response_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
-
+const AwesomeBase64 = require('awesome-urlsafe-base64');
 
 
 router.post('/token', (req, res) => {
@@ -53,9 +53,10 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     if(!req.body){
         console.warn("Wcs callback empty.")
     }
+    let encode = AwesomeBase64.decode(req.params.encoded).toString('utf8')
     //jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
     console.log(req.body)
-    console.log(req.params.encoded)
+    console.log(encode)
     ResponseUtil.Ok(req, res, {})
 })
 
