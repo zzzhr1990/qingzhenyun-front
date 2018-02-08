@@ -260,7 +260,7 @@
         [
             userfile.FileOperationException
         ], , ],
-        "createUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7], [7], [4], [7], [3]], ,
+        "createUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7], [7], [4], [7], [3], [3]], ,
         [
             userfile.FileOperationException
         ], , true],

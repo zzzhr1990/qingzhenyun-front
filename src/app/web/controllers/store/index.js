@@ -133,7 +133,7 @@ router.get('/play/:encoded', (req, res) => {
     var key = "2033a59f29d8750"
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
@@ -155,7 +155,7 @@ router.get('/play/:encoded', (req, res) => {
                 res.send(key)
                 return
             }
-            if(decodeObj['encodeKey']){
+            if (decodeObj['encodeKey']) {
                 key = decodeObj['encodeKey']
             }
             res.send(key)
@@ -212,7 +212,6 @@ router.post('/callback/wcs', (req, res) => {
         //
         // result = { 'callbackTime': (new Date()).getTime }
         //res.json(data)
-        // createUserFile(string parent,long userId,string name,string storeId,long size,string mime,int fileType);
         let names = data.originalFilename.split("|@qzy_inner@|")
         let parent = names[0]
         let name = names[1]
@@ -220,8 +219,9 @@ router.post('/callback/wcs', (req, res) => {
         let storeId = data.fileHash
         let size = data.fileSize
         let mime = data.mime
+        let preview = data.preview
         let fileType = 0
-        userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, fileType).then(fileData => {
+        userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, preview, fileType).then(fileData => {
             ResponseUtil.Ok(req, res, fileData)
         }).catch(fileError => {
             if (fileError['innerCode']) {
