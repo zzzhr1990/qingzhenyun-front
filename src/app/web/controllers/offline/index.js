@@ -9,7 +9,7 @@ let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
 
-outer.post('/torrent', (req, res) => {
+router.post('/torrent', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     var path = req.body['path'] ? req.body['path'] + '' : ''
     if (!uuid && !path) {
