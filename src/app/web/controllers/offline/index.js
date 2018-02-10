@@ -58,6 +58,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         result['comment'] = parsedData['comment']
         result['files'] = parsedData['files']
         result['length'] = parsedData['length']
+        result['private'] = parsedData['private']
         ResponseUtil.Ok(req,res,result)
     }).catch(error => {
         console.error(error)
