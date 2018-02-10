@@ -50,7 +50,14 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
     fileSize = IceUtil.iceLong2Number(size)
     download(url).then(data => {
         //fs.writeFileSync('dist/foo.jpg', data)
-        ResponseUtil.Ok(req,res,parseTorrent(data))
+        let parsedData = parseTorrent(data);
+        let result = {}
+        result['infoHash'] = parsedData['infoHash']
+        result['files'] = parsedData['files']
+        result['name'] = parsedData['name']
+        result['comment'] = parsedData['comment']
+        result['files'] = parsedData['files']
+        ResponseUtil.Ok(req,res,result)
     }).catch(error => {
         console.error(error)
         ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))
