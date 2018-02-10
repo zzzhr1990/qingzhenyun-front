@@ -40,7 +40,7 @@ const getTorrentFileData = (req, res, fileHash) => {
             + fileKey
             + '?key='
             + time
-            + '&userId=' + IceUtil.iceLong2Number(userId).toString()
+            + '&userId=-1'
         //let name = result['name']
         downloadTorrentFile(req, res, fileHash, url, fileSize)
     }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
