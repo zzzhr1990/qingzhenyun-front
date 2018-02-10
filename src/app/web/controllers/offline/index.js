@@ -52,6 +52,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         //fs.writeFileSync('dist/foo.jpg', data)
         Response.Ok(req,res,parseTorrent(data))
     }).catch(error => {
+        console.error(error)
         ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))
     })
 }
