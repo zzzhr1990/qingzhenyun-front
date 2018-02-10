@@ -19,7 +19,7 @@ router.post('/torrent', (req, res) => {
     //get
     userFileRpc.get(uuid, userId, path).then((result) => {
         // first,try to parse.
-        getTorrentFile(req, res, fileData)
+        getTorrentFile(req, res, result)
     }).catch(error => {
         ResponseUtil.RenderStandardRpcError(req, res, error)
     })
