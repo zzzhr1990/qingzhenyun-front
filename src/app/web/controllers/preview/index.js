@@ -12,13 +12,13 @@ const AwesomeBase64 = require('awesome-urlsafe-base64')
 
 router.post('/video', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
-    var name = req.body['name'] ? req.body['name'] + '' : ''
-    if (!uuid && !name) {
+    var path = req.body['path'] ? req.body['path'] + '' : ''
+    if (!uuid && !path) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     //get
-    userFileRpc.get(uuid, userId, name).then((result) => {
+    userFileRpc.get(uuid, userId, path).then((result) => {
         // get file
         //
         let storeId = result["storeId"]
@@ -50,7 +50,7 @@ router.post('/video', (req, res) => {
             var decodeObj = {}
             try {
                 decodeObj = JSON.parse(previewAddon)
-            } catch(err) {
+            } catch (err) {
                 ResponseUtil.ApiError(req, res, new ApiException("PREVIEW_NOT_SUCCESS",
                     400,
                     "PREVIEW_NOT_SUCCESS")
@@ -85,18 +85,10 @@ router.post('/video', (req, res) => {
             responseObj['video'] = videoArr
             ResponseUtil.Ok(req, res, responseObj)
         }).catch((error) => {
-            if (error['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-            } else {
-                ResponseUtil.Error(req, res, error)
-            }
+            ResponseUtil.RenderStandardRpcError(req, res, error)
         })
     }).catch((error) => {
-        if (error['innerCode']) {
-            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-        } else {
-            ResponseUtil.Error(req, res, error)
-        }
+        ResponseUtil.RenderStandardRpcError(req, res, error)
     })
 })
 module.exports = router

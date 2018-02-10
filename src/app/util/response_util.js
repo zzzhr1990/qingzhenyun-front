@@ -8,6 +8,14 @@ class ResponseUtil {
         ResponseUtil.json(req, res, { status: 200, result: data, code: "OK", success: true })
     }
 
+    static RenderStandardRpcError(req,res,error){
+        if (error['innerCode']) {
+            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
+        } else {
+            ResponseUtil.Error(req, res, error)
+        }
+    }
+
     static OkOrError(req, res, error, data) {
         if (error) {
             //console.error(error)

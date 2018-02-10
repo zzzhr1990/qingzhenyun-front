@@ -28,7 +28,8 @@
         "ice": "^3.7.0",
         "commander": "^2.13.0",
         "express-jwt": "^5.3.0",
-        "awesome-urlsafe-base64": "^1.1.2"
+        "awesome-urlsafe-base64": "^1.1.2",
+        "parse-torrent": "^5.8.3"
     },
     "devDependencies": {
         "eslint": "^4.15.0",
