@@ -65,16 +65,18 @@ router.post('/download', (req, res) => {
         cloudStoreRpc.getFile(storeId).then(fileData => {
             let time = (new Date()).getTime().toString()
             let fileKey = fileData['fileKey']
+            let fileHash = storeId
             let fileSize = fileData['fileSize']
             let mime = fileData['mime']
             let url = 'http://other.qiecdn.com/'
                 + fileKey
                 + '?key='
                 + time
-                + '?userId=' + IceUtil.iceLong2Number(userId).toString()
+                + '&userId=' + IceUtil.iceLong2Number(userId).toString()
             let name = result['name']
             ResponseUtil.Ok(req, res, {
                 'fileSize': fileSize,
+                'hash': hash,
                 'name': name,
                 'mime': mime,
                 'url': url
