@@ -26,7 +26,7 @@ router.post('/torrent', (req, res) => {
 })
 
 const getTorrentFile = (req, res, fileData) => {
-    ResponseUtil.Ok(data)
+    ResponseUtil.Ok(fileData)
 }
 
 module.exports = router
