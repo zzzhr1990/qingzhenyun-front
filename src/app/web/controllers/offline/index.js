@@ -32,7 +32,7 @@ const getTorrentFileData = (req, res, fileHash) => {
     // get detail.
     cloudStoreRpc.getFile(fileHash).then(torrentFileData => {
         // get G 
-        // plet time = (new Date()).getTime().toString()
+        let time = (new Date()).getTime().toString()
         let fileKey = torrentFileData['fileKey']
         let fileSize = torrentFileData['fileSize']
         // let mime = torrentFileData['mime']
