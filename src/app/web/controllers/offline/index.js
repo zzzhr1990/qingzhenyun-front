@@ -59,7 +59,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         result['files'] = parsedData['files']
         result['length'] = parsedData['length']
         result['private'] = parsedData['private']
-        ResponseUtil.Ok(req,res,result)
+        ResponseUtil.Ok(req,res,parsedData)
     }).catch(error => {
         console.error(error)
         ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))
