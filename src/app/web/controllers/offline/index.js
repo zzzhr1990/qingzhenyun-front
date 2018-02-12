@@ -120,7 +120,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
                 console.error("Torrent %s validate error",result['infoHash'])
             }
         }).catch(updateError => {
-            console.exception(updateError)
+            console.error(updateError)
         })
 
     }).catch(error => {
