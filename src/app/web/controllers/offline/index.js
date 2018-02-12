@@ -12,7 +12,7 @@ const download = require('download')
 var parseTorrent = require('parse-torrent')
 
 
-router.post('/torrent', (req, res) => {
+router.post('/parseTorrent', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     var path = req.body['path'] ? req.body['path'] + '' : ''
     if (!uuid && !path) {
@@ -28,10 +28,18 @@ router.post('/torrent', (req, res) => {
     })
 })
 
+router.post('/start', (req, res) => {
+    var infoHash = req.body['infoHash'] ? req.body['infoHash'] + '' : ''
+    var downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
+    //TODO FORMAT DOWNLOAD LIST
+    //var 
+    //var path = req.body['path'] ? req.body['path'] + '' : ''
+})
+
 const getTorrentFileData = (req, res, fileHash) => {
     // get detail.
     cloudStoreRpc.getFile(fileHash).then(torrentFileData => {
-        // get G 
+        // get files.
         let time = (new Date()).getTime().toString()
         let fileKey = torrentFileData['fileKey']
         let fileSize = torrentFileData['fileSize']
@@ -59,11 +67,12 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         result['files'] = parsedData['files']
         result['length'] = parsedData['length']
         result['private'] = parsedData['private']
-        ResponseUtil.Ok(req,res,parsedData)
+        ResponseUtil.Ok(req, res, result)
     }).catch(error => {
         console.error(error)
         ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))
     })
 }
+
 
 module.exports = router

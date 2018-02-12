@@ -76,7 +76,7 @@ router.post('/download', (req, res) => {
             let name = result['name']
             ResponseUtil.Ok(req, res, {
                 'fileSize': fileSize,
-                'hash': hash,
+                'hash': fileHash,
                 'name': name,
                 'mime': mime,
                 'url': url
