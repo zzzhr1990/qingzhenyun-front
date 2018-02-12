@@ -21,6 +21,9 @@ rpc.userFileRpc = new CommonRpc(communicator, "UserFileServiceHandler", require(
     .userfile.UserFileServiceHandlerPrx)
 rpc.userRpc = new CommonRpc(communicator, "UserServiceHandler", require('./app/ice/userservice')
     .user.UserServiceHandlerPrx)
+    //OfflineDownloadServiceHandler
+rpc.offlineRpc = new CommonRpc(communicator, "OfflineDownloadServiceHandler", require('./app/ice/offline')
+    .offline.OfflineDownloadServiceHandlerPrx)
 /** INIT RPCs **/
 var app = express()
 const ResponseUtil = require('./app/util/response_util')

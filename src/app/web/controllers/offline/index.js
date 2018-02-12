@@ -7,6 +7,7 @@ const ResponseUtil = require('../../../util/response_util')
 const IceUtil = require('../../../util/ice_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
+let offlineRpc = require('../../../const/rpc').offlineRpc
 const CONSTANTS = require('../../../const/constants')
 const download = require('download')
 var parseTorrent = require('parse-torrent')
@@ -68,6 +69,8 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         result['length'] = parsedData['length']
         result['private'] = parsedData['private']
         ResponseUtil.Ok(req, res, result)
+        // Update background torrent info.
+        
     }).catch(error => {
         console.error(error)
         ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))
