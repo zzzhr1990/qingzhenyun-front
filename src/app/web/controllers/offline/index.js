@@ -8,6 +8,7 @@ const IceUtil = require('../../../util/ice_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 let offlineRpc = require('../../../const/rpc').offlineRpc
+const TaskDetailResponse = require('../../../ice/offline').offline.TaskDetailResponse
 const CONSTANTS = require('../../../const/constants')
 const download = require('download')
 var parseTorrent = require('parse-torrent')
@@ -70,7 +71,58 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         result['private'] = parsedData['private']
         ResponseUtil.Ok(req, res, result)
         // Update background torrent info.
-        
+        let resList = []
+        let count = 0
+        let current = IceUtil.number2IceLong(parseInt((new Date()).getTime()))
+        // constructor(taskHash = "",
+        // taskOrder = 0, 
+        // filename = "", 
+        //fileSize = new Ice.Long(0, 0), 
+        //localPath = "", 
+        //serverId = "", 
+        //taskUrl = "", 
+        //taskFastUrl = "", 
+        //operation = 0,
+        // taskProgress = 0, 
+        //createTime = new Ice.Long(0, 0),
+        // updateTime = new Ice.Long(0, 0), 
+        //storeType = 0, 
+        //storeBucket = "", 
+        //storeKey = "",
+        // addon = "",
+        // status = 0)
+        for (let file of result['files']) {
+            let response = new TaskDetailResponse(
+                result['infoHash'],
+                count,
+                file['name'],
+                IceUtil.number2IceLong(file['length']),
+                "",
+                "",
+                result['infoHash'],
+                "",
+                0,
+                0,
+                current,
+                current,
+                0,
+                "",
+                "",
+                "",
+                0
+            )
+            count++
+            resList.push(response)
+        }
+        offlineRpc.refreshTorrent(resList,false).then(respData => {
+            //check
+            if(respData.length != resList.length){
+                console.error("Torrent %s validate error",result['infoHash'])
+            }
+        }).catch(updateError => {
+            console.exception(updateError)
+        })
+
     }).catch(error => {
         console.error(error)
         ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))

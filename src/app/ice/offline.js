@@ -124,11 +124,12 @@
 
     offline.TaskDetailResponse = class
     {
-        constructor(taskHash = "", taskOrder = 0, filename = "", localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeType = 0, storeBucket = "", storeKey = "", addon = "", status = 0)
+        constructor(taskHash = "", taskOrder = 0, filename = "", fileSize = new Ice.Long(0, 0), localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeType = 0, storeBucket = "", storeKey = "", addon = "", status = 0)
         {
             this.taskHash = taskHash;
             this.taskOrder = taskOrder;
             this.filename = filename;
+            this.fileSize = fileSize;
             this.localPath = localPath;
             this.serverId = serverId;
             this.taskUrl = taskUrl;
@@ -149,6 +150,7 @@
             ostr.writeString(this.taskHash);
             ostr.writeInt(this.taskOrder);
             ostr.writeString(this.filename);
+            ostr.writeLong(this.fileSize);
             ostr.writeString(this.localPath);
             ostr.writeString(this.serverId);
             ostr.writeString(this.taskUrl);
@@ -169,6 +171,7 @@
             this.taskHash = istr.readString();
             this.taskOrder = istr.readInt();
             this.filename = istr.readString();
+            this.fileSize = istr.readLong();
             this.localPath = istr.readString();
             this.serverId = istr.readString();
             this.taskUrl = istr.readString();
@@ -186,7 +189,7 @@
 
         static get minWireSize()
         {
-            return  45;
+            return  53;
         }
     };
 
