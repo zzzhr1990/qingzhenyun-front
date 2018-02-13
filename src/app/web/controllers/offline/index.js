@@ -42,8 +42,8 @@ router.post('/parseMagnet', (req, res) => {
         throw new ApiValidateException("Url required", '{URL}_REQUIRED')
 
     }catch(torrentError){
-        log.error(torrentError)
-        log.error(url)
+        console.error(torrentError)
+        console.error(url)
         throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
     }
     let taskHash = torrentInfo['infoHash']
