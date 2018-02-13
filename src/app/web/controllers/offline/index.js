@@ -30,6 +30,66 @@ router.post('/parseTorrent', (req, res) => {
     })
 })
 
+outer.post('/parseMagnet', (req, res) => {
+    var url = req.body['url'] ? req.body['url'] + '' : ''
+    if (!url) {
+        throw new ApiValidateException("Url required", '{URL}_REQUIRED')
+    }
+    var torrentInfo = {}
+    try {
+        torrentInfo = parseTorrent(url)
+        // RPC get files...
+        throw new ApiValidateException("Url required", '{URL}_REQUIRED')
+
+    }catch(torrentError){
+        throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
+    }
+    let taskHash = torrentInfo['infoHash']
+    result = {'infoHash':torrentInfo['infoHash']}
+    result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
+    if(torrentInfo['files']){
+        result['files'] = torrentInfo['files']
+    }
+    result['server'] = False
+    // call rpc to get detail files.
+    offlineRpc.getTaskDetailList(taskHash).then(data => {
+        // render and format
+        if(data.length < 1){
+            ResponseUtil.Ok(req,res,result)
+        }else{
+            result['server'] = True
+            result['files'] = []
+            for(let single of data){
+                // convert it to libtorrent 
+                let obj = {
+                    "path": single['taskUrl'],
+                    "name": single['filename'],
+                    "length": single['fileSize'],
+                    "offset": -1
+                }
+                result['files'].push(obj)
+            }
+            ResponseUtil.Ok(req,res,result)
+        }
+    }).catch(offlineError =>{
+        console.error(offlineError)
+        ResponseUtil.Ok(req,res,result)
+    })
+    //decode first
+
+    //let userId = req.user.uuid
+    //get
+    /*
+    userFileRpc.get(uuid, userId, path).then((result) => {
+        // first,try to parse.
+        getTorrentFileData(req, res, result['storeId'])
+    }).catch(error => {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    })*/
+})
+
+//let renderMagnetResult = (req,res,dar)
+
 router.post('/start', (req, res) => {
     let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
     let downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
@@ -68,7 +128,7 @@ router.post('/start', (req, res) => {
             try {
                 let torrentInfo = parseTorrent(url)
                 if (torrentInfo['infoHash'] != taskHash) {
-                    console.warn('Task hash mismatch.')
+                    console.warn('Task hash mismatch.[%s : %s]', torrentInfo['infoHash'], taskHash)
                     taskHash = torrentInfo['infoHash']
                 }
             }
@@ -134,7 +194,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         ResponseUtil.Ok(req, res, result)
         // Update background torrent info.
         let resList = []
-        let count = 0
+        let count = 1
         let current = IceUtil.number2IceLong(parseInt((new Date()).getTime()))
         // constructor(taskHash = "",
         // taskOrder = 0, 
