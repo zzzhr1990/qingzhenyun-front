@@ -39,11 +39,11 @@ router.post('/parseMagnet', (req, res) => {
     try {
         torrentInfo = parseTorrent(url)
         // RPC get files...
-        throw new ApiValidateException("Url required", '{URL}_REQUIRED')
+        // throw new ApiValidateException("Url required", '{URL}_REQUIRED')
 
     }catch(torrentError){
-        console.error(torrentError)
-        console.error(url)
+        // console.error(torrentError)
+        // console.error(url)
         throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
     }
     let taskHash = torrentInfo['infoHash']
