@@ -52,7 +52,7 @@ router.post('/parseMagnet', (req, res) => {
     if(torrentInfo['files']){
         result['files'] = torrentInfo['files']
     }
-    result['server'] = False
+    result['server'] = false
     // call rpc to get detail files.
     offlineRpc.getTaskDetailList(taskHash).then(data => {
         // render and format
