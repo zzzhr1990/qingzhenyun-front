@@ -33,7 +33,7 @@ router.post('/parseTorrent', (req, res) => {
 router.post('/start', (req, res) => {
     let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
     let downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
-    let url = req.body['url'] ? req.body['url'] + '' : ''
+    var url = req.body['url'] ? req.body['url'] + '' : ''
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
     var taskHash = req.body['taskHash'] ? req.body['taskHash'] + '' : ''
@@ -49,8 +49,19 @@ router.post('/start', (req, res) => {
         if (!taskHash) {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
         }
+        url = 'magnet:?xt=urn:btih:' + taskHash
+        type = 0
     } else if (url) {
+        if (url.startsWith('thunder://')) {
+            try {
+                url = StringUtil.decodeThunder(url)
+            }
+            catch (thunderError) {
+                throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
+            }
+        }
         addon['url'] = url
+        let urlLow = url.toLocaleLowerCase()
         if (url.startsWith('magnet:')) {
             //magnet, check task hash. 
             type = 10
@@ -64,24 +75,21 @@ router.post('/start', (req, res) => {
             catch (error) {
                 throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
             }
-        } else if (url.startsWith('thunder://')) {
-            try {
-                addon['url'] = StringUtil.decodeThunder(url)
-                type = 20
-            }
-            catch (thunderError) {
-                throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
-            }
+        } else if (urlLow.startsWith('http://') || urlLow.startsWith('https://') || urlLow.startsWith('ftp://') || urlLow.startsWith('sftp://')) {
+            type = 20
+        } else {
+            console.warn('Cannot decode %s', url)
+            throw new ApiValidateException("Url cannot recongnised.",
+                'URL_INVALID')
         }
     } else {
         throw new ApiValidateException("Url or fileStoreId is needed",
             'URL_OR_FILE_STORE_ID_INVALID')
     }
-
     /*
     if(uuid){
         // get and validate torrent again.
-
+ 
     }else if(url){
         // validate url again
     }*/
