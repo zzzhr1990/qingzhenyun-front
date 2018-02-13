@@ -146,6 +146,11 @@ router.post('/start', (req, res) => {
         throw new ApiValidateException("Url or fileStoreId is needed",
             'URL_OR_FILE_STORE_ID_INVALID')
     }
+    // First add user listeners.
+    // second add task listeners,
+    // third add and start task
+    // finally check state
+    
     /*
     if(uuid){
         // get and validate torrent again.
@@ -194,7 +199,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         ResponseUtil.Ok(req, res, result)
         // Update background torrent info.
         let resList = []
-        let count = 1
+        let count = 0
         let current = IceUtil.number2IceLong(parseInt((new Date()).getTime()))
         // constructor(taskHash = "",
         // taskOrder = 0, 

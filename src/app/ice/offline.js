@@ -219,6 +219,10 @@
         "refreshTorrent": [, , , , ["offline.UserFileResponseListHelper"], [["offline.UserFileResponseListHelper"], [1]], ,
         [
             offline.OfflineOperationException
+        ], , ],
+        "getTaskDetailList": [, , , , ["offline.UserFileResponseListHelper"], [[7]], ,
+        [
+            offline.OfflineOperationException
         ], , ]
     });
     exports.offline = offline;
