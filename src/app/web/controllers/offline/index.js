@@ -37,7 +37,7 @@ router.post('/start', (req, res) => {
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
     var taskHash = req.body['taskHash'] ? req.body['taskHash'] + '' : ''
-    var type = req.body['type'] ? req.body['type'] + '' : '0'
+    var type = parseInt(body['type'] ? req.body['type'] + '' : '0')
     var taskHash = ''
     if (isNaN(type)) {
         throw new ApiValidateException("Type required", '{TYPE}_REQUIRED')
