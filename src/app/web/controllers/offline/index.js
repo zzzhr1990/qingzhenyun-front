@@ -46,33 +46,36 @@ router.post('/start', (req, res) => {
     let addon = {}
     if (fileStoreId) {
         addon['file'] = fileStoreId
-        if(!taskHash){
+        if (!taskHash) {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
         }
     } else if (url) {
         addon['url'] = url
-        if(url.startsWith('magnet:')){
+        if (url.startsWith('magnet:')) {
             //magnet, check task hash. 
             type = 10
-            try{
+            try {
                 let torrentInfo = parseTorrent(url)
-                if(torrentInfo['infoHash'] != taskHash){
+                if (torrentInfo['infoHash'] != taskHash) {
                     console.warn('Task hash mismatch.')
                     taskHash = torrentInfo['infoHash']
                 }
             }
-            catch(error){
+            catch (error) {
                 throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
             }
-        }else if(url.startsWith('thunder://')){
-            try{
+        } else if (url.startsWith('thunder://')) {
+            try {
                 addon['url'] = StringUtil.decodeThunder(url)
                 type = 20
             }
-            catch(thunderError){
+            catch (thunderError) {
                 throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
             }
         }
+    } else {
+        throw new ApiValidateException("Url or fileStoreId is needed",
+            'URL_OR_FILE_STORE_ID_INVALID')
     }
 
     /*
@@ -86,7 +89,7 @@ router.post('/start', (req, res) => {
     //TODO FORMAT DOWNLOAD LIST
     //var 
     //var path = req.body['path'] ? req.body['path'] + '' : ''
-    ResponseUtil.Ok(req,res,addon)
+    ResponseUtil.Ok(req, res, addon)
 })
 
 const getTorrentFileData = (req, res, fileHash) => {
