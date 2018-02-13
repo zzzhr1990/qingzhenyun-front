@@ -11,7 +11,7 @@ let offlineRpc = require('../../../const/rpc').offlineRpc
 const TaskDetailResponse = require('../../../ice/offline').offline.TaskDetailResponse
 const CONSTANTS = require('../../../const/constants')
 const download = require('download')
-var parseTorrent = require('parse-torrent')
+const parseTorrent = require('parse-torrent')
 
 
 router.post('/parseTorrent', (req, res) => {
@@ -31,11 +31,62 @@ router.post('/parseTorrent', (req, res) => {
 })
 
 router.post('/start', (req, res) => {
-    var infoHash = req.body['infoHash'] ? req.body['infoHash'] + '' : ''
-    var downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
+    let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
+    let downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
+    let url = req.body['url'] ? req.body['url'] + '' : ''
+    let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
+    let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
+    var taskHash = req.body['taskHash'] ? req.body['taskHash'] + '' : ''
+    var type = req.body['type'] ? req.body['type'] + '' : '0'
+    var taskHash = ''
+    if (isNaN(type)) {
+        throw new ApiValidateException("Type required", '{TYPE}_REQUIRED')
+    }
+    type = parseInt(type)
+    let addon = {}
+    if (fileStoreId) {
+        addon['file'] = fileStoreId
+        if(!taskHash){
+            throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
+        }
+    } else if (url) {
+        addon['url'] = url
+        if(url.startsWith('magnet:')){
+            //magnet, check task hash. 
+            type = 10
+            try{
+                let torrentInfo = parseTorrent(url)
+                if(torrentInfo['infoHash'] != taskHash){
+                    console.warn('Task hash mismatch.')
+                    taskHash = torrentInfo['infoHash']
+                }
+            }
+            catch(error){
+                throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
+            }
+        }else if(url.startsWith('thunder://')){
+            try{
+                addon['url'] = StringUtil.decodeThunder(url)
+                type = 20
+            }
+            catch(thunderError){
+                throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
+            }
+        }
+    }
+
+    /*
+    if(uuid){
+        // get and validate torrent again.
+
+    }else if(url){
+        // validate url again
+    }*/
+
     //TODO FORMAT DOWNLOAD LIST
     //var 
     //var path = req.body['path'] ? req.body['path'] + '' : ''
+    ResponseUtil.Ok(req,res,addon)
 })
 
 const getTorrentFileData = (req, res, fileHash) => {
@@ -114,10 +165,10 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
             count++
             resList.push(response)
         }
-        offlineRpc.refreshTorrent(resList,false).then(respData => {
+        offlineRpc.refreshTorrent(resList, false).then(respData => {
             //check
-            if(respData.length != resList.length){
-                console.error("Torrent %s validate error",result['infoHash'])
+            if (respData.length != resList.length) {
+                console.error("Torrent %s validate error", result['infoHash'])
             }
         }).catch(updateError => {
             console.error(updateError)
