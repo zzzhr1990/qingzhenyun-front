@@ -56,6 +56,7 @@ router.post('/parseMagnet', (req, res) => {
     // call rpc to get detail files.
     offlineRpc.getTaskDetailList(taskHash).then(data => {
         // render and format
+        console.log('called...........')
         if(data.length < 1){
             ResponseUtil.Ok(req,res,result)
         }else{
