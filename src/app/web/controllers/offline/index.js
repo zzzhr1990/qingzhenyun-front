@@ -30,7 +30,7 @@ router.post('/parseTorrent', (req, res) => {
     })
 })
 
-outer.post('/parseMagnet', (req, res) => {
+router.post('/parseMagnet', (req, res) => {
     var url = req.body['url'] ? req.body['url'] + '' : ''
     if (!url) {
         throw new ApiValidateException("Url required", '{URL}_REQUIRED')
@@ -150,7 +150,6 @@ router.post('/start', (req, res) => {
     // second add task listeners,
     // third add and start task
     // finally check state
-    
     /*
     if(uuid){
         // get and validate torrent again.
