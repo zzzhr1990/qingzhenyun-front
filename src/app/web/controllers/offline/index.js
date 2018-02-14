@@ -187,11 +187,13 @@ router.post('/start', (req, res) => {
                 "",
                 current,
                 current,
-                "",0,
+                "", 0,
                 userId,
                 ip
             )
-            ResponseUtil.Ok(req, res, createReq)
+            offlineRpc.addTask(createReq).then(createReqResponse => ResponseUtil.Ok(req, res, createReqResponse))
+                .catch(createError => ResponseUtil.RenderStandardRpcError(req, res, createError))
+
             // add listeners table..
         }).catch(err => ResponseUtil.RenderStandardRpcError(req, res, err))
     // First add user listeners.
