@@ -51,25 +51,6 @@ router.post('/register', (req, res) => {
                 ResponseUtil.Error(req, res, error)
             }
         })
-
-    /*
-    { RegisterNotSuccessException: USER_NAME_EXIST
-at UserService_registerUser_result.read (C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\src\app\thrift\UserService.js:180:19)
-at exports.Client.UserServiceClient.recv_registerUser (C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\src\app\thrift\UserService.js:264:10)
-at C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\node_modules\thrift\lib\nodejs\lib\thrift\connection.js:139:41
-at Socket.<anonymous> (C:\Users\zzzhr\Documents\vscode\qingzhenyun-front\node_modules\thrift\lib\nodejs\lib\thrift\framed_transport.js:60:7)
-at Socket.emit (events.js:159:13)
-at addChunk (_stream_readable.js:265:12)
-at readableAddChunk (_stream_readable.js:252:11)
-at Socket.Readable.push (_stream_readable.js:209:10)
-at TCP.onread (net.js:608:20)
-name: 'RegisterNotSuccessException',
-message: 'USER_NAME_EXIST',
-errorCode: 101 }
-need
-    */
-    //TODO:need check
-
 })
 
 router.post('/login', (req, res) => {
@@ -95,7 +76,7 @@ router.post('/login', (req, res) => {
 
     // Access
     caller.then(dat => {
-        //ResponseUtil.Error(req, res, error)
+        // ResponseUtil.Error(req, res, error)
         req.user = {
             'uuid': dat.uuid,
             'name': dat.name,

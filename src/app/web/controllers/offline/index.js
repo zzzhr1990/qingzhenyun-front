@@ -191,7 +191,14 @@ router.post('/start', (req, res) => {
                 userId,
                 ip
             )
-            offlineRpc.addTask(createReq).then(createReqResponse => ResponseUtil.Ok(req, res, createReqResponse))
+            offlineRpc.addTask(createReq).then(createReqResponse => {
+                delete createReqResponse['serverId']
+                delete createReqResponse['createTime']
+                delete createReqResponse['createUser']
+                delete createReqResponse['createIp']
+                delete createReqResponse['cmds']
+                ResponseUtil.Ok(req, res, createReqResponse)
+            })
                 .catch(createError => ResponseUtil.RenderStandardRpcError(req, res, createError))
 
             // add listeners table..
