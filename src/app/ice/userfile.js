@@ -221,6 +221,52 @@
 
     Slice.defineStruct(userfile.UserFilePageResponse, false, true);
 
+    userfile.UserOfflineResponse = class
+    {
+        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", createTime = new Ice.Long(0, 0), uuid = "", progress = 0, status = 0)
+        {
+            this.userId = userId;
+            this.taskHash = taskHash;
+            this.path = path;
+            this.name = name;
+            this.createTime = createTime;
+            this.uuid = uuid;
+            this.progress = progress;
+            this.status = status;
+        }
+
+        _write(ostr)
+        {
+            ostr.writeLong(this.userId);
+            ostr.writeString(this.taskHash);
+            ostr.writeString(this.path);
+            ostr.writeString(this.name);
+            ostr.writeLong(this.createTime);
+            ostr.writeString(this.uuid);
+            ostr.writeInt(this.progress);
+            ostr.writeInt(this.status);
+        }
+
+        _read(istr)
+        {
+            this.userId = istr.readLong();
+            this.taskHash = istr.readString();
+            this.path = istr.readString();
+            this.name = istr.readString();
+            this.createTime = istr.readLong();
+            this.uuid = istr.readString();
+            this.progress = istr.readInt();
+            this.status = istr.readInt();
+        }
+
+        static get minWireSize()
+        {
+            return  28;
+        }
+    };
+
+    Slice.defineStruct(userfile.UserOfflineResponse, true, true);
+
     const iceC_userfile_UserFileServiceHandler_ids = [
         "::Ice::Object",
         "::userfile::UserFileServiceHandler"
@@ -269,6 +315,10 @@
             userfile.FileOperationException
         ], , ],
         "recycle": [, , , , [3], [[7], [4]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
+        "createOfflineTask": [, , , , [userfile.UserOfflineResponse], [[4], [7], [7], [7], [7]], ,
         [
             userfile.FileOperationException
         ], , ]
