@@ -198,8 +198,7 @@ router.post('/start', (req, res) => {
                 delete createReqResponse['createIp']
                 delete createReqResponse['cmds']
                 ResponseUtil.Ok(req, res, createReqResponse)
-            })
-                .catch(createError => ResponseUtil.RenderStandardRpcError(req, res, createError))
+            }).catch(createError => ResponseUtil.RenderStandardRpcError(req, res, createError))
 
             // add listeners table..
         }).catch(err => ResponseUtil.RenderStandardRpcError(req, res, err))
