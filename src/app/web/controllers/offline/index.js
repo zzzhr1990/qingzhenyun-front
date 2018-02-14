@@ -173,6 +173,7 @@ router.post('/start', (req, res) => {
   `progress` INT(11) NULL DEFAULT 0,
   `status` INT(11) NULL DEFAULT 0,
   */
+  /*
     let userListener = {
         "userId": userId,
         "task_hash": taskHash,
@@ -180,7 +181,8 @@ router.post('/start', (req, res) => {
         "name": '',
         "uuid": saveUuid == '' ? null : uuid
 
-    }
+    
+    */
 
     // second add task listeners,
     // third add and start task
@@ -196,7 +198,7 @@ router.post('/start', (req, res) => {
     //TODO FORMAT DOWNLOAD LIST
     //var 
     //var path = req.body['path'] ? req.body['path'] + '' : ''
-    ResponseUtil.Ok(req, res, addon)
+    // ResponseUtil.Ok(req, res, addon)
 })
 
 const getTorrentFileData = (req, res, fileHash) => {
