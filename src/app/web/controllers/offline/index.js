@@ -197,6 +197,7 @@ router.post('/start', (req, res) => {
                 delete createReqResponse['createUser']
                 delete createReqResponse['createIp']
                 delete createReqResponse['cmds']
+                delete createReqResponse['updateTime']
                 ResponseUtil.Ok(req, res, createReqResponse)
             }).catch(createError => ResponseUtil.RenderStandardRpcError(req, res, createError))
 
