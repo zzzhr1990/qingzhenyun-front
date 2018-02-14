@@ -132,7 +132,9 @@ router.post('/start', (req, res) => {
             try {
                 let torrentInfo = parseTorrent(url)
                 if (torrentInfo['infoHash'] != taskHash) {
-                    console.warn('Task hash mismatch.[%s : %s]', torrentInfo['infoHash'], taskHash)
+                    // console.warn('Task hash mismatch.[%s : %s]',
+                    // torrentInfo['infoHash'], taskHash)
+                    // not need this function
                     taskHash = torrentInfo['infoHash']
                 }
             }
