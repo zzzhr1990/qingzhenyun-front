@@ -223,12 +223,13 @@
 
     userfile.UserOfflineResponse = class
     {
-        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", createTime = new Ice.Long(0, 0), uuid = "", progress = 0, status = 0)
+        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", files = "", createTime = new Ice.Long(0, 0), uuid = "", progress = 0, status = 0)
         {
             this.userId = userId;
             this.taskHash = taskHash;
             this.path = path;
             this.name = name;
+            this.files = files;
             this.createTime = createTime;
             this.uuid = uuid;
             this.progress = progress;
@@ -241,6 +242,7 @@
             ostr.writeString(this.taskHash);
             ostr.writeString(this.path);
             ostr.writeString(this.name);
+            ostr.writeString(this.files);
             ostr.writeLong(this.createTime);
             ostr.writeString(this.uuid);
             ostr.writeInt(this.progress);
@@ -253,6 +255,7 @@
             this.taskHash = istr.readString();
             this.path = istr.readString();
             this.name = istr.readString();
+            this.files = istr.readString();
             this.createTime = istr.readLong();
             this.uuid = istr.readString();
             this.progress = istr.readInt();
@@ -261,7 +264,7 @@
 
         static get minWireSize()
         {
-            return  28;
+            return  29;
         }
     };
 
@@ -318,7 +321,7 @@
         [
             userfile.FileOperationException
         ], , ],
-        "createOfflineTask": [, , , , [userfile.UserOfflineResponse], [[4], [7], [7], [7], [7]], ,
+        "createOfflineTask": [, , , , [userfile.UserOfflineResponse], [[4], [7], [7], [7], [7], [7]], ,
         [
             userfile.FileOperationException
         ], , ]

@@ -30,7 +30,8 @@
         "express-jwt": "^5.3.0",
         "awesome-urlsafe-base64": "^1.1.2",
         "parse-torrent": "^5.8.3",
-        "download": "^6.2.5"
+        "download": "^6.2.5",
+        "md5": "^2.2.1"
     },
     "devDependencies": {
         "eslint": "^4.15.0",

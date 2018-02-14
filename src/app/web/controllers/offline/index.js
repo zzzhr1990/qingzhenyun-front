@@ -4,14 +4,17 @@ const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
+const RequestUtil = require('../../../util/request_util')
 const IceUtil = require('../../../util/ice_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 let offlineRpc = require('../../../const/rpc').offlineRpc
 const TaskDetailResponse = require('../../../ice/offline').offline.TaskDetailResponse
+const OfflineTaskInfoResponse = require('../../../ice/offline').offline.OfflineTaskInfoResponse
 const CONSTANTS = require('../../../const/constants')
 const download = require('download')
 const parseTorrent = require('parse-torrent')
+const md5 = require('md5');
 
 
 router.post('/parseTorrent', (req, res) => {
@@ -99,10 +102,12 @@ router.post('/start', (req, res) => {
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
     var taskHash = req.body['taskHash'] ? req.body['taskHash'] + '' : ''
+    let files = req.body['files'] ? req.body['files'] + '' : '*'
     var name = req.body['name'] ? req.body['name'] + '' : ''
     var type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
     var taskHash = ''
     let userId = req.user.uuid
+    let ip = RequestUtil.getIp(req)
     if (isNaN(type)) {
         throw new ApiValidateException("Type required", '{TYPE}_REQUIRED')
     }
@@ -116,36 +121,34 @@ router.post('/start', (req, res) => {
         url = 'magnet:?xt=urn:btih:' + taskHash
         type = 0
     } else if (url) {
-        if (url.startsWith('thunder://')) {
+        let urlLow = url.toLocaleLowerCase()
+        if (urlLow.startsWith('thunder://')) {
             try {
                 url = StringUtil.decodeThunder(url)
+                urlLow = url.toLocaleLowerCase()
             }
             catch (thunderError) {
                 throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
             }
         }
         addon['url'] = url
-        let urlLow = url.toLocaleLowerCase()
         if (url.startsWith('magnet:')) {
-            //magnet, check task hash. 
             type = 10
             try {
                 let torrentInfo = parseTorrent(url)
                 if (torrentInfo['infoHash'] != taskHash) {
-                    // console.warn('Task hash mismatch.[%s : %s]',
-                    // torrentInfo['infoHash'], taskHash)
-                    // not need this function
                     taskHash = torrentInfo['infoHash']
                 }
             }
-            catch (error) {
+            catch (magnetError) {
                 throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
             }
         } else if (urlLow.startsWith('http://') || urlLow.startsWith('https://') || urlLow.startsWith('ftp://') || urlLow.startsWith('sftp://')) {
             type = 20
+            taskHash = md5(url)
         } else {
             console.warn('Cannot decode %s', url)
-            throw new ApiValidateException("Url cannot recongnised.",
+            throw new ApiValidateException("Url not supported.",
                 'URL_INVALID')
         }
     } else {
@@ -157,11 +160,38 @@ router.post('/start', (req, res) => {
     userFileRpc.createOfflineTask(userId,
         taskHash,
         savePath == '' ? null : savePath,
-        name ? name : taskHash,
+        name ? name : taskHash, files,
         saveUuid == '' ? null : uuid)
         .then(data => {
-            //
-            ResponseUtil.Ok(req, res, data)
+            // add main indexer.
+            /*
+            (taskHash = "",
+             progress = 0, 
+             name = "",
+              type = 0, 
+              addon = "", 
+              serverId = "", 
+              createTime = new Ice.Long(0, 0), 
+              updateTime = new Ice.Long(0, 0), 
+              cmds = "", status = 0, 
+              createUser = new Ice.Long(0, 0), 
+              createIp = "")
+            */
+            let current = IceUtil.number2IceLong((new Date().getTime()))
+            let createReq = new OfflineTaskInfoResponse(
+                taskHash,
+                0,
+                name,
+                type,
+                JSON.stringify(addon),
+                "",
+                current,
+                current,
+                "",0,
+                userId,
+                ip
+            )
+            ResponseUtil.Ok(req, res, createReq)
             // add listeners table..
         }).catch(err => ResponseUtil.RenderStandardRpcError(req, res, err))
     // First add user listeners.
@@ -175,16 +205,16 @@ router.post('/start', (req, res) => {
   `progress` INT(11) NULL DEFAULT 0,
   `status` INT(11) NULL DEFAULT 0,
   */
-  /*
-    let userListener = {
-        "userId": userId,
-        "task_hash": taskHash,
-        "path": savePath == '' ? null : savePath,
-        "name": '',
-        "uuid": saveUuid == '' ? null : uuid
-
-    
-    */
+    /*
+      let userListener = {
+          "userId": userId,
+          "task_hash": taskHash,
+          "path": savePath == '' ? null : savePath,
+          "name": '',
+          "uuid": saveUuid == '' ? null : uuid
+  
+      
+      */
 
     // second add task listeners,
     // third add and start task

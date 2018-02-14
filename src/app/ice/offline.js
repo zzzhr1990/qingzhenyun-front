@@ -122,6 +122,64 @@
 
     Slice.defineStruct(offline.OfflineTaskAddResponse, true, false);
 
+    offline.OfflineTaskInfoResponse = class
+    {
+        constructor(taskHash = "", progress = 0, name = "", type = 0, addon = "", serverId = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "")
+        {
+            this.taskHash = taskHash;
+            this.progress = progress;
+            this.name = name;
+            this.type = type;
+            this.addon = addon;
+            this.serverId = serverId;
+            this.createTime = createTime;
+            this.updateTime = updateTime;
+            this.cmds = cmds;
+            this.status = status;
+            this.createUser = createUser;
+            this.createIp = createIp;
+        }
+
+        _write(ostr)
+        {
+            ostr.writeString(this.taskHash);
+            ostr.writeInt(this.progress);
+            ostr.writeString(this.name);
+            ostr.writeInt(this.type);
+            ostr.writeString(this.addon);
+            ostr.writeString(this.serverId);
+            ostr.writeLong(this.createTime);
+            ostr.writeLong(this.updateTime);
+            ostr.writeString(this.cmds);
+            ostr.writeInt(this.status);
+            ostr.writeLong(this.createUser);
+            ostr.writeString(this.createIp);
+        }
+
+        _read(istr)
+        {
+            this.taskHash = istr.readString();
+            this.progress = istr.readInt();
+            this.name = istr.readString();
+            this.type = istr.readInt();
+            this.addon = istr.readString();
+            this.serverId = istr.readString();
+            this.createTime = istr.readLong();
+            this.updateTime = istr.readLong();
+            this.cmds = istr.readString();
+            this.status = istr.readInt();
+            this.createUser = istr.readLong();
+            this.createIp = istr.readString();
+        }
+
+        static get minWireSize()
+        {
+            return  42;
+        }
+    };
+
+    Slice.defineStruct(offline.OfflineTaskInfoResponse, true, true);
+
     offline.TaskDetailResponse = class
     {
         constructor(taskHash = "", taskOrder = 0, filename = "", fileSize = new Ice.Long(0, 0), localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeType = 0, storeBucket = "", storeKey = "", addon = "", status = 0)
@@ -195,6 +253,40 @@
 
     Slice.defineStruct(offline.TaskDetailResponse, true, true);
 
+    offline.OfflineTaskListenerResponse = class
+    {
+        constructor(taskHash = "", userId = new Ice.Long(0, 0), status = 0, createTime = new Ice.Long(0, 0))
+        {
+            this.taskHash = taskHash;
+            this.userId = userId;
+            this.status = status;
+            this.createTime = createTime;
+        }
+
+        _write(ostr)
+        {
+            ostr.writeString(this.taskHash);
+            ostr.writeLong(this.userId);
+            ostr.writeInt(this.status);
+            ostr.writeLong(this.createTime);
+        }
+
+        _read(istr)
+        {
+            this.taskHash = istr.readString();
+            this.userId = istr.readLong();
+            this.status = istr.readInt();
+            this.createTime = istr.readLong();
+        }
+
+        static get minWireSize()
+        {
+            return  21;
+        }
+    };
+
+    Slice.defineStruct(offline.OfflineTaskListenerResponse, true, true);
+
     Slice.defineSequence(offline, "UserFileResponseListHelper", "offline.TaskDetailResponse", false);
 
     const iceC_offline_OfflineDownloadServiceHandler_ids = [
@@ -212,7 +304,7 @@
 
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
-        "addTask": [, , , , [offline.OfflineTaskAddResponse], [[7], [3], [7], [7], [4]], ,
+        "addTask": [, , , , [offline.OfflineTaskInfoResponse], [[offline.OfflineTaskInfoResponse]], ,
         [
             offline.OfflineOperationException
         ], , ],
