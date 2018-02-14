@@ -5,6 +5,7 @@ let ApiValidateException = require('../../../exception/api_validate_exception')
 let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
 let validator = require('validator')
+const RequestUtil = require('../../../util/request_util')
 let userService = require('../../../const/rpc').userRpc
 
 
@@ -40,7 +41,7 @@ router.post('/register', (req, res) => {
     // Register RPC
     // No front server like nginx.
     //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
-    let ip = req.connection.remoteAddress
+    let ip = RequestUtil.getIp(req)
     userService.registerUser(name, password, email, phone, ip)
         .then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
