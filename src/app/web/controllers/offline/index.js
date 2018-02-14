@@ -41,27 +41,27 @@ router.post('/parseMagnet', (req, res) => {
         // RPC get files...
         // throw new ApiValidateException("Url required", '{URL}_REQUIRED')
 
-    }catch(torrentError){
+    } catch (torrentError) {
         // console.error(torrentError)
         // console.error(url)
         throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
     }
     let taskHash = torrentInfo['infoHash']
-    result = {'infoHash':torrentInfo['infoHash']}
+    result = { 'infoHash': torrentInfo['infoHash'] }
     result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
-    if(torrentInfo['files']){
+    if (torrentInfo['files']) {
         result['files'] = torrentInfo['files']
     }
     result['server'] = false
     // call rpc to get detail files.
     offlineRpc.getTaskDetailList(taskHash).then(data => {
         // render and format
-        if(data.length < 1){
-            ResponseUtil.Ok(req,res,result)
-        }else{
+        if (data.length < 1) {
+            ResponseUtil.Ok(req, res, result)
+        } else {
             result['server'] = true
             result['files'] = []
-            for(let single of data){
+            for (let single of data) {
                 // convert it to libtorrent 
                 let obj = {
                     "path": single['taskUrl'],
@@ -71,11 +71,11 @@ router.post('/parseMagnet', (req, res) => {
                 }
                 result['files'].push(obj)
             }
-            ResponseUtil.Ok(req,res,result)
+            ResponseUtil.Ok(req, res, result)
         }
-    }).catch(offlineError =>{
+    }).catch(offlineError => {
         console.error(offlineError)
-        ResponseUtil.Ok(req,res,result)
+        ResponseUtil.Ok(req, res, result)
     })
     //decode first
 
@@ -99,8 +99,10 @@ router.post('/start', (req, res) => {
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
     var taskHash = req.body['taskHash'] ? req.body['taskHash'] + '' : ''
+    var name = req.body['name'] ? req.body['name'] + '' : ''
     var type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
     var taskHash = ''
+    let userId = req.user.uuid
     if (isNaN(type)) {
         throw new ApiValidateException("Type required", '{TYPE}_REQUIRED')
     }
@@ -148,7 +150,38 @@ router.post('/start', (req, res) => {
         throw new ApiValidateException("Url or fileStoreId is needed",
             'URL_OR_FILE_STORE_ID_INVALID')
     }
+    //(userId: Long, taskHash: String?, path: String?, name: String?, uuid: String?, current: Current?)
+    //
+    userFileRpc.createOfflineTask(userId,
+        taskHash,
+        savePath == '' ? null : savePath,
+        name ? name : taskHash,
+        saveUuid == '' ? null : uuid)
+        .then(data => {
+            //
+            ResponseUtil.Ok(req, res, data)
+            // add listeners table..
+        }).catch(err => ResponseUtil.RenderStandardRpcError(req, res, err))
     // First add user listeners.
+    /*
+    `user_id` BIGINT(20) NOT NULL,
+  `task_hash` VARCHAR(128) NOT NULL,
+  `path` VARCHAR(2048) NULL,
+  `name` VARCHAR(256) NOT NULL DEFAULT '',
+  `create_time` BINARY(20) NOT NULL DEFAULT 0,
+  `uuid` VARCHAR(128) NULL,
+  `progress` INT(11) NULL DEFAULT 0,
+  `status` INT(11) NULL DEFAULT 0,
+  */
+    let userListener = {
+        "userId": userId,
+        "task_hash": taskHash,
+        "path": savePath == '' ? null : savePath,
+        "name": '',
+        "uuid": saveUuid == '' ? null : uuid
+
+    }
+
     // second add task listeners,
     // third add and start task
     // finally check state
