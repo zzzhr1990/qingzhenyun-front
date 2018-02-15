@@ -6,16 +6,43 @@ const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
 const RequestUtil = require('../../../util/request_util')
 const IceUtil = require('../../../util/ice_util')
-let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
-let userFileRpc = require('../../../const/rpc').userFileRpc
-let offlineRpc = require('../../../const/rpc').offlineRpc
+const UrlUtil = require('../../../util/url_utils')
+const cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
+const userFileRpc = require('../../../const/rpc').userFileRpc
+const offlineRpc = require('../../../const/rpc').offlineRpc
 const TaskDetailResponse = require('../../../ice/offline').offline.TaskDetailResponse
 const OfflineTaskInfoResponse = require('../../../ice/offline').offline.OfflineTaskInfoResponse
 const CONSTANTS = require('../../../const/constants')
 const download = require('download')
 const parseTorrent = require('parse-torrent')
 const md5 = require('md5');
+const TASK_HASH_VALIDATE_KEY = '6065772'
+const AwesomeBase64 = require('awesome-urlsafe-base64')
 
+
+const calcTaskHash = (taskHash => {
+    AwesomeBase64.encodeString(_calcHash(taskHash))
+})
+
+const _calcHash = (taskHash => {
+    return taskHash + '.' + md5(TASK_HASH_VALIDATE_KEY + taskHash)
+})
+
+const decodeTaskHash = (taskHash => {
+    if(!taskHash){
+        return ''
+    }
+    try {
+        taskHash = AwesomeBase64.decodeString(taskHash)
+    } catch (exc) {
+        return ''
+    }
+    let arr = taskHash.split('.')
+    if(arr.length < 2){
+        return ''
+    }
+    return _calcHash(arr[0]) == arr[1] ? arr[0] : ''
+})
 
 router.post('/parseTorrent', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
@@ -50,7 +77,10 @@ router.post('/parseMagnet', (req, res) => {
         throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
     }
     let taskHash = torrentInfo['infoHash']
-    result = { 'infoHash': torrentInfo['infoHash'] }
+    result = {
+        'infoHash': torrentInfo['infoHash'],
+        'taskHash': calcTaskHash(torrentInfo['infoHash'])
+    }
     result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
     if (torrentInfo['files']) {
         result['files'] = torrentInfo['files']
@@ -101,11 +131,11 @@ router.post('/start', (req, res) => {
     var url = req.body['url'] ? req.body['url'] + '' : ''
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
-    var taskHash = req.body['taskHash'] ? req.body['taskHash'] + '' : ''
+    var taskHash = decodeTaskHash(req.body['taskHash'] ? req.body['taskHash'] + '' : '')
     let files = req.body['files'] ? req.body['files'] + '' : '*'
     var name = req.body['name'] ? req.body['name'] + '' : ''
     var type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
-    var taskHash = ''
+    // var taskHash = ''
     let userId = req.user.uuid
     let ip = RequestUtil.getIp(req)
     if (isNaN(type)) {
@@ -118,6 +148,13 @@ router.post('/start', (req, res) => {
         if (!taskHash) {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
         }
+        // decode task hash...
+
+        /*
+        这里存在一个问题。种子的infohash为用户上传，并作为taskid作为索引
+        在这个时候，用户可能根据伪造一个taskid
+        从而对云下载服务器进行投毒
+        */
         url = 'magnet:?xt=urn:btih:' + taskHash
         type = 0
     } else if (url) {
@@ -163,20 +200,6 @@ router.post('/start', (req, res) => {
         name ? name : taskHash, files,
         saveUuid == '' ? null : uuid)
         .then(data => {
-            // add main indexer.
-            /*
-            (taskHash = "",
-             progress = 0, 
-             name = "",
-              type = 0, 
-              addon = "", 
-              serverId = "", 
-              createTime = new Ice.Long(0, 0), 
-              updateTime = new Ice.Long(0, 0), 
-              cmds = "", status = 0, 
-              createUser = new Ice.Long(0, 0), 
-              createIp = "")
-            */
             let current = IceUtil.number2IceLong((new Date().getTime()))
             let createReq = new OfflineTaskInfoResponse(
                 taskHash,
@@ -203,58 +226,17 @@ router.post('/start', (req, res) => {
 
             // add listeners table..
         }).catch(err => ResponseUtil.RenderStandardRpcError(req, res, err))
-    // First add user listeners.
-    /*
-    `user_id` BIGINT(20) NOT NULL,
-  `task_hash` VARCHAR(128) NOT NULL,
-  `path` VARCHAR(2048) NULL,
-  `name` VARCHAR(256) NOT NULL DEFAULT '',
-  `create_time` BINARY(20) NOT NULL DEFAULT 0,
-  `uuid` VARCHAR(128) NULL,
-  `progress` INT(11) NULL DEFAULT 0,
-  `status` INT(11) NULL DEFAULT 0,
-  */
-    /*
-      let userListener = {
-          "userId": userId,
-          "task_hash": taskHash,
-          "path": savePath == '' ? null : savePath,
-          "name": '',
-          "uuid": saveUuid == '' ? null : uuid
-  
-      
-      */
-
-    // second add task listeners,
-    // third add and start task
-    // finally check state
-    /*
-    if(uuid){
-        // get and validate torrent again.
- 
-    }else if(url){
-        // validate url again
-    }*/
-
-    //TODO FORMAT DOWNLOAD LIST
-    //var 
-    //var path = req.body['path'] ? req.body['path'] + '' : ''
-    // ResponseUtil.Ok(req, res, addon)
 })
 
 const getTorrentFileData = (req, res, fileHash) => {
     // get detail.
     cloudStoreRpc.getFile(fileHash).then(torrentFileData => {
         // get files.
-        let time = (new Date()).getTime().toString()
+
         let fileKey = torrentFileData['fileKey']
         let fileSize = torrentFileData['fileSize']
         // let mime = torrentFileData['mime']
-        let url = 'http://other.qiecdn.com/'
-            + fileKey
-            + '?key='
-            + time
-            + '&userId=-1'
+        let url = UrlUtil.createInternalDownloadUrl(fileKey)
         //let name = result['name']
         downloadTorrentFile(req, res, fileHash, url, fileSize)
     }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
@@ -267,6 +249,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let parsedData = parseTorrent(data);
         let result = {}
         result['infoHash'] = parsedData['infoHash']
+        result['taskHash'] = AwesomeBase64.encodeString(calcTaskHash(parsedData['infoHash']))
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
         result['comment'] = parsedData['comment']
