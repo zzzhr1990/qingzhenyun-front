@@ -2,7 +2,7 @@ class UrlUtil {
     static createInternalDownloadUrl(key) {
         let time = (new Date()).getTime().toString()
         let url = 'http://other.qiecdn.com/'
-            + fileKey
+            + key
             + '?key='
             + time
             + '&userId=-1'
