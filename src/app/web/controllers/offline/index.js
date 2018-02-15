@@ -21,7 +21,7 @@ const AwesomeBase64 = require('awesome-urlsafe-base64')
 
 
 const calcTaskHash = (taskHash => {
-    AwesomeBase64.encodeString(_calcHash(taskHash))
+    return AwesomeBase64.encodeString(_calcHash(taskHash))
 })
 
 const _calcHash = (taskHash => {
@@ -250,7 +250,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let result = {}
         result['infoHash'] = parsedData['infoHash']
         result['taskHash'] = calcTaskHash(parsedData['infoHash'])
-        console.log('Calc hash %s',result['taskHash'])
+        //console.log('Calc hash %s',result['taskHash'])
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
         result['comment'] = parsedData['comment']
