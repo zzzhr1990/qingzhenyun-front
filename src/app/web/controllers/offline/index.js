@@ -21,11 +21,11 @@ const AwesomeBase64 = require('awesome-urlsafe-base64')
 
 
 const calcTaskHash = (taskHash => {
-    return AwesomeBase64.encodeString(_calcHash(taskHash))
+    return AwesomeBase64.encodeString(taskHash + '.' + _calcHash(taskHash))
 })
 
 const _calcHash = (taskHash => {
-    return taskHash + '.' + md5(TASK_HASH_VALIDATE_KEY + taskHash)
+    return md5(TASK_HASH_VALIDATE_KEY + taskHash)
 })
 
 const decodeTaskHash = (taskHash => {
@@ -41,7 +41,7 @@ const decodeTaskHash = (taskHash => {
     if(arr.length < 2){
         return ''
     }
-    return _calcHash(arr[0]) == arr[1] ? arr[0] : ''
+    return _calcHash(arr[0]) === arr[1] ? arr[0] : ''
 })
 
 router.post('/parseTorrent', (req, res) => {
