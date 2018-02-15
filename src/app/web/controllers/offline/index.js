@@ -250,6 +250,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let result = {}
         result['infoHash'] = parsedData['infoHash']
         result['taskHash'] = calcTaskHash(parsedData['infoHash'])
+        console.log('Calc hash %s',result['taskHash'])
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
         result['comment'] = parsedData['comment']
