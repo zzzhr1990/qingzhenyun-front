@@ -249,7 +249,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let parsedData = parseTorrent(data);
         let result = {}
         result['infoHash'] = parsedData['infoHash']
-        result['taskHash'] = AwesomeBase64.encodeString(calcTaskHash(parsedData['infoHash']))
+        result['taskHash'] = calcTaskHash(parsedData['infoHash'])
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
         result['comment'] = parsedData['comment']
