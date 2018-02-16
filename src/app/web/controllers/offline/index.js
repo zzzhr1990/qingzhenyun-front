@@ -20,8 +20,8 @@ const TASK_HASH_VALIDATE_KEY = '6065772'
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 
 
-const calcTaskHash = (taskHash => {
-    return AwesomeBase64.encodeString(taskHash + '.' + _calcHash(taskHash))
+const calcTaskHash = ((taskHash,fileId) => {
+    return AwesomeBase64.encodeString(taskHash + '.' + fileId.toString() + '.' + _calcHash(taskHash))
 })
 
 const _calcHash = (taskHash => {
@@ -30,18 +30,18 @@ const _calcHash = (taskHash => {
 
 const decodeTaskHash = (taskHash => {
     if(!taskHash){
-        return ''
+        return undefined
     }
     try {
         taskHash = AwesomeBase64.decodeString(taskHash)
     } catch (exc) {
-        return ''
+        return undefined
     }
     let arr = taskHash.split('.')
-    if(arr.length < 2){
-        return ''
+    if(arr.length < 3){
+        return undefined
     }
-    return _calcHash(arr[0]) === arr[1] ? arr[0] : ''
+    return _calcHash(arr[0],arr[1]) === arr[2] ? [arr[0],[arr[1]]] : undefined
 })
 
 router.post('/parseTorrent', (req, res) => {
@@ -79,7 +79,7 @@ router.post('/parseMagnet', (req, res) => {
     let taskHash = torrentInfo['infoHash']
     result = {
         'infoHash': torrentInfo['infoHash'],
-        'taskHash': calcTaskHash(torrentInfo['infoHash'])
+        'taskHash': calcTaskHash(torrentInfo['infoHash'],'')
     }
     result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
     if (torrentInfo['files']) {
@@ -131,11 +131,12 @@ router.post('/start', (req, res) => {
     var url = req.body['url'] ? req.body['url'] + '' : ''
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
-    var taskHash = decodeTaskHash(req.body['taskHash'] ? req.body['taskHash'] + '' : '')
+    var taskHashDecode = decodeTaskHash(req.body['taskHash'] ? req.body['taskHash'] + '' : '')
     let files = req.body['files'] ? req.body['files'] + '' : '*'
     var name = req.body['name'] ? req.body['name'] + '' : ''
     var type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
-    // var taskHash = ''
+    var taskHash = taskHashDecode ? taskHashDecode[0] : ''
+    let fileIdDecode = taskHashDecode ? taskHashDecode[1] : ''
     let userId = req.user.uuid
     let ip = RequestUtil.getIp(req)
     if (isNaN(type)) {
@@ -147,6 +148,9 @@ router.post('/start', (req, res) => {
         addon['file'] = fileStoreId
         if (!taskHash) {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
+        }
+        if(!fileIdDecode === fileStoreId){
+            throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
         }
         // decode task hash...
 
@@ -249,7 +253,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let parsedData = parseTorrent(data);
         let result = {}
         result['infoHash'] = parsedData['infoHash']
-        result['taskHash'] = calcTaskHash(parsedData['infoHash'])
+        result['taskHash'] = calcTaskHash(parsedData['infoHash'],hash)
         //console.log('Calc hash %s',result['taskHash'])
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
