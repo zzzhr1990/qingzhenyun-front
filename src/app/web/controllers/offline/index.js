@@ -20,7 +20,7 @@ const TASK_HASH_VALIDATE_KEY = '6065772'
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 
 
-const calcTaskHash = ((taskHash,fileId) => {
+const calcTaskHash = ((taskHash, fileId) => {
     return AwesomeBase64.encodeString(taskHash + '.' + fileId.toString() + '.' + _calcHash(taskHash))
 })
 
@@ -29,7 +29,7 @@ const _calcHash = (taskHash => {
 })
 
 const decodeTaskHash = (taskHash => {
-    if(!taskHash){
+    if (!taskHash) {
         return undefined
     }
     try {
@@ -38,10 +38,10 @@ const decodeTaskHash = (taskHash => {
         return undefined
     }
     let arr = taskHash.split('.')
-    if(arr.length < 3){
+    if (arr.length < 3) {
         return undefined
     }
-    return _calcHash(arr[0],arr[1]) === arr[2] ? [arr[0],[arr[1]]] : undefined
+    return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], [arr[1]]] : undefined
 })
 
 router.post('/parseTorrent', (req, res) => {
@@ -79,7 +79,7 @@ router.post('/parseMagnet', (req, res) => {
     let taskHash = torrentInfo['infoHash']
     result = {
         'infoHash': torrentInfo['infoHash'],
-        'taskHash': calcTaskHash(torrentInfo['infoHash'],'')
+        'taskHash': calcTaskHash(torrentInfo['infoHash'], url)
     }
     result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
     if (torrentInfo['files']) {
@@ -144,11 +144,11 @@ router.post('/start', (req, res) => {
     }
     type = parseInt(type)
     let addon = {}
-    if(type === 10){
-        if(!url){
+    if (type === 10) {
+        if (!url) {
             url = fileStoreId
         }
-        if(!url){
+        if (!url) {
             throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
         }
     }
@@ -157,7 +157,7 @@ router.post('/start', (req, res) => {
         if (!taskHash) {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
         }
-        if(!fileStoreId){
+        if (!fileStoreId) {
             throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
         }
         url = 'magnet:?xt=urn:btih:' + taskHash
@@ -254,7 +254,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let parsedData = parseTorrent(data);
         let result = {}
         result['infoHash'] = parsedData['infoHash']
-        result['taskHash'] = calcTaskHash(parsedData['infoHash'],hash)
+        result['taskHash'] = calcTaskHash(parsedData['infoHash'], hash)
         //console.log('Calc hash %s',result['taskHash'])
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
