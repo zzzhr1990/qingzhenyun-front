@@ -153,7 +153,8 @@ router.post('/start', (req, res) => {
         if (!url) {
             url = fileStoreId
         }
-        console.log(taskHashDecode)
+        console.log(fileStoreId)
+        console.log("-----------------")
         if (!url) {
             throw new ApiValidateException("Task hash [" + url + "] invaliad", '{TASK_HASH}_INVALID')
         }
