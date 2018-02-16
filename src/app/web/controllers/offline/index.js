@@ -46,6 +46,7 @@ const decodeTaskHash = (taskHash => {
     if (arr.length < 3) {
         return undefined
     }
+    console.log(arr[1])
     return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], [arr[1]]] : undefined
 })
 
