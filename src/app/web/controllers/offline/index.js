@@ -46,7 +46,6 @@ const decodeTaskHash = (taskHash => {
     if (arr.length < 3) {
         return undefined
     }
-    console.log(arr[1])
     return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], [arr[1]]] : undefined
 })
 
@@ -154,6 +153,7 @@ router.post('/start', (req, res) => {
         if (!url) {
             url = fileStoreId
         }
+        console.log(taskHashDecode)
         if (!url) {
             throw new ApiValidateException("Task hash [" + url + "] invaliad", '{TASK_HASH}_INVALID')
         }
