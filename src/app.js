@@ -142,7 +142,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-    if (!err["supress"]) {
+    if (!err["supress"] && err.name !== 'UnauthorizedError') {
         console.error(err.stack)
     }
     let status = err.status || 500
