@@ -126,7 +126,7 @@ router.post('/parseMagnet', (req, res) => {
 //let renderMagnetResult = (req,res,dar)
 
 router.post('/start', (req, res) => {
-    let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
+    // let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
     let downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
     var url = req.body['url'] ? req.body['url'] + '' : ''
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
@@ -136,7 +136,7 @@ router.post('/start', (req, res) => {
     var name = req.body['name'] ? req.body['name'] + '' : ''
     var type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
     var taskHash = taskHashDecode ? taskHashDecode[0] : ''
-    let fileIdDecode = taskHashDecode ? taskHashDecode[1] : ''
+    let fileStoreId = taskHashDecode ? taskHashDecode[1] : ''
     let userId = req.user.uuid
     let ip = RequestUtil.getIp(req)
     if (isNaN(type)) {
@@ -144,12 +144,12 @@ router.post('/start', (req, res) => {
     }
     type = parseInt(type)
     let addon = {}
-    if (fileStoreId) {
+    if (type === 0) {
         addon['file'] = fileStoreId
         if (!taskHash) {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
         }
-        if(!fileIdDecode === fileStoreId){
+        if(!fileStoreId){
             throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
         }
         // decode task hash...
