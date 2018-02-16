@@ -18,10 +18,14 @@ const parseTorrent = require('parse-torrent')
 const md5 = require('md5');
 const TASK_HASH_VALIDATE_KEY = '6065772'
 const AwesomeBase64 = require('awesome-urlsafe-base64')
-
+const HASH_SPLIT = ':qzy-sp-token@6cs92d-token:'
 
 const calcTaskHash = ((taskHash, fileId) => {
-    return AwesomeBase64.encodeString(taskHash + '.' + fileId.toString() + '.' + _calcHash(taskHash))
+    return AwesomeBase64.encodeString(taskHash 
+        + HASH_SPLIT 
+        + fileId.toString() 
+        + HASH_SPLIT 
+        + _calcHash(taskHash))
 })
 
 const _calcHash = (taskHash => {
@@ -37,7 +41,7 @@ const decodeTaskHash = (taskHash => {
     } catch (exc) {
         return undefined
     }
-    let arr = taskHash.split('.')
+    let arr = taskHash.split(HASH_SPLIT)
     if (arr.length < 3) {
         return undefined
     }
