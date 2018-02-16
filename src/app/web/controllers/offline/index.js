@@ -46,7 +46,7 @@ const decodeTaskHash = (taskHash => {
     if (arr.length < 3) {
         return undefined
     }
-    return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], [arr[1]]] : undefined
+    return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], arr[1]] : undefined
 })
 
 router.post('/parseTorrent', (req, res) => {
