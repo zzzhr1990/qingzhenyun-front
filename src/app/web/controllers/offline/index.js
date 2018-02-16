@@ -38,6 +38,7 @@ const decodeTaskHash = (taskHash => {
     }
     try {
         taskHash = AwesomeBase64.decodeString(taskHash)
+        console.log(taskHash)
     } catch (exc) {
         return undefined
     }
