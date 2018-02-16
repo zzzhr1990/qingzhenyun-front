@@ -144,6 +144,14 @@ router.post('/start', (req, res) => {
     }
     type = parseInt(type)
     let addon = {}
+    if(type === 10){
+        if(!url){
+            url = fileStoreId
+        }
+        if(!url){
+            throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
+        }
+    }
     if (type === 0) {
         addon['file'] = fileStoreId
         if (!taskHash) {
@@ -152,13 +160,6 @@ router.post('/start', (req, res) => {
         if(!fileStoreId){
             throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
         }
-        // decode task hash...
-
-        /*
-        这里存在一个问题。种子的infohash为用户上传，并作为taskid作为索引
-        在这个时候，用户可能根据伪造一个taskid
-        从而对云下载服务器进行投毒
-        */
         url = 'magnet:?xt=urn:btih:' + taskHash
         type = 0
     } else if (url) {
