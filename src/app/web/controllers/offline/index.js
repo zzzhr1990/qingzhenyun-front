@@ -38,7 +38,7 @@ const decodeTaskHash = (taskHash => {
     }
     try {
         taskHash = AwesomeBase64.decodeString(taskHash)
-        console.log(taskHash)
+        // console.log(taskHash)
     } catch (exc) {
         return undefined
     }
@@ -154,7 +154,7 @@ router.post('/start', (req, res) => {
             url = fileStoreId
         }
         if (!url) {
-            throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
+            throw new ApiValidateException("Task hash [" + url + "] invaliad", '{TASK_HASH}_INVALID')
         }
     }
     if (type === 0) {
