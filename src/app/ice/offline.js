@@ -124,10 +124,13 @@
 
     offline.OfflineTaskInfoResponse = class
     {
-        constructor(taskHash = "", progress = 0, name = "", type = 0, addon = "", serverId = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "")
+        constructor(taskHash = "", progress = 0, fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), name = "", type = 0, addon = "", serverId = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "", flag = 0)
         {
             this.taskHash = taskHash;
             this.progress = progress;
+            this.fileSize = fileSize;
+            this.downloadSize = downloadSize;
+            this.speed = speed;
             this.name = name;
             this.type = type;
             this.addon = addon;
@@ -138,12 +141,16 @@
             this.status = status;
             this.createUser = createUser;
             this.createIp = createIp;
+            this.flag = flag;
         }
 
         _write(ostr)
         {
             ostr.writeString(this.taskHash);
             ostr.writeInt(this.progress);
+            ostr.writeLong(this.fileSize);
+            ostr.writeLong(this.downloadSize);
+            ostr.writeLong(this.speed);
             ostr.writeString(this.name);
             ostr.writeInt(this.type);
             ostr.writeString(this.addon);
@@ -154,12 +161,16 @@
             ostr.writeInt(this.status);
             ostr.writeLong(this.createUser);
             ostr.writeString(this.createIp);
+            ostr.writeInt(this.flag);
         }
 
         _read(istr)
         {
             this.taskHash = istr.readString();
             this.progress = istr.readInt();
+            this.fileSize = istr.readLong();
+            this.downloadSize = istr.readLong();
+            this.speed = istr.readLong();
             this.name = istr.readString();
             this.type = istr.readInt();
             this.addon = istr.readString();
@@ -170,11 +181,12 @@
             this.status = istr.readInt();
             this.createUser = istr.readLong();
             this.createIp = istr.readString();
+            this.flag = istr.readInt();
         }
 
         static get minWireSize()
         {
-            return  42;
+            return  70;
         }
     };
 
@@ -182,12 +194,14 @@
 
     offline.TaskDetailResponse = class
     {
-        constructor(taskHash = "", taskOrder = 0, filename = "", fileSize = new Ice.Long(0, 0), localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeType = 0, storeBucket = "", storeKey = "", addon = "", status = 0)
+        constructor(taskHash = "", taskOrder = 0, filename = "", fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeType = 0, storeBucket = "", storeKey = "", addon = "", status = 0)
         {
             this.taskHash = taskHash;
             this.taskOrder = taskOrder;
             this.filename = filename;
             this.fileSize = fileSize;
+            this.downloadSize = downloadSize;
+            this.speed = speed;
             this.localPath = localPath;
             this.serverId = serverId;
             this.taskUrl = taskUrl;
@@ -209,6 +223,8 @@
             ostr.writeInt(this.taskOrder);
             ostr.writeString(this.filename);
             ostr.writeLong(this.fileSize);
+            ostr.writeLong(this.downloadSize);
+            ostr.writeLong(this.speed);
             ostr.writeString(this.localPath);
             ostr.writeString(this.serverId);
             ostr.writeString(this.taskUrl);
@@ -230,6 +246,8 @@
             this.taskOrder = istr.readInt();
             this.filename = istr.readString();
             this.fileSize = istr.readLong();
+            this.downloadSize = istr.readLong();
+            this.speed = istr.readLong();
             this.localPath = istr.readString();
             this.serverId = istr.readString();
             this.taskUrl = istr.readString();
@@ -247,7 +265,7 @@
 
         static get minWireSize()
         {
-            return  53;
+            return  69;
         }
     };
 
@@ -289,6 +307,38 @@
 
     Slice.defineSequence(offline, "UserFileResponseListHelper", "offline.TaskDetailResponse", false);
 
+    Slice.defineSequence(offline, "OfflineTaskInfoResponseListHelper", "offline.OfflineTaskInfoResponse", false);
+
+    Slice.defineSequence(offline, "intListHelper", "Ice.IntHelper", true);
+
+    offline.DownloadStatusRefreshRequest = class
+    {
+        constructor(taskInfo = new offline.OfflineTaskInfoResponse(), files = null)
+        {
+            this.taskInfo = taskInfo;
+            this.files = files;
+        }
+
+        _write(ostr)
+        {
+            offline.OfflineTaskInfoResponse.write(ostr, this.taskInfo);
+            offline.UserFileResponseListHelper.write(ostr, this.files);
+        }
+
+        _read(istr)
+        {
+            this.taskInfo = offline.OfflineTaskInfoResponse.read(istr, this.taskInfo);
+            this.files = offline.UserFileResponseListHelper.read(istr);
+        }
+
+        static get minWireSize()
+        {
+            return  71;
+        }
+    };
+
+    Slice.defineStruct(offline.DownloadStatusRefreshRequest, true, true);
+
     const iceC_offline_OfflineDownloadServiceHandler_ids = [
         "::Ice::Object",
         "::offline::OfflineDownloadServiceHandler"
@@ -304,7 +354,15 @@
 
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
+        "refreshDownloadStatus": [, , , , [1], [[offline.DownloadStatusRefreshRequest]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
         "addTask": [, , , , [offline.OfflineTaskInfoResponse], [[offline.OfflineTaskInfoResponse]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "fetchTask": [, , , , [offline.OfflineTaskInfoResponse], [[3], [3], [7], ["offline.intListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],

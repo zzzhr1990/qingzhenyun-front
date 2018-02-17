@@ -153,9 +153,6 @@ router.post('/start', (req, res) => {
         if (!url) {
             url = fileStoreId
         }
-        console.log(fileStoreId)
-        console.log(taskHashDecode)
-        console.log("-----------------")
         if (!url) {
             throw new ApiValidateException("Task hash [" + url + "] invaliad", '{TASK_HASH}_INVALID')
         }
@@ -207,6 +204,7 @@ router.post('/start', (req, res) => {
     }
     //(userId: Long, taskHash: String?, path: String?, name: String?, uuid: String?, current: Current?)
     //
+    let iceZero = IceUtil.number2IceLong(0)
     userFileRpc.createOfflineTask(userId,
         taskHash,
         savePath == '' ? null : savePath,
@@ -217,6 +215,9 @@ router.post('/start', (req, res) => {
             let createReq = new OfflineTaskInfoResponse(
                 taskHash,
                 0,
+                iceZero,
+                iceZero,
+                iceZero,
                 name,
                 type,
                 JSON.stringify(addon),
@@ -225,7 +226,8 @@ router.post('/start', (req, res) => {
                 current,
                 "", 0,
                 userId,
-                ip
+                ip,
+                0
             )
             offlineRpc.addTask(createReq).then(createReqResponse => {
                 delete createReqResponse['serverId']
@@ -292,12 +294,15 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         //storeKey = "",
         // addon = "",
         // status = 0)
+        let zeroLong = IceUtil.number2IceLong(0)
         for (let file of result['files']) {
             let response = new TaskDetailResponse(
                 result['infoHash'],
                 count,
                 file['name'],
                 IceUtil.number2IceLong(file['length']),
+                zeroLong,
+                zeroLong,
                 "",
                 "",
                 result['infoHash'],
