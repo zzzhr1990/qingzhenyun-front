@@ -305,7 +305,7 @@
 
     Slice.defineStruct(offline.OfflineTaskListenerResponse, true, true);
 
-    Slice.defineSequence(offline, "UserFileResponseListHelper", "offline.TaskDetailResponse", false);
+    Slice.defineSequence(offline, "TaskDetailResponseListHelper", "offline.TaskDetailResponse", false);
 
     Slice.defineSequence(offline, "OfflineTaskInfoResponseListHelper", "offline.OfflineTaskInfoResponse", false);
 
@@ -322,13 +322,13 @@
         _write(ostr)
         {
             offline.OfflineTaskInfoResponse.write(ostr, this.taskInfo);
-            offline.UserFileResponseListHelper.write(ostr, this.files);
+            offline.TaskDetailResponseListHelper.write(ostr, this.files);
         }
 
         _read(istr)
         {
             this.taskInfo = offline.OfflineTaskInfoResponse.read(istr, this.taskInfo);
-            this.files = offline.UserFileResponseListHelper.read(istr);
+            this.files = offline.TaskDetailResponseListHelper.read(istr);
         }
 
         static get minWireSize()
@@ -338,6 +338,8 @@
     };
 
     Slice.defineStruct(offline.DownloadStatusRefreshRequest, true, true);
+
+    Slice.defineSequence(offline, "DownloadStatusRefreshRequestListHelper", "offline.DownloadStatusRefreshRequest", false);
 
     const iceC_offline_OfflineDownloadServiceHandler_ids = [
         "::Ice::Object",
@@ -354,7 +356,7 @@
 
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
-        "refreshDownloadStatus": [, , , , [1], [[offline.DownloadStatusRefreshRequest]], ,
+        "refreshDownloadStatus": [, , , , [1], [["offline.DownloadStatusRefreshRequestListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],
@@ -366,11 +368,11 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "refreshTorrent": [, , , , ["offline.UserFileResponseListHelper"], [["offline.UserFileResponseListHelper"], [1]], ,
+        "refreshTorrent": [, , , , ["offline.TaskDetailResponseListHelper"], [["offline.TaskDetailResponseListHelper"], [1]], ,
         [
             offline.OfflineOperationException
         ], , ],
-        "getTaskDetailList": [, , , , ["offline.UserFileResponseListHelper"], [[7]], ,
+        "getTaskDetailList": [, , , , ["offline.TaskDetailResponseListHelper"], [[7]], ,
         [
             offline.OfflineOperationException
         ], , ]
