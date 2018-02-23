@@ -271,6 +271,50 @@
 
     Slice.defineStruct(offline.TaskDetailResponse, true, true);
 
+    offline.TaskStatisticsResponse = class {
+        static get minWireSize() {
+            return 39;
+        }
+
+        constructor(serverId = "", taskHash = "", taskIndex = 0, fileSize = new Ice.Long(0, 0), localPath = "", status = 0, lastUpdateTime = new Ice.Long(0, 0), taskSpeed = new Ice.Long(0, 0), taskType = 0) {
+            this.serverId = serverId;
+            this.taskHash = taskHash;
+            this.taskIndex = taskIndex;
+            this.fileSize = fileSize;
+            this.localPath = localPath;
+            this.status = status;
+            this.lastUpdateTime = lastUpdateTime;
+            this.taskSpeed = taskSpeed;
+            this.taskType = taskType;
+        }
+
+        _write(ostr) {
+            ostr.writeString(this.serverId);
+            ostr.writeString(this.taskHash);
+            ostr.writeInt(this.taskIndex);
+            ostr.writeLong(this.fileSize);
+            ostr.writeString(this.localPath);
+            ostr.writeInt(this.status);
+            ostr.writeLong(this.lastUpdateTime);
+            ostr.writeLong(this.taskSpeed);
+            ostr.writeInt(this.taskType);
+        }
+
+        _read(istr) {
+            this.serverId = istr.readString();
+            this.taskHash = istr.readString();
+            this.taskIndex = istr.readInt();
+            this.fileSize = istr.readLong();
+            this.localPath = istr.readString();
+            this.status = istr.readInt();
+            this.lastUpdateTime = istr.readLong();
+            this.taskSpeed = istr.readLong();
+            this.taskType = istr.readInt();
+        }
+    };
+
+    Slice.defineStruct(offline.TaskStatisticsResponse, true, true);
+
     offline.OfflineTaskListenerResponse = class
     {
         constructor(taskHash = "", userId = new Ice.Long(0, 0), status = 0, createTime = new Ice.Long(0, 0))
@@ -364,10 +408,18 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "fetchTask": [, , , , [offline.OfflineTaskInfoResponse], [[3], [3], [7], ["offline.intListHelper"]], ,
+        "resumeTask": [, , , , ["offline.OfflineTaskInfoResponseListHelper"], [[3], [7], ["offline.intListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],
+        "fetchTask": [, , , , [offline.OfflineTaskInfoResponse], [[3], [3], [7], ["offline.intListHelper"]], ,
+        [
+            offline.OfflineOperationException
+        ], ,],
+        "fetchUploadTask": [, , , , [offline.TaskStatisticsResponse], [[3], [3], [7]], ,
+            [
+                offline.OfflineOperationException
+            ], ,],
         "refreshTorrent": [, , , , ["offline.TaskDetailResponseListHelper"], [["offline.TaskDetailResponseListHelper"], [1]], ,
         [
             offline.OfflineOperationException
@@ -378,7 +430,7 @@
         ], , ]
     });
     exports.offline = offline;
-}
+};
 (typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? module : undefined,
  typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
  typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this));
