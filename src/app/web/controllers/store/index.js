@@ -90,7 +90,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
-                .toString('utf8')
+            .toString('utf8')
         )
         let callback = JSON.parse(
             AwesomeBase64.decode(req.body).toString('utf8')
@@ -169,7 +169,7 @@ router.get('/play/:encoded', (req, res) => {
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
-                .toString('utf8')
+            .toString('utf8')
         )
         let fileHash = encode['hash']
         cloudStoreRpc.getFile(fileHash).then(fileData => {
@@ -195,8 +195,7 @@ router.get('/play/:encoded', (req, res) => {
             console.error(error)
             res.send(key)
         })
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error)
         res.send(key)
     }
@@ -230,7 +229,12 @@ router.post('/callback/wcs', (req, res) => {
         let mime = data.mime
         let preview = data.preview
         let fileType = 0
-        createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType)
+        if (userId > -1) {
+            createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType)
+        } else {
+            ResponseUtil.Ok(req, res, data)
+        }
+
     }).catch(error => {
         if (error['innerCode']) {
             ResponseUtil.ApiErrorAsOk(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
