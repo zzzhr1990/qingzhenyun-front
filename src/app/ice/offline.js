@@ -433,11 +433,11 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "singleFileFinish": [, , , , [1], [[7], [3], [7]], ,
+        "singleFileFinish": [, , , , [1], [[7], [3], [7], [7], [7], [7], [4], [3]], ,
         [
             offline.OfflineOperationException
         ], , ],
-        "taskFinish": [, , , , [1], [[7]], ,
+        "taskFinish": [, , , , [1], [[7], [7]], ,
         [
             offline.OfflineOperationException
         ], , ]
