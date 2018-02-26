@@ -194,7 +194,7 @@
 
     offline.TaskDetailResponse = class
     {
-        constructor(taskHash = "", taskOrder = 0, filename = "", fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeType = 0, storeBucket = "", storeKey = "", addon = "", status = 0)
+        constructor(taskHash = "", taskOrder = 0, filename = "", fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), localPath = "", serverId = "", taskUrl = "", taskFastUrl = "", operation = 0, taskProgress = 0, createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), storeId = "", addon = "", status = 0)
         {
             this.taskHash = taskHash;
             this.taskOrder = taskOrder;
@@ -210,9 +210,7 @@
             this.taskProgress = taskProgress;
             this.createTime = createTime;
             this.updateTime = updateTime;
-            this.storeType = storeType;
-            this.storeBucket = storeBucket;
-            this.storeKey = storeKey;
+            this.storeId = storeId;
             this.addon = addon;
             this.status = status;
         }
@@ -233,9 +231,7 @@
             ostr.writeInt(this.taskProgress);
             ostr.writeLong(this.createTime);
             ostr.writeLong(this.updateTime);
-            ostr.writeInt(this.storeType);
-            ostr.writeString(this.storeBucket);
-            ostr.writeString(this.storeKey);
+            ostr.writeString(this.storeId);
             ostr.writeString(this.addon);
             ostr.writeInt(this.status);
         }
@@ -256,16 +252,14 @@
             this.taskProgress = istr.readInt();
             this.createTime = istr.readLong();
             this.updateTime = istr.readLong();
-            this.storeType = istr.readInt();
-            this.storeBucket = istr.readString();
-            this.storeKey = istr.readString();
+            this.storeId = istr.readString();
             this.addon = istr.readString();
             this.status = istr.readInt();
         }
 
         static get minWireSize()
         {
-            return  69;
+            return  64;
         }
     };
 
@@ -436,6 +430,14 @@
             offline.OfflineOperationException
         ], , ],
         "getTaskDetailList": [, , , , ["offline.TaskDetailResponseListHelper"], [[7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "singleFileFinish": [, , , , [1], [[7], [3], [7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "taskFinish": [, , , , [1], [[7]], ,
         [
             offline.OfflineOperationException
         ], , ]

@@ -229,7 +229,8 @@ router.post('/callback/wcs', (req, res) => {
         let mime = data.mime
         let preview = data.preview
         let fileType = 0
-        if (userId > -1) {
+        let testUserId = IceUtil.iceLong2Number(userId)
+        if (testUserId > -1) {
             createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType)
         } else {
             ResponseUtil.Ok(req, res, data)
