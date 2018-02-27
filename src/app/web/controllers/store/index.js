@@ -149,7 +149,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
             previewData['video'] = videos
         }
         
-        let successCode = success ? 100 : -100
+        let successCode = success ? (convertType == 1 ? 200:100) : -100
         let previewType = convertType == 1 ? 48 : 38
         let previewAddonData = JSON.stringify(previewData)
         // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
