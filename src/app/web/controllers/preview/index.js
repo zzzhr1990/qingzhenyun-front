@@ -40,7 +40,7 @@ router.post('/video', (req, res) => {
         cloudStoreRpc.getFile(storeId).then(fileData => {
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
-            if (preview != 100 || preview != 200) {
+            if (preview != 100 && preview != 200) {
                 ResponseUtil.ApiError(req, res, new ApiException("PREVIEW_NOT_SUCCESS",
                     400,
                     "PREVIEW_NOT_SUCCESS")
