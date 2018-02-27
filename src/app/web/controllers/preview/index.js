@@ -10,7 +10,7 @@ let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 
-router.post('/video', (req, res) => {
+router.post(['/video','/audio'], (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     var path = req.body['path'] ? req.body['path'] + '' : ''
     if (!uuid && !path) {
