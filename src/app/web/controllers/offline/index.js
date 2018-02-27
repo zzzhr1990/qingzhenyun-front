@@ -132,7 +132,6 @@ router.post('/parseMagnet', (req, res) => {
 
 router.post('/start', (req, res) => {
     // let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
-    let downloadList = req.body['downloadList'] ? req.body['downloadList'] : [0]
     var url = req.body['url'] ? req.body['url'] + '' : ''
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''

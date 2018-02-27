@@ -101,6 +101,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let fileHash = encode['hash']
         let fileBucket = encode['hash']
         let encodeKey = encode['key']
+        let convertType = encode['type']
         var success = false
         let wcsTaskId = callback['id']
         let callbackCode = callback['code']
@@ -142,9 +143,14 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
             }
         }
         previewData['duration'] = durationCount
-        previewData['video'] = videos
+        if(convertType == 1){
+            previewData['audio'] = videos
+        }else{
+            previewData['video'] = videos
+        }
+        
         let successCode = success ? 100 : -100
-        let previewType = 38
+        let previewType = convertType == 1 ? 48 : 38
         let previewAddonData = JSON.stringify(previewData)
         // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
         cloudStoreRpc.updatePreviewTaskStatus(IceUtil.number2IceLong(taskId), fileHash, successCode, previewType, previewAddonData).then(data => {
