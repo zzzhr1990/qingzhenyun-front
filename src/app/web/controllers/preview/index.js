@@ -40,7 +40,7 @@ router.post('/video', (req, res) => {
         cloudStoreRpc.getFile(storeId).then(fileData => {
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
-            if (preview != 100) {
+            if (preview != 100 || preview != 200) {
                 ResponseUtil.ApiError(req, res, new ApiException("PREVIEW_NOT_SUCCESS",
                     400,
                     "PREVIEW_NOT_SUCCESS")
@@ -63,7 +63,8 @@ router.post('/video', (req, res) => {
                 'duration': decodeObj["duration"],
                 'maxClear': decodeObj['maxClear']
             }
-            if (!decodeObj['video']) {
+            let videos = preview == 100 ? decodeObj['video'] : decodeObj['audio']
+            if (!videos) {
                 ResponseUtil.ApiError(req, res, new ApiException("PREVIEW_NOT_SUCCESS",
                     400,
                     "PREVIEW_NOT_SUCCESS")
@@ -71,7 +72,7 @@ router.post('/video', (req, res) => {
                 return
             }
             let videoArr = []
-            for (let video of decodeObj['video']) {
+            for (let video of videos) {
                 videoArr.push({
                     'duration': video['duration'],
                     'url': 'http://other.qiecdn.com/'
@@ -82,7 +83,11 @@ router.post('/video', (req, res) => {
                     'clear': video['clear']
                 })
             }
-            responseObj['video'] = videoArr
+            if(preview == 100){
+                responseObj['video'] = videoArr
+            }else{
+                responseObj['audio'] = videoArr
+            }
             ResponseUtil.Ok(req, res, responseObj)
         }).catch((error) => {
             ResponseUtil.RenderStandardRpcError(req, res, error)
