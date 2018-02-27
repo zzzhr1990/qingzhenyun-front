@@ -166,13 +166,14 @@
 
     store.PreviewTaskResponse = class
     {
-        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, previewType = 0, actionTime = new Ice.Long(0, 0))
+        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", originalName = "", storeType = 0, preview = 0, previewType = 0, actionTime = new Ice.Long(0, 0))
         {
             this.taskId = taskId;
             this.fileHash = fileHash;
             this.mime = mime;
             this.fileBucket = fileBucket;
             this.fileKey = fileKey;
+            this.originalName = originalName;
             this.storeType = storeType;
             this.preview = preview;
             this.previewType = previewType;
@@ -186,6 +187,7 @@
             ostr.writeString(this.mime);
             ostr.writeString(this.fileBucket);
             ostr.writeString(this.fileKey);
+            ostr.writeString(this.originalName);
             ostr.writeInt(this.storeType);
             ostr.writeInt(this.preview);
             ostr.writeInt(this.previewType);
@@ -199,6 +201,7 @@
             this.mime = istr.readString();
             this.fileBucket = istr.readString();
             this.fileKey = istr.readString();
+            this.originalName = istr.readString();
             this.storeType = istr.readInt();
             this.preview = istr.readInt();
             this.previewType = istr.readInt();
@@ -207,7 +210,7 @@
 
         static get minWireSize()
         {
-            return  32;
+            return  33;
         }
     };
 
