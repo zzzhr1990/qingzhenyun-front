@@ -79,7 +79,6 @@ router.post('/page', (req, res) => {
     if (!validator.isInt(orderStr)) {
         orderStr = '0'
     }
-    console.log(orderStr)
     userFileRpc.listOfflinePage(userId, page, pageSize, parseInt(orderStr)).then(data => {
         ResponseUtil.Ok(req, res, data)
     }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
@@ -212,7 +211,7 @@ router.post('/start', (req, res) => {
             throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
         }
         if (!fileStoreId) {
-            throw new ApiValidateException("Task hash invaliad", '{TASK_HASH}_INVALID')
+            throw new ApiValidateException("Task hash invalid", '{TASK_HASH}_INVALID')
         }
         url = 'magnet:?xt=urn:btih:' + taskHash
         type = 0
@@ -256,7 +255,7 @@ router.post('/start', (req, res) => {
             taskHash,
             savePath == '' ? null : savePath,
             name ? name : taskHash, files,
-            saveUuid == '' ? null : uuid)
+            saveUuid == '' ? null : saveUuid)
         .then(data => {
             let current = IceUtil.number2IceLong((new Date().getTime()))
             let createReq = new OfflineTaskInfoResponse(
