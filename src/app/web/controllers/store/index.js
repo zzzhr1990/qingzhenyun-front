@@ -181,7 +181,7 @@ router.get('/play/:encoded', (req, res) => {
         cloudStoreRpc.getFile(fileHash).then(fileData => {
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
-            if (preview != 100) {
+            if (preview != 100 && preview != 200 ) {
                 res.send(key)
                 return
             }
