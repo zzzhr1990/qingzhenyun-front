@@ -9,7 +9,12 @@ let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
 const AwesomeBase64 = require('awesome-urlsafe-base64')
+const cors = require('cors')
 
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 router.post('/token', (req, res) => {
     let userId = req.user.uuid
@@ -143,13 +148,13 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
             }
         }
         previewData['duration'] = durationCount
-        if(convertType == 1){
+        if (convertType == 1) {
             previewData['audio'] = videos
-        }else{
+        } else {
             previewData['video'] = videos
         }
-        
-        let successCode = success ? (convertType == 1 ? 200:100) : -100
+
+        let successCode = success ? (convertType == 1 ? 200 : 100) : -100
         let previewType = convertType == 1 ? 48 : 38
         let previewAddonData = JSON.stringify(previewData)
         // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
@@ -167,11 +172,11 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     ResponseUtil.Ok(req, res, {})
 })
 
-router.get('/play/:encoded', (req, res) => {
+router.get('/play/:encoded', cors(corsOptions) ,(req, res) => {
     var key = "2033a59f29d8750"
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    // res.header("Access-Control-Allow-Origin", "*");
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
@@ -181,7 +186,7 @@ router.get('/play/:encoded', (req, res) => {
         cloudStoreRpc.getFile(fileHash).then(fileData => {
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
-            if (preview != 100 && preview != 200 ) {
+            if (preview != 100 && preview != 200) {
                 res.send(key)
                 return
             }

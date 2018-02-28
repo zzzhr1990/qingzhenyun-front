@@ -31,7 +31,8 @@
         "awesome-urlsafe-base64": "^1.1.2",
         "parse-torrent": "^5.8.3",
         "download": "^6.2.5",
-        "md5": "^2.2.1"
+        "md5": "^2.2.1",
+        "cors": "^2.8.4"
     },
     "devDependencies": {
         "eslint": "^4.15.0",
