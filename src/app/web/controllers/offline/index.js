@@ -22,10 +22,12 @@ const HASH_SPLIT = '.qzy-sp-token@6cs92d-token.'
 let validator = require('validator')
 
 
-const calcTaskHash = ((taskHash, fileId) => {
+const calcTaskHash = ((taskHash, fileId, taskName) => {
     return AwesomeBase64.encodeString(taskHash +
         HASH_SPLIT +
         fileId.toString() +
+        HASH_SPLIT +
+        AwesomeBase64.encodeString(taskName) +
         HASH_SPLIT +
         _calcHash(taskHash))
 })
@@ -48,7 +50,8 @@ const decodeTaskHash = (taskHash => {
     if (arr.length < 3) {
         return undefined
     }
-    return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], arr[1]] : undefined
+    let tt = AwesomeBase64.decodeString(arr[2])
+    return _calcHash(arr[0], arr[1], tt) === arr[3] ? [arr[0], arr[1], tt] : undefined
 })
 
 router.post('/page', (req, res) => {
@@ -88,9 +91,9 @@ router.post('/remove', (req, res) => {
     //ResponseUtil.Ok(req, res, req.user)
     var taskHash = req.body['taskHash'] ? req.body['taskHash'] : []
     let userId = req.user.uuid
-    if(Array.isArray(taskHash)){
+    if (Array.isArray(taskHash)) {
         taskHash = taskHash.map((v) => v.toString())
-    }else{
+    } else {
         taskHash = [taskHash + '']
     }
     userFileRpc.removeOfflineTask(userId, taskHash).then(data => {
@@ -133,9 +136,9 @@ router.post('/parseMagnet', (req, res) => {
     let taskHash = torrentInfo['infoHash']
     result = {
         'infoHash': torrentInfo['infoHash'],
-        'taskHash': calcTaskHash(torrentInfo['infoHash'], url)
     }
     result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
+    result['taskHash'] = calcTaskHash(torrentInfo['infoHash'], url, result['name'])
     if (torrentInfo['files']) {
         result['files'] = torrentInfo['files']
     }
@@ -192,6 +195,9 @@ router.post('/start', (req, res) => {
     let fileStoreId = taskHashDecode ? taskHashDecode[1] : ''
     let userId = req.user.uuid
     let ip = RequestUtil.getIp(req)
+    if(!name){
+        name = taskHashDecode ? taskHashDecode[2] : ''
+    }
     if (isNaN(type)) {
         throw new ApiValidateException("Type required", '{TYPE}_REQUIRED')
     }
@@ -239,6 +245,19 @@ router.post('/start', (req, res) => {
         } else if (urlLow.startsWith('http://') || urlLow.startsWith('https://') || urlLow.startsWith('ftp://') || urlLow.startsWith('sftp://')) {
             type = 20
             taskHash = md5(url)
+            let ldex = url.lastIndexOf('/')
+            if(ldex > -1){
+                let sb = url.substring(ldex + 1)
+                if(sb){
+                    let odex = sb.lastIndexOf('?')
+                    if(odex > -1){
+                        let be = sb.substring(0,odex)
+                        if(be){
+                            name = decodeURIComponent(be)
+                        }
+                    }
+                }
+            }
         } else {
             console.warn('Cannot decode %s', url)
             throw new ApiValidateException("Url not supported.",
@@ -310,10 +329,11 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         let parsedData = parseTorrent(data);
         let result = {}
         result['infoHash'] = parsedData['infoHash']
-        result['taskHash'] = calcTaskHash(parsedData['infoHash'], hash)
+
         //console.log('Calc hash %s',result['taskHash'])
         result['files'] = parsedData['files']
         result['name'] = parsedData['name']
+        result['taskHash'] = calcTaskHash(parsedData['infoHash'], hash, result['name'])
         result['comment'] = parsedData['comment']
         result['files'] = parsedData['files']
         result['length'] = parsedData['length']
