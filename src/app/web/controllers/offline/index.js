@@ -79,7 +79,7 @@ router.post('/page', (req, res) => {
     if (!validator.isInt(orderStr)) {
         orderStr = '0'
     }
-    userFileRpc.listOfflinePage(userId, page, pageSize, order).then(data => {
+    userFileRpc.listOfflinePage(userId, page, pageSize, parseInt(orderStr)).then(data => {
         ResponseUtil.Ok(req, res, data)
     }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
 })
