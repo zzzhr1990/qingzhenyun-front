@@ -12,10 +12,17 @@ const AwesomeBase64 = require('awesome-urlsafe-base64')
 const cors = require('cors')
 
 var corsOptions = {
+    /*
     origin: '*',
     methods: ['GET', 'PUT', 'POST'],
     allowedHeaders: ["X-Requested-With"],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    */
+
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 200
 }
 
 router.post('/token', (req, res) => {
