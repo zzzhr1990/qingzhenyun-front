@@ -13,6 +13,8 @@ const cors = require('cors')
 
 var corsOptions = {
     origin: '*',
+    methods: ['GET', 'PUT', 'POST'],
+    allowedHeaders: ["X-Requested-With"],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -172,7 +174,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     ResponseUtil.Ok(req, res, {})
 })
 
-router.get('/play/:encoded', cors(corsOptions) ,(req, res) => {
+router.get('/play/:encoded', cors(corsOptions), (req, res) => {
     var key = "2033a59f29d8750"
     // res.header("Access-Control-Allow-Origin", "*");
     // res.header("Access-Control-Allow-Headers", "X-Requested-With");
