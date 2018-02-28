@@ -238,8 +238,6 @@ router.post('/callback/wcs', (req, res) => {
     // save file
     cloudStoreRpc.uploadFile(req.body.callbackBody).then(data => {
         //
-        // result = { 'callbackTime': (new Date()).getTime }
-        //res.json(data)
         let names = data.originalFilename.split("|@qzy_inner@|")
         let parent = names[0]
         let name = names[1]

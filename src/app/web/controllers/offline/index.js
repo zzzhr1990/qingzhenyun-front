@@ -21,11 +21,11 @@ const AwesomeBase64 = require('awesome-urlsafe-base64')
 const HASH_SPLIT = '.qzy-sp-token@6cs92d-token.'
 
 const calcTaskHash = ((taskHash, fileId) => {
-    return AwesomeBase64.encodeString(taskHash 
-        + HASH_SPLIT 
-        + fileId.toString() 
-        + HASH_SPLIT 
-        + _calcHash(taskHash))
+    return AwesomeBase64.encodeString(taskHash +
+        HASH_SPLIT +
+        fileId.toString() +
+        HASH_SPLIT +
+        _calcHash(taskHash))
 })
 
 const _calcHash = (taskHash => {
@@ -47,6 +47,53 @@ const decodeTaskHash = (taskHash => {
         return undefined
     }
     return _calcHash(arr[0], arr[1]) === arr[2] ? [arr[0], arr[1]] : undefined
+})
+
+router.post('/page', (req, res) => {
+    //ResponseUtil.Ok(req, res, req.user)
+    var pageStr = req.body['page'] ? req.body['page'] + '' : ''
+    //var pageStr = req.body['taskHas'] ? req.body['page'] : []
+    if (!validator.isInt(pageStr)) {
+        pageStr = '1'
+    }
+    var page = parseInt(pageStr)
+    if (page < 1) {
+        page = 1
+    }
+    //
+    var pageSizeStr = req.body['pageSize'] ? req.body['pageSize'] + '' : ''
+    if (!validator.isInt(pageSizeStr)) {
+        pageSizeStr = '20'
+    }
+    var pageSize = parseInt(pageSizeStr)
+    if (pageSize < 1) {
+        pageSize = 20
+    }
+    if (pageSize > 999) {
+        pageSize = 999
+    }
+    let userId = req.user.uuid
+    var orderStr = req.body['order'] ? req.body['order'] + '' : ''
+    if (!validator.isInt(orderStr)) {
+        orderStr = '0'
+    }
+    userFileRpc.listOfflinePage(userId, page, pageSize, order).then(data => {
+        ResponseUtil.Ok(req, res, data)
+    }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
+})
+
+router.post('/remove', (req, res) => {
+    //ResponseUtil.Ok(req, res, req.user)
+    var taskHash = req.body['taskHash'] ? req.body['taskHash'] : []
+    let userId = req.user.uuid
+    if(Array.isArray(taskHash)){
+        taskHash = taskHash.map((v) => v.toString())
+    }else{
+        taskHash = [taskHash + '']
+    }
+    userFileRpc.removeOfflineTask(userId, taskHash).then(data => {
+        ResponseUtil.Ok(req, res, data)
+    }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
 })
 
 router.post('/parseTorrent', (req, res) => {
@@ -172,8 +219,7 @@ router.post('/start', (req, res) => {
             try {
                 url = StringUtil.decodeThunder(url)
                 urlLow = url.toLocaleLowerCase()
-            }
-            catch (thunderError) {
+            } catch (thunderError) {
                 throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
             }
         }
@@ -185,8 +231,7 @@ router.post('/start', (req, res) => {
                 if (torrentInfo['infoHash'] != taskHash) {
                     taskHash = torrentInfo['infoHash']
                 }
-            }
-            catch (magnetError) {
+            } catch (magnetError) {
                 throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
             }
         } else if (urlLow.startsWith('http://') || urlLow.startsWith('https://') || urlLow.startsWith('ftp://') || urlLow.startsWith('sftp://')) {
@@ -205,10 +250,10 @@ router.post('/start', (req, res) => {
     //
     let iceZero = IceUtil.number2IceLong(0)
     userFileRpc.createOfflineTask(userId,
-        taskHash,
-        savePath == '' ? null : savePath,
-        name ? name : taskHash, files,
-        saveUuid == '' ? null : uuid)
+            taskHash,
+            savePath == '' ? null : savePath,
+            name ? name : taskHash, files,
+            saveUuid == '' ? null : uuid)
         .then(data => {
             let current = IceUtil.number2IceLong((new Date().getTime()))
             let createReq = new OfflineTaskInfoResponse(

@@ -270,6 +270,47 @@
 
     Slice.defineStruct(userfile.UserOfflineResponse, true, true);
 
+    Slice.defineSequence(userfile, "UserOfflineResponseListHelper", "userfile.UserOfflineResponse", false);
+
+    userfile.UserOfflinePageResponse = class
+    {
+        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0, list = null)
+        {
+            this.page = page;
+            this.pageSize = pageSize;
+            this.totalCount = totalCount;
+            this.totalPage = totalPage;
+            this.list = list;
+        }
+
+        _write(ostr)
+        {
+            ostr.writeInt(this.page);
+            ostr.writeInt(this.pageSize);
+            ostr.writeInt(this.totalCount);
+            ostr.writeInt(this.totalPage);
+            userfile.UserOfflineResponseListHelper.write(ostr, this.list);
+        }
+
+        _read(istr)
+        {
+            this.page = istr.readInt();
+            this.pageSize = istr.readInt();
+            this.totalCount = istr.readInt();
+            this.totalPage = istr.readInt();
+            this.list = userfile.UserOfflineResponseListHelper.read(istr);
+        }
+
+        static get minWireSize()
+        {
+            return  17;
+        }
+    };
+
+    Slice.defineStruct(userfile.UserOfflinePageResponse, true, true);
+
+    Slice.defineSequence(userfile, "removeOfflineTaskListHelper", "Ice.StringHelper", false);
+
     const iceC_userfile_UserFileServiceHandler_ids = [
         "::Ice::Object",
         "::userfile::UserFileServiceHandler"
@@ -285,10 +326,18 @@
 
     Slice.defineOperations(userfile.UserFileServiceHandler, userfile.UserFileServiceHandlerPrx, iceC_userfile_UserFileServiceHandler_ids, 1,
     {
+        "removeOfflineTask": [, , , , [3], [[4], ["userfile.removeOfflineTaskListHelper"]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
         "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [4], [3], [3], [3], [3]], ,
         [
             userfile.FileOperationException
         ], , true],
+        "listOfflinePage": [, , , , [userfile.UserOfflinePageResponse], [[4], [3], [3], [3]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
         "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7]], ,
         [
             userfile.FileOperationException
