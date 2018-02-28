@@ -182,7 +182,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
 })
 
 router.get('/play/:encoded', cors(corsOptions), (req, res) => {
-    var key = "2033a59f29d8750"
+    var key = "2033a59f29d87508"
     // res.header("Access-Control-Allow-Origin", "*");
     // res.header("Access-Control-Allow-Headers", "X-Requested-With");
     // res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
