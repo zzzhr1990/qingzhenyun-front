@@ -182,7 +182,7 @@
 
     Slice.defineOperations(user.UserServiceHandler, user.UserServiceHandlerPrx, iceC_user_UserServiceHandler_ids, 1,
     {
-        "registerUser": [, , , , [user.UserResponse], [[7], [7], [7], [7], [7]], ,
+        "registerUser": [, , , , [user.UserResponse], [[7], [7], [7], [7]], ,
         [
             user.RegisterFailedException
         ], , ],

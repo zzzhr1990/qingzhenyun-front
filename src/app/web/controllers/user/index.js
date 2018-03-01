@@ -24,6 +24,7 @@ router.post('/register', (req, res) => {
     if (StringUtil.isEmpty(password)) {
         throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
     }
+    /*
     let email = req.body['email']
     if (StringUtil.isEmpty(email)) {
         throw new ApiValidateException("User email required", '{EMAIL}_REQUIRED')
@@ -31,6 +32,7 @@ router.post('/register', (req, res) => {
     if (!validator.isEmail(email)) {
         throw new ApiValidateException("User email not validate", '{EMAIL}_NOT_VALIDATE')
     }
+    */
     let phone = req.body['phone']
     if (StringUtil.isEmpty(phone)) {
         throw new ApiValidateException("User phone required", '{PHONE}_REQUIRED')
@@ -42,7 +44,7 @@ router.post('/register', (req, res) => {
     // No front server like nginx.
     //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
     let ip = RequestUtil.getIp(req)
-    userService.registerUser(name, password, email, phone, ip)
+    userService.registerUser(name, password, phone, ip)
         .then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {

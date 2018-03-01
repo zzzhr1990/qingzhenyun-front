@@ -99,6 +99,9 @@ router.post('/remove', (req, res) => {
     userFileRpc.removeOfflineTask(userId, taskHash).then(data => {
         ResponseUtil.Ok(req, res, data)
     }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
+    offlineRpc.removeTask(userId, taskHash)
+        .then((data) => {})
+        .catch(ex => console.error(ex))
 })
 
 router.post('/parseTorrent', (req, res) => {
@@ -195,7 +198,7 @@ router.post('/start', (req, res) => {
     let fileStoreId = taskHashDecode ? taskHashDecode[1] : ''
     let userId = req.user.uuid
     let ip = RequestUtil.getIp(req)
-    if(!name){
+    if (!name) {
         name = taskHashDecode ? taskHashDecode[2] : ''
     }
     if (isNaN(type)) {
@@ -246,13 +249,13 @@ router.post('/start', (req, res) => {
             type = 20
             taskHash = md5(url)
             let ldex = url.lastIndexOf('/')
-            if(ldex > -1){
+            if (ldex > -1) {
                 let sb = url.substring(ldex + 1)
-                if(sb){
+                if (sb) {
                     let odex = sb.lastIndexOf('?')
-                    if(odex > -1){
-                        let be = sb.substring(0,odex)
-                        if(be){
+                    if (odex > -1) {
+                        let be = sb.substring(0, odex)
+                        if (be) {
                             name = decodeURIComponent(be)
                         }
                     }

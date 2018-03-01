@@ -309,7 +309,7 @@
 
     Slice.defineStruct(userfile.UserOfflinePageResponse, true, true);
 
-    Slice.defineSequence(userfile, "removeOfflineTaskListHelper", "Ice.StringHelper", false);
+    Slice.defineSequence(userfile, "RemoveOfflineTaskListHelper", "Ice.StringHelper", false);
 
     const iceC_userfile_UserFileServiceHandler_ids = [
         "::Ice::Object",
@@ -326,7 +326,7 @@
 
     Slice.defineOperations(userfile.UserFileServiceHandler, userfile.UserFileServiceHandlerPrx, iceC_userfile_UserFileServiceHandler_ids, 1,
     {
-        "removeOfflineTask": [, , , , [3], [[4], ["userfile.removeOfflineTaskListHelper"]], ,
+        "removeOfflineTask": [, , , , [3], [[4], ["userfile.RemoveOfflineTaskListHelper"]], ,
         [
             userfile.FileOperationException
         ], , ],

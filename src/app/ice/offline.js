@@ -386,6 +386,8 @@
 
     Slice.defineSequence(offline, "DownloadStatusRefreshRequestListHelper", "offline.DownloadStatusRefreshRequest", false);
 
+    Slice.defineSequence(offline, "RemoveTaskListHelper", "Ice.StringHelper", false);
+
     const iceC_offline_OfflineDownloadServiceHandler_ids = [
         "::Ice::Object",
         "::offline::OfflineDownloadServiceHandler"
@@ -402,6 +404,10 @@
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
         "refreshDownloadStatus": [, , , , [1], [["offline.DownloadStatusRefreshRequestListHelper"]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "removeTask": [, , , , [3], [[4], ["offline.RemoveTaskListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],
