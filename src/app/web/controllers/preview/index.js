@@ -75,7 +75,7 @@ router.post(['/video','/audio'], (req, res) => {
             for (let video of videos) {
                 videoArr.push({
                     'duration': video['duration'],
-                    'url': 'http://other.qiecdn.com/'
+                    'url': CONSTANTS.PLAY_PREFIX
                         + video['key']
                         + '?time='
                         + (new Date()).getTime().toString()
