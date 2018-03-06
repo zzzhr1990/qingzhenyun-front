@@ -265,6 +265,7 @@ router.post('/callback/wcs', (req, res) => {
         let testUserId = IceUtil.iceLong2Number(userId)
         let override = (data.flag == 1)
         console.log(override)
+        console.log(data.flag)
         if (testUserId > -1) {
             createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType,override)
         } else {
