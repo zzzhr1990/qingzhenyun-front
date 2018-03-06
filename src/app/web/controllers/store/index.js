@@ -237,6 +237,7 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
 })
 
 const createUserFile = (req, res, parent, userId, name, storeId, size, mime, preview, fileType, override = false) => {
+    console.log(override)
     userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, preview, fileType, override).then(fileData => {
         ResponseUtil.Ok(req, res, fileData)
     }).catch(fileError => {
@@ -264,8 +265,6 @@ router.post('/callback/wcs', (req, res) => {
         let fileType = 0
         let testUserId = IceUtil.iceLong2Number(userId)
         let override = (data.flag == 1)
-        console.log(override)
-        console.log(data.flag)
         if (testUserId > -1) {
             createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType,override)
         } else {
