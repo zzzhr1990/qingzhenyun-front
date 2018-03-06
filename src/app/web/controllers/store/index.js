@@ -30,6 +30,7 @@ router.post('/token', (req, res) => {
     var name = req.body.name
     var parent = req.body.parent
     var hash = req.body.hash
+    var override = req.body.hash + ""
     if (!hash) {
         hash = req.body.fileHash
     }
@@ -39,43 +40,55 @@ router.post('/token', (req, res) => {
     if (!name) {
         name = "qzy-upload-noname." + (new Date()).getTime().toString() + ".tmp"
     }
+    var overrideFile = 0
+    if (override == '1' || override == 'true') {
+        overrideFile = 1
+    }
     // check file exists.
-    userFileRpc.couldCreateFile(parent, userId, name, CONSTANTS.FILE_TYPE).then(cdata => {
-        //could create
-        if (hash) {
-            cloudStoreRpc.getFile(hash).then(fileData => {
-                // exists,moving file...
-                // result['exists'] = true
-                // move file...
-                createUserFile(req,
-                    res,
-                    parent,
-                    userId,
-                    name,
-                    hash,
-                    fileData['fileSize'],
-                    fileData['mime'],
-                    fileData['preview'],
-                    0
-                )
-            }).catch(exception => {
-                createNewFileToken(req, res, parent, userId, name)
-            })
-        } else {
-            createNewFileToken(req, res, parent, userId, name)
-        }
+    if (override == 1) {
+        userFileRpc.getWithoutPath(parent, userId, "").then(data => {
+            if(data.type == CONSTANTS.DIRECTORY_TYPE){
+                doNextCreateToken(req, res, parent, userId, name, hash, override)
+            }
+            else{
+                throw new ApiException("PARENT_IS_A_FILE",400,"PARENT_IS_A_FILE")
+            }
+        }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
+    } else {
+        userFileRpc.couldCreateFile(parent, userId, name, CONSTANTS.FILE_TYPE).then(cdata => {
+            doNextCreateToken(req, res, parent, userId, name, hash, override)
 
-    }).catch(error => {
-        if (error['innerCode']) {
-            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-        } else {
-            ResponseUtil.Error(req, res, error)
-        }
-    })
+        }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
+    }
 })
 
-const createNewFileToken = (req, res, parent, userId, name) => {
-    cloudStoreRpc.createUploadToken(userId, parent, name).then((result) => {
+const doNextCreateToken = (req, res, parent, userId, name, hash, override) => {
+    if (hash) {
+        cloudStoreRpc.getFile(hash).then(fileData => {
+            // exists,moving file...
+            // result['exists'] = true
+            // move file...
+            createUserFile(req,
+                res,
+                parent,
+                userId,
+                name,
+                hash,
+                fileData['fileSize'],
+                fileData['mime'],
+                fileData['preview'],
+                0
+            )
+        }).catch(exception => {
+            createNewFileToken(req, res, parent, userId, name, override)
+        })
+    } else {
+        createNewFileToken(req, res, parent, userId, name, override)
+    }
+}
+
+const createNewFileToken = (req, res, parent, userId, name, override) => {
+    cloudStoreRpc.createUploadToken(userId, parent, name, override).then((result) => {
         ResponseUtil.Ok(req, res, result)
     }).catch((error) => {
         if (error['innerCode']) {

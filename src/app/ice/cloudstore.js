@@ -231,7 +231,7 @@
 
     Slice.defineOperations(store.CloudStoreServiceHandler, store.CloudStoreServiceHandlerPrx, iceC_store_CloudStoreServiceHandler_ids, 1,
     {
-        "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7]], ,
+        "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ],

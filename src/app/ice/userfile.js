@@ -350,6 +350,10 @@
         [
             userfile.FileOperationException
         ], , true],
+        "getWithoutPath": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
         "rename": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4], [7]], ,
         [
             userfile.FileOperationException
