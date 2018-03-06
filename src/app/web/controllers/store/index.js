@@ -237,7 +237,6 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
 })
 
 const createUserFile = (req, res, parent, userId, name, storeId, size, mime, preview, fileType, override = false) => {
-    console.log(override)
     userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, preview, fileType, override).then(fileData => {
         ResponseUtil.Ok(req, res, fileData)
     }).catch(fileError => {
