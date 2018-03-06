@@ -47,16 +47,15 @@ router.post('/token', (req, res) => {
     // check file exists.
     if (override == 1) {
         userFileRpc.getWithoutPath(parent, userId, "").then(data => {
-            if(data.type == CONSTANTS.DIRECTORY_TYPE){
-                doNextCreateToken(req, res, parent, userId, name, hash, override)
-            }
-            else{
-                throw new ApiException("PARENT_IS_A_FILE",400,"PARENT_IS_A_FILE")
+            if (data.type == CONSTANTS.DIRECTORY_TYPE) {
+                doNextCreateToken(req, res, parent, userId, name, hash, overrideFile)
+            } else {
+                throw new ApiException("PARENT_IS_A_FILE", 400, "PARENT_IS_A_FILE")
             }
         }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
     } else {
         userFileRpc.couldCreateFile(parent, userId, name, CONSTANTS.FILE_TYPE).then(cdata => {
-            doNextCreateToken(req, res, parent, userId, name, hash, override)
+            doNextCreateToken(req, res, parent, userId, name, hash, overrideFile)
 
         }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
     }
@@ -77,7 +76,7 @@ const doNextCreateToken = (req, res, parent, userId, name, hash, override) => {
                 fileData['fileSize'],
                 fileData['mime'],
                 fileData['preview'],
-                0
+                CONSTANTS.FILE_TYPE,override == 1
             )
         }).catch(exception => {
             createNewFileToken(req, res, parent, userId, name, override)
@@ -234,8 +233,8 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
     }
 })
 
-const createUserFile = (req, res, parent, userId, name, storeId, size, mime, preview, fileType) => {
-    userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, preview, fileType).then(fileData => {
+const createUserFile = (req, res, parent, userId, name, storeId, size, mime, preview, fileType, override = false) => {
+    userFileRpc.createUserFile(parent, userId, name, storeId, size, mime, preview, fileType, override).then(fileData => {
         ResponseUtil.Ok(req, res, fileData)
     }).catch(fileError => {
         if (fileError['innerCode']) {
@@ -261,8 +260,9 @@ router.post('/callback/wcs', (req, res) => {
         let preview = data.preview
         let fileType = 0
         let testUserId = IceUtil.iceLong2Number(userId)
+        let override = (data.flag == 1)
         if (testUserId > -1) {
-            createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType)
+            createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType,override)
         } else {
             ResponseUtil.Ok(req, res, data)
         }
