@@ -30,7 +30,7 @@ router.post('/token', (req, res) => {
     var name = req.body.name
     var parent = req.body.parent
     var hash = req.body.hash
-    var override = req.body.hash + ""
+    var override = req.body.override + ""
     if (!hash) {
         hash = req.body.fileHash
     }
