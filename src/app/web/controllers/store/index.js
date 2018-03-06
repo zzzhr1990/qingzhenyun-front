@@ -31,6 +31,9 @@ router.post('/token', (req, res) => {
     var parent = req.body.parent
     var hash = req.body.hash
     var override = req.body.override + ""
+    if (!override){
+        override = req.body.rewrite + ""
+    }
     if (!hash) {
         hash = req.body.fileHash
     }
