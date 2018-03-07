@@ -139,13 +139,30 @@ router.post('/rename', (req, res) => {
 })
 
 router.post('/recycle', (req, res) => {
-    var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
+    let uuid = req.body['uuid'] 
+    let recycle = req.body['recycle'] 
+    if(Array.isArray(uuid)){
+        uuid = uuid.map(a => a.toString())
+    }
+    else{
+        if(uuid){
+            uuid = [uuid.toString()]
+        }
+    }
     if (!uuid) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
+    if(!recycle){
+        recycle = false
+    }else{
+        let cx = recycle.toString()
+        if(cx == '1' || cx == 'true' || cx == 'yes'){
+            recycle = true
+        }
+    }
     let userId = req.user.uuid
     //get
-    userFileService.recycle(uuid, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.batchRecycle(uuid, userId,recycle).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
