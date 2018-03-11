@@ -388,6 +388,8 @@
 
     Slice.defineSequence(offline, "RemoveTaskListHelper", "Ice.StringHelper", false);
 
+    Slice.defineSequence(offline, "ResumeTaskListHelper", "Ice.IntHelper", true);
+
     const iceC_offline_OfflineDownloadServiceHandler_ids = [
         "::Ice::Object",
         "::offline::OfflineDownloadServiceHandler"
@@ -416,6 +418,10 @@
             offline.OfflineOperationException
         ], , ],
         "resumeTask": [, , , , ["offline.OfflineTaskInfoResponseListHelper"], [[3], [7], ["offline.intListHelper"]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "resumeTasks": [, , , , ["offline.OfflineTaskInfoResponseListHelper"], [["offline.ResumeTaskListHelper"], [3], [7], ["offline.intListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],
