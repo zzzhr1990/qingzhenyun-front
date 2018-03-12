@@ -58,7 +58,7 @@ router.post('/register', (req, res) => {
 
 router.post('/resendActMessage',async (req, res) => {
     try {
-        letConst.SMS_SENDER.sendRegisterMessage('13627140483', '12345')
+        Const.SMS_SENDER.sendRegisterMessage('13627140483', '12345')
     } catch (error) {
         console.error(error)
     }
