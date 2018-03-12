@@ -11,8 +11,8 @@ const SmsSender = require('./app/service/sms_sender')
 // get port
 program.version('0.1.0')
     .option('-p, --port <n>', 'Port, Default 3000')
-    .option('-ak, --appkey', 'Message app key, Default None')
-    .option('-ai, --appid', 'Message app id, Default None')
+    .option('-k, --appkey', 'Message app key, Default None')
+    .option('-i, --appid', 'Message app id, Default None')
     .parse(process.argv)
 /**
  * Get port from environment and store in Express.
@@ -21,11 +21,11 @@ let port = normalizePort(process.env.PORT || program.port || '3000')
 let appkey = program.appkey
 let appid = program.appid
 if(!appkey){
-    console.log('Set ak first before run this application.')
+    console.log('Set k first before run this application.')
     return
 }
 if(!appid){
-    console.log('Set ai first before run this application.')
+    console.log('Set i first before run this application.')
     return
 }
 Constants.SMS_SENDER = SmsSender(appid,appkey)
