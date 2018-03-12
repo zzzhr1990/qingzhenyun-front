@@ -4,6 +4,9 @@ const randomstring = require("randomstring");
 class SmsSender {
     constructor(appid, appkey) {
         this.qcloudsms = QcloudSms(appid, appkey);
+        this.appid = appid
+        this.appkey = appkey
+        console.log("Init QcloudSms %s:%s",appid,appkey)
     }
 
     get success() {
@@ -20,9 +23,11 @@ class SmsSender {
                     console.log("err: ", err);
                 else
                     console.log("response data: ", resData);
+                /*
                 if(res){
                     console.log("res: ", res);
                 }
+                */
             });
     }
 }
