@@ -7,6 +7,7 @@ let ResponseUtil = require('../../../util/response_util')
 let StringUtil = require('../../../util/string_util')
 let validator = require('validator')
 const RequestUtil = require('../../../util/request_util')
+const randomstring = require("randomstring");
 let userService = require('../../../const/rpc').userRpc
 
 
@@ -56,13 +57,17 @@ router.post('/register', (req, res) => {
         })
 })
 
-router.post('/resendActMessage',async (req, res) => {
+router.post('/resendActMessage', async (req, res) => {
+    let code = randomstring.generate({
+        charset: "numeric",
+        length: 6
+    })
     try {
-        let data = await Const.SMS_SENDER.sendRegisterMessage('13627140483', '12345')
-        ResponseUtil.Ok(req,res,true)
+        let data = await Const.SMS_SENDER.sendRegisterMessage('13627140483', code)
+        ResponseUtil.Ok(req, res, data)
     } catch (error) {
         console.error(error)
-        ResponseUtil.ApiError(req,res,new ApiException("SEND_MESSAGE_ERROR",500,"SEND_MESSAGE_ERROR"))
+        ResponseUtil.ApiError(req, res, new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR"))
     }
 })
 
@@ -172,7 +177,10 @@ router.post('/:methodId', (req, res) => {
 
 router.get('/date', (req, res) => {
     let time = Date.now()
-    let userId = {"high":0,"low":0}
+    let userId = {
+        "high": 0,
+        "low": 0
+    }
     userService.getUserByUuid(userId)
         .then((data) => ResponseUtil.Ok(req, res, data))
         .catch((error) => ResponseUtil.OkOrError(req, res, error))
