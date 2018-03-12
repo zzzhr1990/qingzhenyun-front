@@ -6,6 +6,8 @@ class SmsSender {
         this.qcloudsms = QcloudSms(appid, appkey);
     }
 
+    get success() {
+    }
     sendRegisterMessage(phoneNumber, validateCode, expireInMinutes = 5) {
         let countryCode = "86"
         let templId = "93861"
