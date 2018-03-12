@@ -98,7 +98,14 @@ router.post('/download', (req, res) => {
 })
 
 router.post('/move', (req, res) => {
-    var uuid = req.body['uuid']
+    if(Array.isArray(uuid)){
+        uuid = uuid.map(a => a.toString())
+    }
+    else{
+        if(uuid){
+            uuid = [uuid.toString()]
+        }
+    }
     if (!uuid) {
         throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
     }
@@ -106,7 +113,7 @@ router.post('/move', (req, res) => {
     let parent = req.body['parent'] ? req.body['parent'] + '' : ''
 
     //get
-    userFileService.move(uuid, parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.batchMove(uuid, parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))

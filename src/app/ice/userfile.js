@@ -370,6 +370,10 @@
         [
             userfile.FileOperationException
         ], , ],
+        "batchMove": [, , , , [3], [["userfile.RemoveOfflineTaskListHelper"], [7], [4]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
         "recycle": [, , , , [3], [[7], [4]], ,
         [
             userfile.FileOperationException
