@@ -1,7 +1,7 @@
 const QcloudSms = require("qcloudsms_js");
 const randomstring = require("randomstring");
 
-export default class SmsSender {
+class SmsSender {
     constructor(appid, appkey) {
         this.qcloudsms = QcloudSms(appid, appkey);
     }
@@ -24,3 +24,4 @@ export default class SmsSender {
             });
     }
 }
+module.exports = SmsSender
