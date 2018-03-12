@@ -12,7 +12,7 @@ const SmsSender = require('./app/service/sms_sender')
 program.version('0.1.0')
     .option('-p, --port <n>', 'Port, Default 3000')
     .option('-k, --appkey [value]', 'Message app key, Default None')
-    .option('-i, --appid', 'Message app id, Default None')
+    .option('-i, --appid [value]', 'Message app id, Default None')
     .parse(process.argv)
 /**
  * Get port from environment and store in Express.
