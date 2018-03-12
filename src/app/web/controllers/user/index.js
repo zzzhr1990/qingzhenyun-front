@@ -1,5 +1,5 @@
 let express = require('express')
-let smsSender = require('../../../const/constants').SMS_SENDER
+let Const = require('../../../const/constants')
 let router = express.Router()
 let ApiException = require('../../../exception/api_exception')
 let ApiValidateException = require('../../../exception/api_validate_exception')
@@ -57,7 +57,7 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/resendActMessage',(req, res) => {
-    smsSender.sendRegisterMessage('13627140483', '12345')
+    Const.SMS_SENDER.sendRegisterMessage('13627140483', '12345')
     ResponseUtil.Ok(req,res,true)
 })
 
