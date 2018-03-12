@@ -58,12 +58,12 @@ router.post('/register', (req, res) => {
 
 router.post('/resendActMessage',async (req, res) => {
     try {
-        Const.SMS_SENDER.sendRegisterMessage('13627140483', '12345')
+        let data = await Const.SMS_SENDER.sendRegisterMessage('13627140483', '12345')
+        ResponseUtil.Ok(req,res,true)
     } catch (error) {
         console.error(error)
+        ResponseUtil.ApiError(req,res,new ApiException("SEND_MESSAGE_ERROR",500,"SEND_MESSAGE_ERROR"))
     }
-    
-    ResponseUtil.Ok(req,res,true)
 })
 
 router.post('/login', (req, res) => {
