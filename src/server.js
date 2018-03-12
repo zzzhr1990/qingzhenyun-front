@@ -11,7 +11,7 @@ const SmsSender = require('./app/service/sms_sender')
 // get port
 program.version('0.1.0')
     .option('-p, --port <n>', 'Port, Default 3000')
-    .option('-k, --appkey', 'Message app key, Default None')
+    .option('-k, --appkey [value]', 'Message app key, Default None')
     .option('-i, --appid', 'Message app id, Default None')
     .parse(process.argv)
 /**
