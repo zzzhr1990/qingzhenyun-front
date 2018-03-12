@@ -28,7 +28,7 @@ if(!appid){
     console.log('Set i first before run this application.')
     return
 }
-Constants.SMS_SENDER = SmsSender(appid,appkey)
+Constants.SMS_SENDER = new SmsSender(appid,appkey)
 app.set('port', port)
 
 console.log('Server listen on %d.', port)
