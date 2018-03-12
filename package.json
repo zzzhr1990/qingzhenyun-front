@@ -34,7 +34,9 @@
         "winston": "^2.4.0",
         "ws": "^4.0.0",
         "m3u8-parser": "^4.2.0",
-        "node-fetch": "^2.0.0"
+        "node-fetch": "^2.0.0",
+        "qcloudsms_js": "^0.1.0",
+        "randomstring": "^1.1.5"
     },
     "devDependencies": {
         "eslint": "^4.15.0",

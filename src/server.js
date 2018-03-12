@@ -4,14 +4,31 @@
 var app = require('./app')
 var debug = require('debug')('wxapp-monitor-server:server')
 var http = require('http')
-var program = require('commander');
+var program = require('commander')
+const Constants = require('./app/const/constants')
+const SmsSender = require('./app/service/sms_sender')
 
 // get port
-program.version('0.1.0').option('-p, --port <n>', 'Port, Default 3000').parse(process.argv)
+program.version('0.1.0')
+    .option('-p, --port <n>', 'Port, Default 3000')
+    .option('-ak, --appkey', 'Message app key, Default None')
+    .option('-ai, --appid', 'Message app id, Default None')
+    .parse(process.argv)
 /**
  * Get port from environment and store in Express.
  */
-var port = normalizePort(process.env.PORT || program.port ||  '3000')
+let port = normalizePort(process.env.PORT || program.port || '3000')
+let appkey = program.appkey
+let appid = program.appid
+if(!appkey){
+    console.log('Set ak first before run this application.')
+    return
+}
+if(!appid){
+    console.log('Set ai first before run this application.')
+    return
+}
+Constants.SMS_SENDER = SmsSender(appid,appkey)
 app.set('port', port)
 
 console.log('Server listen on %d.', port)
@@ -59,9 +76,9 @@ function onError(error) {
         throw error
     }
 
-    var bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port
+    var bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
@@ -82,8 +99,8 @@ function onError(error) {
 
 function onListening() {
     var addr = server.address()
-    var bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port
+    var bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port
     debug('Listening on ' + bind)
 }

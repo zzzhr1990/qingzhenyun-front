@@ -4,7 +4,8 @@ module.exports = {
     "ICE":null,
     "FILE_TYPE":0,
     "DIRECTORY_TYPE":1,
-    "PLAY_PREFIX":"https://play.6pan.cn/"
+    "PLAY_PREFIX":"https://play.6pan.cn/",
+    "SMS_SENDER":{}
 }
 /*
 
