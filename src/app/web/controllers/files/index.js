@@ -98,6 +98,7 @@ router.post('/download', (req, res) => {
 })
 
 router.post('/move', (req, res) => {
+    let uuid = req.body['uuid']
     if(Array.isArray(uuid)){
         uuid = uuid.map(a => a.toString())
     }
