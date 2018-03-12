@@ -28,9 +28,7 @@ if(!appid){
     console.log('Set i first before run this application.')
     return
 }
-let xx = new SmsSender(appid,appkey)
-xx.sendRegisterMessage("13627140483","12345","6")
-Constants.SMS_SENDER = xx
+Constants.SMS_SENDER = new SmsSender(appid,appkey)
 app.set('port', port)
 
 console.log('Server listen on %d.', port)

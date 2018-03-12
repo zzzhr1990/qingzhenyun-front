@@ -6,29 +6,37 @@ class SmsSender {
         this.qcloudsms = QcloudSms(appid, appkey);
         this.appid = appid
         this.appkey = appkey
-        console.log("Init QcloudSms %s:%s",appid,appkey)
+        console.log("Init QcloudSms %s:%s", appid, appkey)
     }
-
-    get success() {
-    }
-    sendRegisterMessage(phoneNumber, validateCode, expireInMinutes = 5) {
+    
+    async sendRegisterMessage(phoneNumber, validateCode, expireInMinutes = 5) {
         let countryCode = "86"
-        let templId = "93861"
+        let templId = "94257"
+        return this.sendWithParam(countryCode, phoneNumber, templId, [validateCode, expireInMinutes.toString()])
+    }
+    sendWithParam(countryCode, phoneNumber, templId, args) {
         let ssender = this.qcloudsms.SmsSingleSender();
         let messageId = randomstring.generate(12)
-        //nationCode, phoneNumber, templId, params, sign, extend, ext, callback
-        ssender.sendWithParam(countryCode, phoneNumber, templId, [validateCode, expireInMinutes.toString()], "", "", messageId,
-            (err, res, resData) => {
-                if (err)
-                    console.log("err: ", err);
-                else
-                    console.log("response data: ", resData);
-                /*
-                if(res){
-                    console.log("res: ", res);
+        return new Promise((reslove, reject) => {
+            ssender.sendWithParam(countryCode, phoneNumber, templId, args, "", "", messageId, (err, res, resData) => {
+                let success = false
+                if(resData){
+                    success = resData['result'] === 0
                 }
-                */
-            });
+                if(success){
+                    reslove(resData)
+                }else{
+                    if(err){
+                        console.error(err)
+                    }
+                    if(resData){
+                        console.error(err)
+                    }
+                    reject(new Error('SendMessage Error'))
+                }
+            })
+        })
     }
+
 }
 module.exports = SmsSender
