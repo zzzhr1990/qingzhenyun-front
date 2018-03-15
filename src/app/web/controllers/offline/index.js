@@ -99,9 +99,12 @@ router.post('/remove', (req, res) => {
     userFileRpc.removeOfflineTask(userId, taskHash).then(data => {
         ResponseUtil.Ok(req, res, data)
     }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
+    /*
+    no need to do this.
     offlineRpc.removeTask(userId, taskHash)
         .then((data) => {})
         .catch(ex => console.error(ex))
+    */
 })
 
 router.post('/parseTorrent', (req, res) => {
@@ -137,7 +140,7 @@ router.post('/parseMagnet', (req, res) => {
         throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
     }
     let taskHash = torrentInfo['infoHash']
-    result = {
+    let result = {
         'infoHash': torrentInfo['infoHash'],
     }
     result['name'] = torrentInfo['name'] ? torrentInfo['name'] : torrentInfo['infoHash']
@@ -274,11 +277,11 @@ router.post('/start', (req, res) => {
     //
     let iceZero = IceUtil.number2IceLong(0)
     userFileRpc.createOfflineTask(userId,
-            taskHash,
-            savePath == '' ? null : savePath,
-            name ? name : taskHash, files,
-            saveUuid == '' ? null : saveUuid)
-        .then(data => {
+        taskHash,
+        savePath == '' ? null : savePath,
+        name ? name : taskHash, files,
+        saveUuid == '' ? null : saveUuid)
+        .then(_ => {
             let current = IceUtil.number2IceLong((new Date().getTime()))
             let createReq = new OfflineTaskInfoResponse(
                 taskHash,
@@ -289,10 +292,11 @@ router.post('/start', (req, res) => {
                 name,
                 type,
                 JSON.stringify(addon),
-                "",
+                '',
+                '',
                 current,
                 current,
-                "", 0,
+                '', 0,
                 userId,
                 ip,
                 0

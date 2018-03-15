@@ -393,6 +393,36 @@
 
     Slice.defineSequence(offline, "ResumeTaskListHelper", "Ice.IntHelper", true);
 
+    offline.OfflineProgressRequest = class
+    {
+        constructor(cmds = null, request = new offline.DownloadStatusRefreshRequest())
+        {
+            this.cmds = cmds;
+            this.request = request;
+        }
+
+        _write(ostr)
+        {
+            offline.RemoveTaskListHelper.write(ostr, this.cmds);
+            offline.DownloadStatusRefreshRequest.write(ostr, this.request);
+        }
+
+        _read(istr)
+        {
+            this.cmds = offline.RemoveTaskListHelper.read(istr);
+            this.request = offline.DownloadStatusRefreshRequest.read(istr, this.request);
+        }
+
+        static get minWireSize()
+        {
+            return  73;
+        }
+    };
+
+    Slice.defineStruct(offline.OfflineProgressRequest, true, true);
+
+    Slice.defineSequence(offline, "OfflineProgressRequestListHelper", "offline.OfflineProgressRequest", false);
+
     const iceC_offline_OfflineDownloadServiceHandler_ids = [
         "::Ice::Object",
         "::offline::OfflineDownloadServiceHandler"
@@ -408,19 +438,15 @@
 
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
-        "refreshDownloadStatus": [, , , , [1], [["offline.DownloadStatusRefreshRequestListHelper"]], ,
+        "refreshDownloadProgress": [, , , , ["offline.TaskDetailResponseListHelper"], [["offline.OfflineProgressRequestListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],
-        "removeTask": [, , , , [3], [[4], ["offline.RemoveTaskListHelper"]], ,
+        "refreshDownloadMetaData": [, , , , [1], [[offline.DownloadStatusRefreshRequest]], ,
         [
             offline.OfflineOperationException
         ], , ],
         "addTask": [, , , , [offline.OfflineTaskInfoResponse], [[offline.OfflineTaskInfoResponse]], ,
-        [
-            offline.OfflineOperationException
-        ], , ],
-        "resumeTask": [, , , , ["offline.OfflineTaskInfoResponseListHelper"], [[3], [7], ["offline.intListHelper"]], ,
         [
             offline.OfflineOperationException
         ], , ],
@@ -432,27 +458,7 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "fetchUploadTask": [, , , , [offline.TaskStatisticsResponse], [[3], [3], [7]], ,
-        [
-            offline.OfflineOperationException
-        ], , ],
-        "fetchUploadTaskList": [, , , , ["offline.TaskStatisticsResponseListHelper"], [[3], [3], [7]], ,
-        [
-            offline.OfflineOperationException
-        ], , ],
-        "refreshTorrent": [, , , , ["offline.TaskDetailResponseListHelper"], [["offline.TaskDetailResponseListHelper"], [1]], ,
-        [
-            offline.OfflineOperationException
-        ], , ],
         "getTaskDetailList": [, , , , ["offline.TaskDetailResponseListHelper"], [[7]], ,
-        [
-            offline.OfflineOperationException
-        ], , ],
-        "singleFileFinish": [, , , , [1], [[7], [3], [7], [7], [7], [7], [4], [3]], ,
-        [
-            offline.OfflineOperationException
-        ], , ],
-        "taskFinish": [, , , , [1], [[7], [7]], ,
         [
             offline.OfflineOperationException
         ], , ]
