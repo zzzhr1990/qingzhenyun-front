@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
-const StringUtil = require('../../../util/string_util')
+// const _ = require('../../../util/string_util')
 const IceUtil = require('../../../util/ice_util')
 const ResponseUtil = require('../../../util/response_util')
 //let UserFileServiceRpc = require('../../../service/user_file')
@@ -21,7 +21,7 @@ router.post('/get', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     var name = req.body['name'] ? req.body['name'] + '' : ''
     if (!uuid && !name) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     //get
@@ -39,27 +39,26 @@ router.post('/download', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     var name = req.body['name'] ? req.body['name'] + '' : ''
     if (!uuid && !name) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     //get
     userFileService.get(uuid, userId, name).then((result) => {
         // get file
         //
-        let storeId = result["storeId"]
+        let storeId = result['storeId']
         if (!storeId) {
-            if (result["type"] !== 0) {
+            if (result['type'] !== 0) {
                 ResponseUtil.ApiError(req, res,
-                    new ApiException("DOWNLOAD_DIRECTORY_NOT_SUPPORTED",
+                    new ApiException('DOWNLOAD_DIRECTORY_NOT_SUPPORTED',
                         400,
-                        "DOWNLOAD_DIRECTORY_NOT_SUPPORTED")
+                        'DOWNLOAD_DIRECTORY_NOT_SUPPORTED')
                 )
                 return
             }
-            ResponseUtil.ApiError(req, res, new ApiException("FILE_NOT_FOUND",
+            ResponseUtil.ApiError(req, res, new ApiException('FILE_NOT_FOUND',
                 400,
-                "FILE_NOT_FOUND")
-            )
+                'FILE_NOT_FOUND'))
             return
         }
         cloudStoreRpc.getFile(storeId).then(fileData => {
@@ -68,11 +67,11 @@ router.post('/download', (req, res) => {
             let fileHash = storeId
             let fileSize = fileData['fileSize']
             let mime = fileData['mime']
-            let url = 'http://other.qiecdn.com/'
-                + fileKey
-                + '?key='
-                + time
-                + '&userId=' + IceUtil.iceLong2Number(userId).toString()
+            let url = 'http://other.qiecdn.com/' +
+                fileKey +
+                '?key=' +
+                time +
+                '&userId=' + IceUtil.iceLong2Number(userId).toString()
             let name = result['name']
             ResponseUtil.Ok(req, res, {
                 'fileSize': fileSize,
@@ -99,16 +98,15 @@ router.post('/download', (req, res) => {
 
 router.post('/move', (req, res) => {
     let uuid = req.body['uuid']
-    if(Array.isArray(uuid)){
+    if (Array.isArray(uuid)) {
         uuid = uuid.map(a => a.toString())
-    }
-    else{
-        if(uuid){
+    } else {
+        if (uuid) {
             uuid = [uuid.toString()]
         }
     }
     if (!uuid) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     let parent = req.body['parent'] ? req.body['parent'] + '' : ''
@@ -127,12 +125,12 @@ router.post('/move', (req, res) => {
 router.post('/rename', (req, res) => {
     var uuid = req.body['uuid']
     if (!uuid) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     var name = req.body['name']
     if (!name) {
-        throw new ApiValidateException("File name required", '{NAME}_REQUIRED')
+        throw new ApiValidateException('File name required', '{NAME}_REQUIRED')
     }
 
     //get
@@ -147,30 +145,29 @@ router.post('/rename', (req, res) => {
 })
 
 router.post('/recycle', (req, res) => {
-    let uuid = req.body['uuid'] 
-    let recycle = req.body['recycle'] 
-    if(Array.isArray(uuid)){
+    let uuid = req.body['uuid']
+    let recycle = req.body['recycle']
+    if (Array.isArray(uuid)) {
         uuid = uuid.map(a => a.toString())
-    }
-    else{
-        if(uuid){
+    } else {
+        if (uuid) {
             uuid = [uuid.toString()]
         }
     }
     if (!uuid) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
-    if(!recycle){
+    if (!recycle) {
         recycle = false
-    }else{
+    } else {
         let cx = recycle.toString()
-        if(cx == '1' || cx == 'true' || cx == 'yes'){
+        if (cx == '1' || cx == 'true' || cx == 'yes') {
             recycle = true
         }
     }
     let userId = req.user.uuid
     //get
-    userFileService.batchRecycle(uuid, userId,recycle).then((result) => ResponseUtil.Ok(req, res, result))
+    userFileService.batchRecycle(uuid, userId, recycle).then((result) => ResponseUtil.Ok(req, res, result))
         .catch((error) => {
             if (error['innerCode']) {
                 ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
@@ -230,7 +227,7 @@ router.post('/createDirectory', (req, res) => {
     let userId = req.user.uuid
     var name = req.body['name']
     if (!name) {
-        name = "New Directory Created by:" + new Date()
+        name = 'New Directory Created by:' + new Date()
     }
     // call rpc
     userFileService.createDirectory(parent, userId, name).then((result) => ResponseUtil.Ok(req, res, result))

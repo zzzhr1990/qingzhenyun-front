@@ -124,7 +124,7 @@
 
     offline.OfflineTaskInfoResponse = class
     {
-        constructor(taskHash = "", progress = 0, fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), name = "", type = 0, addon = "", serverId = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "", flag = 0)
+        constructor(taskHash = "", progress = 0, fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), name = "", type = 0, addon = "", serverId = "", localId = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "", flag = 0)
         {
             this.taskHash = taskHash;
             this.progress = progress;
@@ -135,6 +135,7 @@
             this.type = type;
             this.addon = addon;
             this.serverId = serverId;
+            this.localId = localId;
             this.createTime = createTime;
             this.updateTime = updateTime;
             this.cmds = cmds;
@@ -155,6 +156,7 @@
             ostr.writeInt(this.type);
             ostr.writeString(this.addon);
             ostr.writeString(this.serverId);
+            ostr.writeString(this.localId);
             ostr.writeLong(this.createTime);
             ostr.writeLong(this.updateTime);
             ostr.writeString(this.cmds);
@@ -175,6 +177,7 @@
             this.type = istr.readInt();
             this.addon = istr.readString();
             this.serverId = istr.readString();
+            this.localId = istr.readString();
             this.createTime = istr.readLong();
             this.updateTime = istr.readLong();
             this.cmds = istr.readString();
@@ -186,7 +189,7 @@
 
         static get minWireSize()
         {
-            return  70;
+            return  71;
         }
     };
 
@@ -378,7 +381,7 @@
 
         static get minWireSize()
         {
-            return  71;
+            return  72;
         }
     };
 

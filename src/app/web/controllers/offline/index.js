@@ -15,7 +15,7 @@ const OfflineTaskInfoResponse = require('../../../ice/offline').offline.OfflineT
 const CONSTANTS = require('../../../const/constants')
 const download = require('download')
 const parseTorrent = require('parse-torrent')
-const md5 = require('md5');
+const md5 = require('md5')
 const TASK_HASH_VALIDATE_KEY = '6065772'
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 const HASH_SPLIT = '.qzy-sp-token@6cs92d-token.'
@@ -389,6 +389,8 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
             count++
             resList.push(response)
         }
+        /*
+        no need to refresh torrent files.
         offlineRpc.refreshTorrent(resList, false).then(respData => {
             //check
             if (respData.length != resList.length) {
@@ -397,6 +399,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         }).catch(updateError => {
             console.error(updateError)
         })
+        */
 
     }).catch(error => {
         console.error(error)
