@@ -158,7 +158,7 @@ router.post('/recycle', (req, res) => {
         throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
     if (!recycle) {
-        recycle = false
+        recycle = true
     } else {
         let cx = recycle.toString()
         if (cx == '1' || cx == 'true' || cx == 'yes') {
