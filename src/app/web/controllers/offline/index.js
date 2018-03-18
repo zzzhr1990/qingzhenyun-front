@@ -294,6 +294,7 @@ router.post('/start', (req, res) => {
                 JSON.stringify(addon),
                 '',
                 '',
+                '',
                 current,
                 current,
                 '', 0,
