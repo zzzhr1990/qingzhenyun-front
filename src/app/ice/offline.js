@@ -124,7 +124,7 @@
 
     offline.OfflineTaskInfoResponse = class
     {
-        constructor(taskHash = "", progress = 0, fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), name = "", type = 0, addon = "", serverId = "", localId = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "", flag = 0)
+        constructor(taskHash = "", progress = 0, fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), name = "", type = 0, addon = "", serverId = "", localId = "", localPath = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "", flag = 0)
         {
             this.taskHash = taskHash;
             this.progress = progress;
@@ -136,6 +136,7 @@
             this.addon = addon;
             this.serverId = serverId;
             this.localId = localId;
+            this.localPath = localPath;
             this.createTime = createTime;
             this.updateTime = updateTime;
             this.cmds = cmds;
@@ -157,6 +158,7 @@
             ostr.writeString(this.addon);
             ostr.writeString(this.serverId);
             ostr.writeString(this.localId);
+            ostr.writeString(this.localPath);
             ostr.writeLong(this.createTime);
             ostr.writeLong(this.updateTime);
             ostr.writeString(this.cmds);
@@ -178,6 +180,7 @@
             this.addon = istr.readString();
             this.serverId = istr.readString();
             this.localId = istr.readString();
+            this.localPath = istr.readString();
             this.createTime = istr.readLong();
             this.updateTime = istr.readLong();
             this.cmds = istr.readString();
@@ -189,7 +192,7 @@
 
         static get minWireSize()
         {
-            return  71;
+            return  72;
         }
     };
 
@@ -268,15 +271,16 @@
 
     Slice.defineStruct(offline.TaskDetailResponse, true, true);
 
-    offline.TaskStatisticsResponse = class
+    offline.TaskUploadResponse = class
     {
-        constructor(serverId = "", taskHash = "", taskIndex = 0, fileSize = new Ice.Long(0, 0), localPath = "", status = 0, lastUpdateTime = new Ice.Long(0, 0), taskSpeed = new Ice.Long(0, 0), taskType = 0)
+        constructor(serverId = "", taskHash = "", taskIndex = 0, fileSize = new Ice.Long(0, 0), localPath = "", storeId = "", status = 0, lastUpdateTime = new Ice.Long(0, 0), taskSpeed = new Ice.Long(0, 0), taskType = 0)
         {
             this.serverId = serverId;
             this.taskHash = taskHash;
             this.taskIndex = taskIndex;
             this.fileSize = fileSize;
             this.localPath = localPath;
+            this.storeId = storeId;
             this.status = status;
             this.lastUpdateTime = lastUpdateTime;
             this.taskSpeed = taskSpeed;
@@ -290,6 +294,7 @@
             ostr.writeInt(this.taskIndex);
             ostr.writeLong(this.fileSize);
             ostr.writeString(this.localPath);
+            ostr.writeString(this.storeId);
             ostr.writeInt(this.status);
             ostr.writeLong(this.lastUpdateTime);
             ostr.writeLong(this.taskSpeed);
@@ -303,6 +308,7 @@
             this.taskIndex = istr.readInt();
             this.fileSize = istr.readLong();
             this.localPath = istr.readString();
+            this.storeId = istr.readString();
             this.status = istr.readInt();
             this.lastUpdateTime = istr.readLong();
             this.taskSpeed = istr.readLong();
@@ -311,11 +317,11 @@
 
         static get minWireSize()
         {
-            return  39;
+            return  40;
         }
     };
 
-    Slice.defineStruct(offline.TaskStatisticsResponse, true, true);
+    Slice.defineStruct(offline.TaskUploadResponse, true, true);
 
     offline.OfflineTaskListenerResponse = class
     {
@@ -357,7 +363,7 @@
 
     Slice.defineSequence(offline, "intListHelper", "Ice.IntHelper", true);
 
-    Slice.defineSequence(offline, "TaskStatisticsResponseListHelper", "offline.TaskStatisticsResponse", false);
+    Slice.defineSequence(offline, "TaskUploadResponseListHelper", "offline.TaskUploadResponse", false);
 
     offline.DownloadStatusRefreshRequest = class
     {
@@ -381,7 +387,7 @@
 
         static get minWireSize()
         {
-            return  72;
+            return  73;
         }
     };
 
@@ -415,7 +421,7 @@
 
         static get minWireSize()
         {
-            return  73;
+            return  74;
         }
     };
 
@@ -438,7 +444,31 @@
 
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
-        "refreshDownloadProgress": [, , , , ["offline.TaskDetailResponseListHelper"], [["offline.OfflineProgressRequestListHelper"]], ,
+        "fetchUploadTask": [, , , , [offline.TaskUploadResponse], [[3], [3], [7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "fetchUploadTaskList": [, , , , ["offline.TaskUploadResponseListHelper"], [[3], [3], [7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "resetUploadTaskStatus": [, , , , [1], [[3], [3], [7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "singleFileUpload": [, , , , [1], [[7], [3], [7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "refreshDownloadProgress": [, , , , ["offline.OfflineTaskInfoResponseListHelper"], [["offline.OfflineProgressRequestListHelper"]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "finishDownload": [, , , , [1], [[offline.DownloadStatusRefreshRequest]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "changeLocalId": [, , , , [1], [[7], [7]], ,
         [
             offline.OfflineOperationException
         ], , ],
