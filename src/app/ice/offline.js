@@ -444,6 +444,10 @@
 
     Slice.defineOperations(offline.OfflineDownloadServiceHandler, offline.OfflineDownloadServiceHandlerPrx, iceC_offline_OfflineDownloadServiceHandler_ids, 1,
     {
+        "taskUploadComplete": [, , , , [1], [[7], [3], [1]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
         "fetchUploadTask": [, , , , [offline.TaskUploadResponse], [[3], [3], [7]], ,
         [
             offline.OfflineOperationException
