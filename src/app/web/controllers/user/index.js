@@ -97,7 +97,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
             charset: "numeric",
             length: 6
         })
-        let countryCode = req.body['countryCode']
+        let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig,"")
         let phone = req.body['phone']
         if (!phone || !(typeof (phone) === 'string')) {
             throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
@@ -105,7 +105,6 @@ router.post('/sendRegisterMessage', async (req, res) => {
         if (!countryCode || !(typeof (countryCode) === 'string')) {
             countryCode = '86'
         }
-        
         let checkMessageResult = await userService.sendMessage(countryCode,
             phone,
             10,
