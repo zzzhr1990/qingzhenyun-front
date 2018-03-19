@@ -58,19 +58,19 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/sendRegisterMessage', async (req, res) => {
-    let code = randomstring.generate({
-        charset: "numeric",
-        length: 6
-    })
-    let countryCode = req.body['countryCode']
-    let phone = req.body['phone']
-    if(!phone || !(typeof(phone) === 'string')){
-        throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
-    }
-    if(!countryCode || !(typeof(countryCode) === 'string')){
-        throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
-    }
     try {
+        let code = randomstring.generate({
+            charset: "numeric",
+            length: 6
+        })
+        let countryCode = req.body['countryCode']
+        let phone = req.body['phone']
+        if (!phone || !(typeof (phone) === 'string')) {
+            throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
+        }
+        if (!countryCode || !(typeof (countryCode) === 'string')) {
+            throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
+        }
         let checkMessageResult = await userService.sendMessage(countryCode,
             phone,
             10,
