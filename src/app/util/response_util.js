@@ -5,14 +5,24 @@ const Long = require('ice').Ice.Long
 const IceUtil = require('./ice_util')
 class ResponseUtil {
     static Ok(req, res, data) {
-        ResponseUtil.json(req, res, { status: 200, result: data, code: "OK", success: true })
+        ResponseUtil.json(req, res, {
+            status: 200,
+            result: data,
+            code: "OK",
+            success: true
+        })
     }
 
-    static RenderStandardRpcError(req,res,error){
+    static RenderStandardRpcError(req, res, error) {
         if (error['innerCode']) {
             ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
         } else {
-            ResponseUtil.Error(req, res, error)
+            if (error instanceof ApiException) {
+                ResponseUtil.ApiError(req, res, error)
+            } else {
+                ResponseUtil.Error(req, res, error)
+            }
+
         }
     }
 
@@ -23,7 +33,12 @@ class ResponseUtil {
             ResponseUtil.Error(req, res, error)
             return
         }
-        ResponseUtil.json(req, res, { status: 200, result: data, code: "OK", success: true })
+        ResponseUtil.json(req, res, {
+            status: 200,
+            result: data,
+            code: "OK",
+            success: true
+        })
     }
 
     static Error(req, res, error) {
@@ -31,7 +46,11 @@ class ResponseUtil {
             console.error(error)
         }
         res.status(500)
-        ResponseUtil.json(req, res, { status: 500, code: "INTERNAL_ERROR", success: false })
+        ResponseUtil.json(req, res, {
+            status: 500,
+            code: "INTERNAL_ERROR",
+            success: false
+        })
         //throw new ApiException('Internal Server Error', undefined, undefined, false)
         //res.json({ status: 200, result: data, code: "OK", success: true })
     }
@@ -46,7 +65,10 @@ class ResponseUtil {
         }
         let status = err.status || 500
         res.status(status)
-        let data = { success: false, message: err.message }
+        let data = {
+            success: false,
+            message: err.message
+        }
         if (err['code']) {
             data.code = err["code"]
         } else {
@@ -68,7 +90,10 @@ class ResponseUtil {
         }
         let status = err.status || 500
         //res.status(status)
-        let data = { success: false, message: err.message }
+        let data = {
+            success: false,
+            message: err.message
+        }
         if (err['code']) {
             data.code = err["code"]
         } else {
@@ -93,18 +118,24 @@ class ResponseUtil {
                 'lastLoginTime': dat.lastLoginTime,
                 'refreshTime': dat.refreshTime,
                 'version': dat.version
-            }, Constants.JWT_SECRET_KEY, { expiresIn: '30d' })
+            }, Constants.JWT_SECRET_KEY, {
+                expiresIn: '30d'
+            })
             res.header('Authorization', 'Bearer ' + auth);
             if (data) {
                 data['token'] = auth
             } else {
-                data = { 'token': auth }
+                data = {
+                    'token': auth
+                }
             }
         }
         res.json(ResponseUtil.preProcessObject(data))
     }
 
-    static isObj(obj) { return typeof obj === 'object' && obj !== null }
+    static isObj(obj) {
+        return typeof obj === 'object' && obj !== null
+    }
 
     static needConvert(obj) {
         //const keys = Object.keys(obj)
@@ -127,8 +158,7 @@ class ResponseUtil {
                 //
                 if (ResponseUtil.needConvert(value)) {
                     obj[key] = IceUtil.iceLong2Number(value)
-                }
-                else {
+                } else {
                     obj[key] = ResponseUtil.preProcessObject(value)
                 }
             }
