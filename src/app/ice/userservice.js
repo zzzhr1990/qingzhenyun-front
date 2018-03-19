@@ -102,14 +102,16 @@
 
     user.UserResponse = class
     {
-        constructor(uuid = new Ice.Long(0, 0), name = "", email = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
+        constructor(uuid = new Ice.Long(0, 0), name = "", email = "", countryCode = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", ssidMobile = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
         {
             this.uuid = uuid;
             this.name = name;
             this.email = email;
+            this.countryCode = countryCode;
             this.phone = phone;
             this.createTime = createTime;
             this.ssid = ssid;
+            this.ssidMobile = ssidMobile;
             this.level = level;
             this.type = type;
             this.ban = ban;
@@ -126,9 +128,11 @@
             ostr.writeLong(this.uuid);
             ostr.writeString(this.name);
             ostr.writeString(this.email);
+            ostr.writeString(this.countryCode);
             ostr.writeString(this.phone);
             ostr.writeLong(this.createTime);
             ostr.writeString(this.ssid);
+            ostr.writeString(this.ssidMobile);
             ostr.writeInt(this.level);
             ostr.writeInt(this.type);
             ostr.writeInt(this.ban);
@@ -145,9 +149,11 @@
             this.uuid = istr.readLong();
             this.name = istr.readString();
             this.email = istr.readString();
+            this.countryCode = istr.readString();
             this.phone = istr.readString();
             this.createTime = istr.readLong();
             this.ssid = istr.readString();
+            this.ssidMobile = istr.readString();
             this.level = istr.readInt();
             this.type = istr.readInt();
             this.ban = istr.readInt();
@@ -161,7 +167,7 @@
 
         static get minWireSize()
         {
-            return  65;
+            return  67;
         }
     };
 
@@ -183,6 +189,10 @@
     Slice.defineOperations(user.UserServiceHandler, user.UserServiceHandlerPrx, iceC_user_UserServiceHandler_ids, 1,
     {
         "registerUser": [, , , , [user.UserResponse], [[7], [7], [7], [7]], ,
+        [
+            user.RegisterFailedException
+        ], , ],
+        "sendMessage": [, , , , [3], [[7], [7], [3], [7], [3]], ,
         [
             user.RegisterFailedException
         ], , ],

@@ -21,7 +21,7 @@ rpc.userFileRpc = new CommonRpc(communicator, "UserFileServiceHandler", require(
     .userfile.UserFileServiceHandlerPrx)
 rpc.userRpc = new CommonRpc(communicator, "UserServiceHandler", require('./app/ice/userservice')
     .user.UserServiceHandlerPrx)
-    //OfflineDownloadServiceHandler
+//OfflineDownloadServiceHandler
 rpc.offlineRpc = new CommonRpc(communicator, "OfflineDownloadServiceHandler", require('./app/ice/offline')
     .offline.OfflineDownloadServiceHandlerPrx)
 /** INIT RPCs **/
@@ -37,84 +37,84 @@ app.use(session({
     saveUninitialized: true
 }));
 */
-app.use(jwt({
-    secret: Constants.JWT_SECRET_KEY, 'getToken': (req) => {
-        /*
-        var parts = req.headers.authorization.split(' ');
-        if (parts.length == 2) {
-            var scheme = parts[0];
-            var credentials = parts[1];
-
-            if (/^Bearer$/i.test(scheme)) {
-                return token;
-            }
-        } else {
-            return undefined
-        }
-        */
-        var pre = req.headers.authorization ? req.headers.authorization : (req.headers.Authorization ? req.headers.Authorization : undefined)
-        if (pre) {
-            let parts = pre.split(' ');
+app.use(
+    jwt({
+        secret: Constants.JWT_SECRET_KEY,
+        'getToken': (req) => {
+            /*
+            var parts = req.headers.authorization.split(' ');
             if (parts.length == 2) {
                 var scheme = parts[0];
                 var credentials = parts[1];
 
                 if (/^Bearer$/i.test(scheme)) {
-                    return credentials;
-                } else {
-                    throw new ApiException('Format is Authorization: Bearer [token]', 401, "BEARER_AUTHORIZATION_HEADER_INVALID")
+                    return token;
                 }
             } else {
                 return undefined
             }
-            return pre
+            */
+            var pre = req.headers.authorization ? req.headers.authorization : (req.headers.Authorization ? req.headers.Authorization : undefined)
+            if (pre) {
+                let parts = pre.split(' ')
+                if (parts.length == 2) {
+                    var scheme = parts[0]
+                    var credentials = parts[1]
+
+                    if (/^Bearer$/i.test(scheme)) {
+                        return credentials
+                    } else {
+                        throw new ApiException('Format is Authorization: Bearer [token]', 401, "BEARER_AUTHORIZATION_HEADER_INVALID")
+                    }
+                } else {
+                    return undefined
+                }
+            }
+            /*
+            if (req.headers.Authorization) {
+                return req.headers.Authorization
+            }
+            if (req.query && req.query.authorization) {
+                return req.query.authorization;
+            }
+            */
+            if (req.query && req.query.auth) {
+                return req.query.auth
+            }
+            if (req.query && req.query.token) {
+                return req.query.token
+            }
+            return null
         }
-        /*
-        if (req.headers.Authorization) {
-            return req.headers.Authorization
-        }
-        if (req.query && req.query.authorization) {
-            return req.query.authorization;
-        }
-        */
-        if (req.query && req.query.auth) {
-            return req.query.auth;
-        }
-        if (req.query && req.query.token) {
-            return req.query.token;
-        }
-        return null
-    }
-})
-    .unless(
-    {
-        path:
-            ['/v1/user/login',
-                '/v1/user/register',
-                '/v1/user/check',
-                '/v1/user/logout',
-                '/v1/store/callback/wcs',
-                /^\/v1\/store\/callback\/wcsm3u8\/.*/,
-                '/v1/store/callback/wcsm3u8',
-                '/v1/store/play',
-                /^\/v1\/store\/play\/.*/
-            ]
-    }
-    )
+    }).unless({
+        path: ['/v1/user/login',
+            '/v1/user/register',
+            '/v1/user/check',
+            '/v1/user/logout',
+            '/v1/user/logout/sendRegisterMessage',
+            '/v1/store/callback/wcs',
+            /^\/v1\/store\/callback\/wcsm3u8\/.*/,
+            '/v1/store/callback/wcsm3u8',
+            '/v1/store/play',
+            /^\/v1\/store\/play\/.*/
+        ]
+    })
 )
 // common config
 app.use(logger('dev'))
 app.use(cookieParser())
 app.use(helmet())
 
-app.use('/v1/store/callback/wcsm3u8',bodyParser.text());
-app.use(/^\/v1\/store\/callback\/wcsm3u8\/.*/,bodyParser.text());
+app.use('/v1/store/callback/wcsm3u8', bodyParser.text())
+app.use(/^\/v1\/store\/callback\/wcsm3u8\/.*/, bodyParser.text())
 //app.use('/v1/store/callback/wcsm3u8',bodyParser.raw());
 
 // parser json to object
 // app.use(bodyParser.text())
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 const USER_VERSION = 1
 app.use((req, res, next) => {
     if (req.user) {
@@ -142,14 +142,17 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-    if (!err["supress"] && err.name !== 'UnauthorizedError') {
+    if (!err['supress'] && err.name !== 'UnauthorizedError') {
         console.error(err.stack)
     }
     let status = err.status || 500
     res.status(status)
-    let data = { success: false, message: err.message }
+    let data = {
+        success: false,
+        message: err.message
+    }
     if (err['code']) {
-        data.code = err["code"]
+        data.code = err['code']
     } else {
         data.code = 'INTERNAL_SERVER_ERROR'
     }

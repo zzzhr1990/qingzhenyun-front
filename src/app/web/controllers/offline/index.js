@@ -190,14 +190,14 @@ router.post('/parseMagnet', (req, res) => {
 
 router.post('/start', (req, res) => {
     // let fileStoreId = req.body['fileStoreId'] ? req.body['fileStoreId'] + '' : ''
-    var url = req.body['url'] ? req.body['url'] + '' : ''
+    let url = req.body['url'] ? req.body['url'] + '' : ''
     let savePath = req.body['savePath'] ? req.body['savePath'] + '' : ''
     let saveUuid = req.body['saveUuid'] ? req.body['saveUuid'] + '' : ''
-    var taskHashDecode = decodeTaskHash(req.body['taskHash'] ? req.body['taskHash'] + '' : '')
+    let taskHashDecode = decodeTaskHash(req.body['taskHash'] ? req.body['taskHash'] + '' : '')
     let files = req.body['files'] ? req.body['files'] + '' : '*'
-    var name = req.body['name'] ? req.body['name'] + '' : ''
-    var type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
-    var taskHash = taskHashDecode ? taskHashDecode[0] : ''
+    let name = req.body['name'] ? req.body['name'] + '' : ''
+    let type = parseInt(req.body['type'] ? req.body['type'] + '' : '0')
+    let taskHash = taskHashDecode ? taskHashDecode[0] : ''
     let fileStoreId = taskHashDecode ? taskHashDecode[1] : ''
     let userId = req.user.uuid
     let ip = RequestUtil.getIp(req)
@@ -214,16 +214,16 @@ router.post('/start', (req, res) => {
             url = fileStoreId
         }
         if (!url) {
-            throw new ApiValidateException("Task hash [" + url + "] invaliad", '{TASK_HASH}_INVALID')
+            throw new ApiValidateException('Task hash [' + url + '] invaliad', '{TASK_HASH}_INVALID')
         }
     }
     if (type === 0) {
         addon['file'] = fileStoreId
         if (!taskHash) {
-            throw new ApiValidateException("Task hash required", '{TASK_HASH}_REQUIRED')
+            throw new ApiValidateException('Task hash required', '{TASK_HASH}_REQUIRED')
         }
         if (!fileStoreId) {
-            throw new ApiValidateException("Task hash invalid", '{TASK_HASH}_INVALID')
+            throw new ApiValidateException('Task hash invalid', '{TASK_HASH}_INVALID')
         }
         url = 'magnet:?xt=urn:btih:' + taskHash
         type = 0

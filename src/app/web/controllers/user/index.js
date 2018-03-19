@@ -57,17 +57,37 @@ router.post('/register', (req, res) => {
         })
 })
 
-router.post('/resendActMessage', async (req, res) => {
+router.post('/sendRegisterMessage', async (req, res) => {
     let code = randomstring.generate({
         charset: "numeric",
         length: 6
     })
+    let countryCode = req.body['countryCode']
+    let phone = req.body['phone']
+    if(!phone || !(phone instanceof string)){
+        throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
+    }
+    if(!countryCode || !(countryCode instanceof string)){
+        throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
+    }
     try {
-        let data = await Const.SMS_SENDER.sendRegisterMessage('13627140483', code)
-        ResponseUtil.Ok(req, res, data)
-    } catch (error) {
-        console.error(error)
-        ResponseUtil.ApiError(req, res, new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR"))
+        let checkMessageResult = await userService.sendMessage(countryCode,
+            phone,
+            10,
+            code,
+            500)
+        if (checkMessageResult !== 0) {
+            throw new ApiException("SEND_MESSAGE_FREQUENTLY", 500, "SEND_MESSAGE_FREQUENTLY")
+            ResponseUtil.Ok(req, res, data)
+        }
+        try {
+            let data = await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
+        } catch (error) {
+            console.error(error)
+            throw new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR")
+        }
+    } catch (apiError) {
+        ResponseUtil.RenderStandardRpcError(req, res, apiError)
     }
 })
 

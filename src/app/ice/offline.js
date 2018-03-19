@@ -456,6 +456,14 @@
         [
             offline.OfflineOperationException
         ], , ],
+        "fetchCopyTask": [, , , , [offline.TaskUploadResponse], [[3]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
+        "fetchCopyTaskList": [, , , , ["offline.TaskUploadResponseListHelper"], [[3]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
         "resetUploadTaskStatus": [, , , , [1], [[3], [3], [7]], ,
         [
             offline.OfflineOperationException

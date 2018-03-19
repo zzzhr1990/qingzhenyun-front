@@ -9,7 +9,7 @@ class SmsSender {
         console.log("Init QcloudSms %s:%s", appid, appkey)
     }
     
-    async sendRegisterMessage(phoneNumber, validateCode, expireInMinutes = 5) {
+    async sendRegisterMessage(phoneNumber, validateCode,countryCode = '86', expireInMinutes = 5) {
         let countryCode = "86"
         let templId = "94257"
         return this.sendWithParam(countryCode, phoneNumber, templId, [validateCode, expireInMinutes.toString()])
