@@ -25,13 +25,16 @@ class SmsSender {
                 if(success){
                     reslove(resData)
                 }else{
+                    let code = 0
                     if(err){
                         console.error(err)
                     }
                     if(resData){
+                        console.error("Return fail")
+                        code = resData['result']
                         console.error(resData)
                     }
-                    reject(new Error('SendMessage Error'))
+                    reject(code)
                 }
             })
         })

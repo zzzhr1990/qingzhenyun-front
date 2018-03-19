@@ -9,7 +9,41 @@ let validator = require('validator')
 const RequestUtil = require('../../../util/request_util')
 const randomstring = require("randomstring");
 let userService = require('../../../const/rpc').userRpc
+const md5 = require('md5')
+const TASK_HASH_VALIDATE_KEY = 'dkewkdoe'
+const AwesomeBase64 = require('awesome-urlsafe-base64')
+const HASH_SPLIT = '.qzy-sp-token@6cs92d-user.'
 
+
+const calcPhoneHash = ((countryCode, phone) => {
+    return AwesomeBase64.encodeString(countryCode +
+        HASH_SPLIT +
+        phone +
+        HASH_SPLIT +
+        _calcHash(countryCode + phone))
+})
+
+const _calcHash = (taskHash => {
+    return md5(TASK_HASH_VALIDATE_KEY + taskHash)
+})
+
+const decodeTaskHash = (taskHash => {
+    if (!taskHash) {
+        return undefined
+    }
+    try {
+        taskHash = AwesomeBase64.decodeString(taskHash)
+        // console.log(taskHash)
+    } catch (exc) {
+        return undefined
+    }
+    let arr = taskHash.split(HASH_SPLIT)
+    if (arr.length < 3) {
+        return undefined
+    }
+    let tt = AwesomeBase64.decodeString(arr[2])
+    return _calcHash(arr[0], arr[1], tt) === arr[3] ? [arr[0], arr[1], tt] : undefined
+})
 
 router.post('/register', (req, res) => {
     let name = req.body['name']
@@ -71,6 +105,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
         if (!countryCode || !(typeof (countryCode) === 'string')) {
             countryCode = '86'
         }
+        
         let checkMessageResult = await userService.sendMessage(countryCode,
             phone,
             10,
@@ -80,10 +115,13 @@ router.post('/sendRegisterMessage', async (req, res) => {
             throw new ApiException("SEND_MESSAGE_FREQUENTLY", 400, "SEND_MESSAGE_FREQUENTLY")
         }
         try {
-            let data = await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
-            ResponseUtil.Ok(req, res, data)
-        } catch (error) {
-            console.error(error)
+            await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
+            ResponseUtil.Ok(req, res, calcPhoneHash(countryCode,phone))
+        } catch (errorCode) {
+            //console.error(error)
+            if (errorCode === 1016) {
+                throw new ApiValidateException("Phone not validate", '{PHONE}_NOT_VALIDATE')
+            }
             throw new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR")
         }
     } catch (apiError) {
