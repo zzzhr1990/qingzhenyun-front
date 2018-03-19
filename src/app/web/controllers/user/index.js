@@ -78,10 +78,10 @@ router.post('/sendRegisterMessage', async (req, res) => {
             500)
         if (checkMessageResult !== 0) {
             throw new ApiException("SEND_MESSAGE_FREQUENTLY", 500, "SEND_MESSAGE_FREQUENTLY")
-            ResponseUtil.Ok(req, res, data)
         }
         try {
-            let data = await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
+            //let data = await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
+            ResponseUtil.Ok(req, res, countryCode)
         } catch (error) {
             console.error(error)
             throw new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR")
@@ -125,7 +125,7 @@ router.post('/login', (req, res) => {
             'version': dat.version
         }
         // console.log(req.user)
-        
+
         ResponseUtil.Ok(req, res, dat)
     }).catch(error => {
         if (error['innerCode']) {
