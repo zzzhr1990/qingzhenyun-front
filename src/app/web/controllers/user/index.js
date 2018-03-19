@@ -77,7 +77,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
             code,
             500)
         if (checkMessageResult !== 0) {
-            throw new ApiException("SEND_MESSAGE_FREQUENTLY", 500, "SEND_MESSAGE_FREQUENTLY")
+            throw new ApiException("SEND_MESSAGE_FREQUENTLY", 400, "SEND_MESSAGE_FREQUENTLY")
         }
         try {
             let data = await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)

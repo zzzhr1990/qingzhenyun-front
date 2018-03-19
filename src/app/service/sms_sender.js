@@ -29,7 +29,7 @@ class SmsSender {
                         console.error(err)
                     }
                     if(resData){
-                        console.error(err)
+                        console.error(resData)
                     }
                     reject(new Error('SendMessage Error'))
                 }
