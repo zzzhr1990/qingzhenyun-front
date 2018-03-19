@@ -125,6 +125,7 @@ router.post('/login', (req, res) => {
             'version': dat.version
         }
         // console.log(req.user)
+        
         ResponseUtil.Ok(req, res, dat)
     }).catch(error => {
         if (error['innerCode']) {
