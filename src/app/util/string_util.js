@@ -31,6 +31,7 @@ class StringUtil {
         for(let xArg of strings){
             result += (AwesomeBase64.encodeString(xArg + '') + HASH_SPLIT)
         }
+        console.log(result + TASK_HASH_VALIDATE_KEY)
         return AwesomeBase64.encodeString(result + md5(result + TASK_HASH_VALIDATE_KEY))
     }
 
@@ -65,8 +66,8 @@ class StringUtil {
                 return undefined
             }
         }
-        console.log(result)
-        console.log(before)
+        console.log(before + TASK_HASH_VALIDATE_KEY)
+        console.log(hashed)
         let validate = md5(before + TASK_HASH_VALIDATE_KEY) === hashed
         return validate ? result : undefined
         /*
