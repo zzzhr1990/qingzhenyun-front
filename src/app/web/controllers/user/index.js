@@ -13,10 +13,14 @@ let userService = require('../../../const/rpc').userRpc
 router.post('/register', async (req, res) => {
     try {
         let code = req.body['code']
+        let name = req.body['name']
+        if(!name || typeof(name) !== 'string'){
+            name = randomstring.generate(16)
+        }
         if (StringUtil.isEmpty(code)) {
             throw new ApiValidateException("Code required", '{CODE}_REQUIRED')
         }
-        let phoneInfo = req.body['phoneInfo']
+        let phoneInfo = req.body['phoneInfo'] + ''
         if (StringUtil.isEmpty(phoneInfo)) {
             throw new ApiValidateException("Phone info required", '{PHONE_INFO}_REQUIRED')
         }
@@ -31,7 +35,7 @@ router.post('/register', async (req, res) => {
         if (validator.isInt(name)) {
             throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
         }
-        let password = req.body['password']
+        let password = req.body['password'] + ''
         if (StringUtil.isEmpty(password)) {
             throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
         }
