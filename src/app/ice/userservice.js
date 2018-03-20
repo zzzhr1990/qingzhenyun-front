@@ -204,6 +204,10 @@
         "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByPhone": [, , , , [1], [[7], [7]], , , , ],
+        "loginByPhone": [, , , , [user.UserResponse], [[7], [7], [1]], ,
+        [
+            user.LoginFailedException
+        ], , ],
         "checkUserValidByName": [, , , , [user.UserResponse], [[7], [7]], ,
         [
             user.LoginFailedException
