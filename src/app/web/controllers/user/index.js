@@ -10,83 +10,49 @@ const RequestUtil = require('../../../util/request_util')
 const randomstring = require("randomstring");
 let userService = require('../../../const/rpc').userRpc
 
-
-const calcPhoneHash = ((countryCode, phone, flag) => {
-    return AwesomeBase64.encodeString(countryCode +
-        HASH_SPLIT +
-        phone +
-        HASH_SPLIT +
-        flag.toString() +
-        HASH_SPLIT +
-        _calcHash(countryCode + phone + flag.toString()))
-})
-
-const _calcHash = (taskHash => {
-    return md5(TASK_HASH_VALIDATE_KEY + taskHash)
-})
-
-const decodePhoneHash = (taskHash => {
-    if (!taskHash) {
-        return undefined
-    }
+router.post('/register', async (req, res) => {
     try {
-        taskHash = AwesomeBase64.decodeString(taskHash)
-        // console.log(taskHash)
-    } catch (exc) {
-        return undefined
-    }
-    let arr = taskHash.split(HASH_SPLIT)
-    if (arr.length < 3) {
-        return undefined
-    }
-    //let tt = AwesomeBase64.decodeString(arr[2])
-    return _calcHash(arr[0], arr[1], tt) === arr[3] ? [arr[0], arr[2], tt] : undefined
-})
+        let code = req.body['code']
+        if (StringUtil.isEmpty(code)) {
+            throw new ApiValidateException("Code required", '{CODE}_REQUIRED')
+        }
+        let phoneInfo = req.body['phoneInfo']
+        if (StringUtil.isEmpty(phoneInfo)) {
+            throw new ApiValidateException("Phone info required", '{PHONE_INFO}_REQUIRED')
+        }
+        let validateCodeDecode = StringUtil.decodeHashStrings(phoneInfo)
+        if (!validateCodeDecode || validateCodeDecode.length !== 3) {
+            throw new ApiValidateException("Phone info not valid", '{PHONE_INFO}_NOT_VALID')
+        }
+        //countryCode, phone, flag
+        if (validator.isEmail(name)) {
+            throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
+        }
+        if (validator.isInt(name)) {
+            throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
+        }
+        let password = req.body['password']
+        if (StringUtil.isEmpty(password)) {
+            throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
+        }
+        let flag = 10
+        let phone = validateCodeDecode[1]
+        let countryCode = validateCodeDecode[0]
+        // Check message validate.
+        let validateResult = await userService.validateMessage(countryCode, phone, flag, code, true)
+        if (!validateResult) {
+            throw new ApiValidateException("Code not valid", '{CODE}_NOT_VALID')
+        }
 
-router.post('/register', (req, res) => {
-    let name = req.body['name']
-    if (StringUtil.isEmpty(name)) {
-        throw new ApiValidateException("User name required", '{NAME}_REQUIRED')
+        // Register RPC
+        // No front server like nginx.
+        //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
+        let ip = RequestUtil.getIp(req)
+        let data = await userService.registerUser(name, password, countryCode, phone, ip)
+        ResponseUtil.Ok(req, res, data)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
     }
-    if (validator.isEmail(name)) {
-        throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
-    }
-    if (validator.isMobilePhone(name, 'any')) {
-        throw new ApiValidateException("User name exists", '{NAME}_EXISTS')
-    }
-    let password = req.body['password']
-    if (StringUtil.isEmpty(password)) {
-        throw new ApiValidateException("User password required", '{PASSWORD}_REQUIRED')
-    }
-    /*
-    let email = req.body['email']
-    if (StringUtil.isEmpty(email)) {
-        throw new ApiValidateException("User email required", '{EMAIL}_REQUIRED')
-    }
-    if (!validator.isEmail(email)) {
-        throw new ApiValidateException("User email not validate", '{EMAIL}_NOT_VALIDATE')
-    }
-    */
-    let phone = req.body['phone']
-    if (StringUtil.isEmpty(phone)) {
-        throw new ApiValidateException("User phone required", '{PHONE}_REQUIRED')
-    }
-    if (!validator.isMobilePhone(phone, 'any')) {
-        throw new ApiValidateException("User phone not validate", '{PHONE}_NOT_VALIDATE')
-    }
-    // Register RPC
-    // No front server like nginx.
-    //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
-    let ip = RequestUtil.getIp(req)
-    userService.registerUser(name, password, phone, ip)
-        .then((result) => ResponseUtil.Ok(req, res, result))
-        .catch((error) => {
-            if (error['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-            } else {
-                ResponseUtil.Error(req, res, error)
-            }
-        })
 })
 
 router.post('/sendRegisterMessage', async (req, res) => {
@@ -131,6 +97,10 @@ router.post('/login', (req, res) => {
     // login logic
     let value = req.body['value']
     let password = req.body['password']
+    let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig, "")
+    if (!countryCode) {
+        countryCode = '86'
+    }
     if (StringUtil.isEmpty(value)) {
         throw new ApiValidateException("Check value required", '{VALUE}_REQUIRED')
     }
@@ -142,8 +112,8 @@ router.post('/login', (req, res) => {
     var caller = undefined
     if (validator.isEmail(value)) {
         caller = userService.checkUserValidByEmail(value, password)
-    } else if (validator.isMobilePhone(value, 'any')) {
-        caller = userService.checkUserValidByPhone(value, password)
+    } else if (validator.isInt(value)) {
+        caller = userService.checkUserValidByPhone(countryCode, value, password)
     } else {
         caller = userService.checkUserValidByName(value, password)
     }
@@ -229,7 +199,7 @@ router.post('/benchmark', (req, res) => {
 
 router.post('/:methodId', (req, res) => {
     let method = req.params.methodId
-    let s = StringUtil.encodeHashStrings("a","b","c","d")
+    let s = StringUtil.encodeHashStrings("a", "b", "c", "d")
     ResponseUtil.Ok(req, res, StringUtil.decodeHashStrings(s))
 })
 

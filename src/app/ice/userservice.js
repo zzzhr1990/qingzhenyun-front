@@ -188,11 +188,15 @@
 
     Slice.defineOperations(user.UserServiceHandler, user.UserServiceHandlerPrx, iceC_user_UserServiceHandler_ids, 1,
     {
-        "registerUser": [, , , , [user.UserResponse], [[7], [7], [7], [7]], ,
+        "registerUser": [, , , , [user.UserResponse], [[7], [7], [7], [7], [7]], ,
         [
             user.RegisterFailedException
         ], , ],
         "sendMessage": [, , , , [3], [[7], [7], [3], [7], [3]], ,
+        [
+            user.RegisterFailedException
+        ], , ],
+        "validateMessage": [, , , , [1], [[7], [7], [3], [7], [1]], ,
         [
             user.RegisterFailedException
         ], , ],
@@ -208,7 +212,7 @@
         [
             user.LoginFailedException
         ], , ],
-        "checkUserValidByPhone": [, , , , [user.UserResponse], [[7], [7]], ,
+        "checkUserValidByPhone": [, , , , [user.UserResponse], [[7], [7], [7]], ,
         [
             user.LoginFailedException
         ], , ]
