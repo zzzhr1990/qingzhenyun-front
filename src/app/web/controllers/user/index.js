@@ -59,6 +59,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
+
 router.post('/sendRegisterMessage', async (req, res) => {
     try {
         let code = randomstring.generate({
@@ -100,6 +101,53 @@ router.post('/sendRegisterMessage', async (req, res) => {
     } catch (apiError) {
         ResponseUtil.RenderStandardRpcError(req, res, apiError)
     }
+})
+
+router.post('/sendLoginMessage', async (req, res) => {
+    try {
+        let code = randomstring.generate({
+            charset: "numeric",
+            length: 6
+        })
+        let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig, "")
+        let phone = (req.body['phone'] + '').replace(/[^0-9]/ig, "")
+        if (!phone || !(typeof (phone) === 'string')) {
+            throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
+        }
+        if (!countryCode || !(typeof (countryCode) === 'string')) {
+            countryCode = '86'
+        }
+        //user exists
+        let exists = userService.checkUserExistsByPhone(countryCode,phone)
+        if(!exists){
+            throw new ApiValidateException("User phone not exists", 'USER_PHONE_NOT_EXIST')
+        }
+        let flag = 20
+        let checkMessageResult = await userService.sendMessage(countryCode,
+            phone,
+            flag,
+            code,
+            500)
+        if (checkMessageResult !== 0) {
+            throw new ApiException("Send message too frequently", 400, "SEND_MESSAGE_FREQUENTLY")
+        }
+        try {
+            await Const.SMS_SENDER.sendCommonMessage(phone, code,'97082', countryCode, 5)
+            ResponseUtil.Ok(req, res, StringUtil.encodeHashStrings(countryCode, phone, flag))
+        } catch (errorCode) {
+            //console.error(error)
+            if (errorCode === 1016) {
+                throw new ApiValidateException("Phone not validate", 'PHONE_NOT_VALIDATE')
+            }
+            throw new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR")
+        }
+    } catch (apiError) {
+        ResponseUtil.RenderStandardRpcError(req, res, apiError)
+    }
+})
+
+router.post('/loginByMessage',async (req, res) => {
+
 })
 
 router.post('/login', (req, res) => {

@@ -13,6 +13,9 @@ class SmsSender {
         let templId = "94257"
         return this.sendWithParam(countryCode, phoneNumber, templId, [validateCode, expireInMinutes.toString()])
     }
+    async sendCommonMessage(phoneNumber, validateCode,templId,countryCode = '86', expireInMinutes = 5) {
+        return this.sendWithParam(countryCode, phoneNumber, templId, [validateCode, expireInMinutes.toString()])
+    }
     sendWithParam(countryCode, phoneNumber, templId, args) {
         let ssender = this.qcloudsms.SmsSingleSender();
         let messageId = randomstring.generate(12)
