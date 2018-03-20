@@ -75,9 +75,9 @@ router.post('/sendRegisterMessage', async (req, res) => {
             countryCode = '86'
         }
         //user exists
-        let exists = userService.checkUserExistsByPhone(countryCode, phone)
+        let exists = await userService.checkUserExistsByPhone(countryCode, phone)
         if (exists) {
-            throw new ApiValidateException('User phone exists (' + countryCode + ')' + phone, 'USER_PHONE_EXIST')
+            throw new ApiValidateException('User phone exists', 'USER_PHONE_EXIST')
         }
         let flag = 10
         let checkMessageResult = await userService.sendMessage(countryCode,
@@ -118,7 +118,7 @@ router.post('/sendLoginMessage', async (req, res) => {
             countryCode = '86'
         }
         //user exists
-        let exists = userService.checkUserExistsByPhone(countryCode, phone)
+        let exists = await userService.checkUserExistsByPhone(countryCode, phone)
         if (!exists) {
             throw new ApiValidateException('User phone not exists', 'USER_PHONE_NOT_EXIST')
         }
