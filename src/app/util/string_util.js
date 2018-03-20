@@ -67,7 +67,7 @@ class StringUtil {
         }
         console.log(result)
         console.log(before)
-        let validate = (before + md5(before + TASK_HASH_VALIDATE_KEY)) === hashed
+        let validate = md5(before + TASK_HASH_VALIDATE_KEY) === hashed
         return validate ? result : undefined
         /*
         let result = ''
