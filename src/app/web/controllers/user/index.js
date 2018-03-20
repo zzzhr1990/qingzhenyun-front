@@ -93,7 +93,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
         } catch (errorCode) {
             //console.error(error)
             if (errorCode === 1016) {
-                throw new ApiValidateException("Phone not validate", '{PHONE}_NOT_VALIDATE')
+                throw new ApiValidateException("Phone not validate", 'PHONE_NOT_VALIDATE')
             }
             throw new ApiException("SEND_MESSAGE_ERROR", 500, "SEND_MESSAGE_ERROR")
         }
