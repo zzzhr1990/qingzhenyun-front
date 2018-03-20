@@ -71,7 +71,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
         if (!phone || !(typeof (phone) === 'string')) {
             throw new ApiValidateException('Phone required', '{PHONE}_REQUIRED')
         }
-        if (!countryCode || !(typeof (countryCode) === 'string')) {
+        if (!countryCode || (typeof (countryCode) !== 'string')) {
             countryCode = '86'
         }
         //user exists
@@ -274,23 +274,65 @@ router.post('/check', (req, res) => {
 })
 
 
+router.post('/changePassword', async (req, res) => {
+    try {
+        let userId = req.user.uuid
+        let newPassword = req.body['newPassword'] + ''
+        let oldPassword = req.body['oldPassword'] + ''
+        let data = await userService.changePassword(userId, oldPassword, newPassword)
+        ResponseUtil.Ok(req, res, data)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
+router.post('/sendChangePasswordMessage', async (req, res) => {
+    try {
+        let code = randomstring.generate({
+            charset: 'numeric',
+            length: 6
+        })
+        let userId = req.user.uuid
+        let userInfo = await userService.getUserByUuid(userId)
+        let countryCode = userInfo.countryCode
+        let phone = userInfo.phone
+        if (!phone || !(typeof (phone) === 'string')) {
+            throw new ApiValidateException('Phone required', '{PHONE}_REQUIRED')
+        }
+        if (!countryCode || !(typeof (countryCode) === 'string')) {
+            countryCode = '86'
+        }
+        //user exists
+        let flag = 30
+        let checkMessageResult = await userService.sendMessage(countryCode,
+            phone,
+            flag,
+            code,
+            500)
+        if (checkMessageResult !== 0) {
+            throw new ApiException('Send message too frequently', 400, 'SEND_MESSAGE_FREQUENTLY')
+        }
+        try {
+            await Const.SMS_SENDER.sendCommonMessage(phone, code, '94261', countryCode, 5)
+            ResponseUtil.Ok(req, res, StringUtil.encodeHashStrings(countryCode, phone, flag))
+        } catch (errorCode) {
+            //console.error(error)
+            if (errorCode === 1016) {
+                throw new ApiValidateException('Phone not validate', 'PHONE_NOT_VALIDATE')
+            }
+            throw new ApiException('SEND_MESSAGE_ERROR', 500, 'SEND_MESSAGE_ERROR')
+        }
+    } catch (apiError) {
+        ResponseUtil.RenderStandardRpcError(req, res, apiError)
+    }
+})
 
 router.post('/:methodId', (req, res) => {
     let method = req.params.methodId
-    let s = StringUtil.encodeHashStrings('a', 'b', 'c', 'd',method)
+    let s = StringUtil.encodeHashStrings('a', 'b', 'c', 'd', method)
     ResponseUtil.Ok(req, res, StringUtil.decodeHashStrings(s))
 })
 
-router.get('/date', (req, res) => {
-    let time = Date.now()
-    let userId = {
-        'high': 0,
-        'low': 0
-    }
-    userService.getUserByUuid(userId)
-        .then((data) => ResponseUtil.Ok(req, res, data))
-        .catch((error) => ResponseUtil.OkOrError(req, res, error))
-})
 
 router.get('/test', (req, res) => {
     let time = Date.now()
