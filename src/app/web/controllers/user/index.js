@@ -77,7 +77,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
         //user exists
         let exists = userService.checkUserExistsByPhone(countryCode, phone)
         if (exists) {
-            throw new ApiValidateException('User phone exists', 'USER_PHONE_EXIST')
+            throw new ApiValidateException('User phone exists (' + countryCode + ')' + phone, 'USER_PHONE_EXIST')
         }
         let flag = 10
         let checkMessageResult = await userService.sendMessage(countryCode,
@@ -326,6 +326,47 @@ router.post('/sendChangePasswordMessage', async (req, res) => {
         ResponseUtil.RenderStandardRpcError(req, res, apiError)
     }
 })
+
+
+router.post('/changePasswordByMessage', async (req, res) => {
+    try {
+        let code = (req.body['code'] + '').replace(/[^0-9]/ig, '')
+        if (StringUtil.isEmpty(code)) {
+            throw new ApiValidateException('Code required', '{CODE}_REQUIRED')
+        }
+        let phoneInfo = req.body['phoneInfo'] + ''
+        if (StringUtil.isEmpty(phoneInfo)) {
+            throw new ApiValidateException('Phone info required', '{PHONE_INFO}_REQUIRED')
+        }
+        let validateCodeDecode = StringUtil.decodeHashStrings(phoneInfo)
+        if (!validateCodeDecode || validateCodeDecode.length !== 3) {
+            throw new ApiValidateException('Phone info not valid', '{PHONE_INFO}_NOT_VALID')
+        }
+        //countryCode, phone, flag
+        let flag = 30
+        let phone = validateCodeDecode[1]
+        let countryCode = validateCodeDecode[0]
+        // Check message validate.
+        let validateResult = await userService.validateMessage(countryCode, phone, flag, code, true)
+        if (!validateResult) {
+            throw new ApiValidateException('Code not valid', '{CODE}_NOT_VALID')
+        }
+        let userId = req.user.uuid
+        let newPassword = req.body['newPassword'] + ''
+        let succ = await userService.changePasswordByMessage(userId, countryCode, phone, newPassword)
+
+        // Validate Directly to User
+        // No front server like nginx.
+        //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
+        //let ip = RequestUtil.getIp(req)
+        //let data = await userService.registerUser(name, password, countryCode, phone, ip)
+        
+        ResponseUtil.Ok(req, res, succ)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
 
 router.post('/:methodId', (req, res) => {
     let method = req.params.methodId
