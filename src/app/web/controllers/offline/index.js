@@ -111,7 +111,7 @@ router.post('/parseTorrent', (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
     var path = req.body['path'] ? req.body['path'] + '' : ''
     if (!uuid && !path) {
-        throw new ApiValidateException("File uuid required", '{UUID}_REQUIRED')
+        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
     }
     let userId = req.user.uuid
     //get
@@ -126,7 +126,7 @@ router.post('/parseTorrent', (req, res) => {
 router.post('/parseMagnet', (req, res) => {
     var url = req.body['url'] ? req.body['url'] + '' : ''
     if (!url) {
-        throw new ApiValidateException("Url required", '{URL}_REQUIRED')
+        throw new ApiValidateException('Url required', '{URL}_REQUIRED')
     }
     var torrentInfo = {}
     try {
@@ -137,7 +137,7 @@ router.post('/parseMagnet', (req, res) => {
     } catch (torrentError) {
         // console.error(torrentError)
         // console.error(url)
-        throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
+        throw new ApiValidateException('Magnet parse fail', 'MAGNET_URL_INVALID')
     }
     let taskHash = torrentInfo['infoHash']
     let result = {
@@ -160,10 +160,10 @@ router.post('/parseMagnet', (req, res) => {
             for (let single of data) {
                 // convert it to libtorrent 
                 let obj = {
-                    "path": single['taskUrl'],
-                    "name": single['filename'],
-                    "length": single['fileSize'],
-                    "offset": -1
+                    'path': single['taskUrl'],
+                    'name': single['filename'],
+                    'length': single['fileSize'],
+                    'offset': -1
                 }
                 result['files'].push(obj)
             }
@@ -205,7 +205,7 @@ router.post('/start', (req, res) => {
         name = taskHashDecode ? taskHashDecode[2] : ''
     }
     if (isNaN(type)) {
-        throw new ApiValidateException("Type required", '{TYPE}_REQUIRED')
+        throw new ApiValidateException('Type required', '{TYPE}_REQUIRED')
     }
     type = parseInt(type)
     let addon = {}
@@ -234,7 +234,7 @@ router.post('/start', (req, res) => {
                 url = StringUtil.decodeThunder(url)
                 urlLow = url.toLocaleLowerCase()
             } catch (thunderError) {
-                throw new ApiValidateException("Thunder parse fail", 'THUNDER_URL_INVALID')
+                throw new ApiValidateException('Thunder parse fail', 'THUNDER_URL_INVALID')
             }
         }
         addon['url'] = url
@@ -246,7 +246,7 @@ router.post('/start', (req, res) => {
                     taskHash = torrentInfo['infoHash']
                 }
             } catch (magnetError) {
-                throw new ApiValidateException("Magnet parse fail", 'MAGNET_URL_INVALID')
+                throw new ApiValidateException('Magnet parse fail', 'MAGNET_URL_INVALID')
             }
         } else if (urlLow.startsWith('http://') || urlLow.startsWith('https://') || urlLow.startsWith('ftp://') || urlLow.startsWith('sftp://')) {
             type = 20
@@ -266,11 +266,11 @@ router.post('/start', (req, res) => {
             }
         } else {
             console.warn('Cannot decode %s', url)
-            throw new ApiValidateException("Url not supported.",
+            throw new ApiValidateException('Url not supported.',
                 'URL_INVALID')
         }
     } else {
-        throw new ApiValidateException("Url or fileStoreId is needed",
+        throw new ApiValidateException('Url or fileStoreId is needed',
             'URL_OR_FILE_STORE_ID_INVALID')
     }
     //(userId: Long, taskHash: String?, path: String?, name: String?, uuid: String?, current: Current?)
@@ -331,10 +331,10 @@ const getTorrentFileData = (req, res, fileHash) => {
 }
 
 const downloadTorrentFile = (req, res, hash, url, size) => {
-    fileSize = IceUtil.iceLong2Number(size)
+    //let fileSize = IceUtil.iceLong2Number(size)
     download(url).then(data => {
         //fs.writeFileSync('dist/foo.jpg', data)
-        let parsedData = parseTorrent(data);
+        let parsedData = parseTorrent(data)
         let result = {}
         result['infoHash'] = parsedData['infoHash']
 
@@ -377,18 +377,18 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
                 IceUtil.number2IceLong(file['length']),
                 zeroLong,
                 zeroLong,
-                "",
-                "",
+                '',
+                '',
                 result['infoHash'],
-                "",
+                '',
                 0,
                 0,
                 current,
                 current,
                 0,
-                "",
-                "",
-                "",
+                '',
+                '',
+                '',
                 0
             )
             count++
@@ -408,7 +408,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
 
     }).catch(error => {
         console.error(error)
-        ResponseUtil.ApiError(req, res, new ApiException("FETCH_TORRENT_FAILED", 500, "Download torrent failed."))
+        ResponseUtil.ApiError(req, res, new ApiException('FETCH_TORRENT_FAILED', 500, 'Download torrent failed.'))
     })
 }
 
