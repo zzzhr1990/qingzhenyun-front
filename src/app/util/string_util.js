@@ -60,7 +60,7 @@ class StringUtil {
             try{
                 let val = AwesomeBase64.decodeString(arr[i])
                 result.push(val)
-                before += val + HASH_SPLIT
+                before += (arr[i] + HASH_SPLIT)
             }catch(error){
                 console.error(error)
                 return undefined
