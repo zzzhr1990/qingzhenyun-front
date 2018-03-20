@@ -15,19 +15,21 @@ const AwesomeBase64 = require('awesome-urlsafe-base64')
 const HASH_SPLIT = '.qzy-sp-token@6cs92d-user.'
 
 
-const calcPhoneHash = ((countryCode, phone) => {
+const calcPhoneHash = ((countryCode, phone, flag) => {
     return AwesomeBase64.encodeString(countryCode +
         HASH_SPLIT +
         phone +
         HASH_SPLIT +
-        _calcHash(countryCode + phone))
+        flag.toString() +
+        HASH_SPLIT +
+        _calcHash(countryCode + phone + flag.toString()))
 })
 
 const _calcHash = (taskHash => {
     return md5(TASK_HASH_VALIDATE_KEY + taskHash)
 })
 
-const decodeTaskHash = (taskHash => {
+const decodePhoneHash = (taskHash => {
     if (!taskHash) {
         return undefined
     }
@@ -41,8 +43,8 @@ const decodeTaskHash = (taskHash => {
     if (arr.length < 3) {
         return undefined
     }
-    let tt = AwesomeBase64.decodeString(arr[2])
-    return _calcHash(arr[0], arr[1], tt) === arr[3] ? [arr[0], arr[1], tt] : undefined
+    //let tt = AwesomeBase64.decodeString(arr[2])
+    return _calcHash(arr[0], arr[1], tt) === arr[3] ? [arr[0], arr[2], tt] : undefined
 })
 
 router.post('/register', (req, res) => {
@@ -97,17 +99,18 @@ router.post('/sendRegisterMessage', async (req, res) => {
             charset: "numeric",
             length: 6
         })
-        let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig,"")
-        let phone = (req.body['phone'] + '').replace(/[^0-9]/ig,"")
+        let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig, "")
+        let phone = (req.body['phone'] + '').replace(/[^0-9]/ig, "")
         if (!phone || !(typeof (phone) === 'string')) {
             throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
         }
         if (!countryCode || !(typeof (countryCode) === 'string')) {
             countryCode = '86'
         }
+        let flag = 10
         let checkMessageResult = await userService.sendMessage(countryCode,
             phone,
-            10,
+            flag,
             code,
             500)
         if (checkMessageResult !== 0) {
@@ -115,7 +118,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
         }
         try {
             await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
-            ResponseUtil.Ok(req, res, calcPhoneHash(countryCode,phone))
+            ResponseUtil.Ok(req, res, calcPhoneHash(countryCode, phone, flag))
         } catch (errorCode) {
             //console.error(error)
             if (errorCode === 1016) {
@@ -230,7 +233,8 @@ router.post('/benchmark', (req, res) => {
 
 router.post('/:methodId', (req, res) => {
     let method = req.params.methodId
-    ResponseUtil.Ok(req, res, method)
+    let s = StringUtil.encodeHashStrings("a","b","c","d")
+    ResponseUtil.Ok(req, res, s)
 })
 
 router.get('/date', (req, res) => {

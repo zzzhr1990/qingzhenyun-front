@@ -51,7 +51,7 @@ const decodeTaskHash = (taskHash => {
         return undefined
     }
     let tt = AwesomeBase64.decodeString(arr[2])
-    return _calcHash(arr[0], arr[1], tt) === arr[3] ? [arr[0], arr[1], tt] : undefined
+    return _calcHash(arr[0]) === arr[3] ? [arr[0], arr[1], tt] : undefined
 })
 
 router.post('/page', (req, res) => {
