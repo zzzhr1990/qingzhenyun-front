@@ -98,7 +98,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
             length: 6
         })
         let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig,"")
-        let phone = req.body['phone']
+        let phone = (req.body['phone'] + '').replace(/[^0-9]/ig,"")
         if (!phone || !(typeof (phone) === 'string')) {
             throw new ApiValidateException("Phone required", '{PHONE}_REQUIRED')
         }
