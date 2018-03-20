@@ -65,6 +65,7 @@ class StringUtil {
             }
             before += (arr[i]) + HASH_SPLIT
         }
+        console.log(result)
         let validate = (before + md5(before + TASK_HASH_VALIDATE_KEY)) === hashed
         return validate ? result : undefined
         /*
