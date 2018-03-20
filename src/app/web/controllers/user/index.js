@@ -73,6 +73,8 @@ router.post('/sendRegisterMessage', async (req, res) => {
         if (!countryCode || !(typeof (countryCode) === 'string')) {
             countryCode = '86'
         }
+        //user exists
+        let 
         let flag = 10
         let checkMessageResult = await userService.sendMessage(countryCode,
             phone,
@@ -80,7 +82,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
             code,
             500)
         if (checkMessageResult !== 0) {
-            throw new ApiException("SEND_MESSAGE_FREQUENTLY", 400, "SEND_MESSAGE_FREQUENTLY")
+            throw new ApiException("Send message too frequently", 400, "SEND_MESSAGE_FREQUENTLY")
         }
         try {
             await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
@@ -153,6 +155,10 @@ router.post('/check', (req, res) => {
     }
     let type = (req.body['type'] ? req.body['type'] : 0).toString()
     // check
+    let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig, "")
+    if (!countryCode) {
+        countryCode = '86'
+    }
     switch (type) {
         case "0":
             userService.checkUserExistsByName(value)
@@ -165,7 +171,7 @@ router.post('/check', (req, res) => {
                 .catch((error) => ResponseUtil.OkOrError(req, res, error))
             break;
         case "2":
-            userService.checkUserExistsByPhone(value)
+            userService.checkUserExistsByPhone(countryCode,value)
                 .then(data => ResponseUtil.OkOrError(req, res, error, data))
                 .catch((error) => ResponseUtil.OkOrError(req, res, error))
             break;
