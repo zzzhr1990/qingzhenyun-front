@@ -12,7 +12,7 @@ let userService = require('../../../const/rpc').userRpc
 
 router.post('/register', async (req, res) => {
     try {
-        let code = req.body['code']
+        let code = (req.body['code'] + '').replace(/[^0-9]/ig, "")
         let name = req.body['name']
         if(!name || typeof(name) !== 'string'){
             name = randomstring.generate(16)
@@ -147,7 +147,49 @@ router.post('/sendLoginMessage', async (req, res) => {
 })
 
 router.post('/loginByMessage',async (req, res) => {
+    try {
+        let code = (req.body['code'] + '').replace(/[^0-9]/ig, "")
+        if (StringUtil.isEmpty(code)) {
+            throw new ApiValidateException("Code required", '{CODE}_REQUIRED')
+        }
+        let phoneInfo = req.body['phoneInfo'] + ''
+        if (StringUtil.isEmpty(phoneInfo)) {
+            throw new ApiValidateException("Phone info required", '{PHONE_INFO}_REQUIRED')
+        }
+        let validateCodeDecode = StringUtil.decodeHashStrings(phoneInfo)
+        if (!validateCodeDecode || validateCodeDecode.length !== 3) {
+            throw new ApiValidateException("Phone info not valid", '{PHONE_INFO}_NOT_VALID')
+        }
+        //countryCode, phone, flag
+        let flag = 20
+        let phone = validateCodeDecode[1]
+        let countryCode = validateCodeDecode[0]
+        // Check message validate.
+        let validateResult = await userService.validateMessage(countryCode, phone, flag, code, true)
+        if (!validateResult) {
+            throw new ApiValidateException("Code not valid", '{CODE}_NOT_VALID')
+        }
+        let isMobile = false
+        let dat = await userService.loginByPhone(countryCode, phone, isMobile)
 
+        // Validate Directly to User
+        // No front server like nginx.
+        //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
+        //let ip = RequestUtil.getIp(req)
+        //let data = await userService.registerUser(name, password, countryCode, phone, ip)
+        req.user = {
+            'uuid': dat.uuid,
+            'name': dat.name,
+            'email': dat.email,
+            'phone': dat.phone,
+            'lastLoginTime': dat.lastLoginTime,
+            'refreshTime': dat.refreshTime,
+            'version': dat.version
+        }
+        ResponseUtil.Ok(req, res, dat)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
 })
 
 router.post('/login', (req, res) => {

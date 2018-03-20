@@ -39,6 +39,7 @@
         "randomstring": "^1.1.5"
     },
     "devDependencies": {
+        "babel-eslint": "^8.2.2",
         "eslint": "^4.15.0",
         "eslint-config-google": "^0.9.1",
         "eslint-config-standard": "^11.0.0-beta.0",
