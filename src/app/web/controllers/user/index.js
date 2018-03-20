@@ -234,7 +234,7 @@ router.post('/benchmark', (req, res) => {
 router.post('/:methodId', (req, res) => {
     let method = req.params.methodId
     let s = StringUtil.encodeHashStrings("a","b","c","d")
-    ResponseUtil.Ok(req, res, s)
+    ResponseUtil.Ok(req, res, StringUtil.decodeHashStrings(s))
 })
 
 router.get('/date', (req, res) => {
