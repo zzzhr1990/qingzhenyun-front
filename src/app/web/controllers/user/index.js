@@ -9,10 +9,6 @@ let validator = require('validator')
 const RequestUtil = require('../../../util/request_util')
 const randomstring = require("randomstring");
 let userService = require('../../../const/rpc').userRpc
-const md5 = require('md5')
-const TASK_HASH_VALIDATE_KEY = 'dkewkdoe'
-const AwesomeBase64 = require('awesome-urlsafe-base64')
-const HASH_SPLIT = '.qzy-sp-token@6cs92d-user.'
 
 
 const calcPhoneHash = ((countryCode, phone, flag) => {
@@ -118,7 +114,7 @@ router.post('/sendRegisterMessage', async (req, res) => {
         }
         try {
             await Const.SMS_SENDER.sendRegisterMessage(phone, code, countryCode, 5)
-            ResponseUtil.Ok(req, res, calcPhoneHash(countryCode, phone, flag))
+            ResponseUtil.Ok(req, res, StringUtil.encodeHashStrings(countryCode, phone, flag))
         } catch (errorCode) {
             //console.error(error)
             if (errorCode === 1016) {
