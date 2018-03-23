@@ -464,6 +464,7 @@
         [
             offline.OfflineOperationException
         ], , ],
+        "resetTaskStatus": [, , , , [1], [[7], [3], [7]], , , , ],
         "resetUploadTaskStatus": [, , , , [1], [[3], [3], [7]], ,
         [
             offline.OfflineOperationException

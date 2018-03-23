@@ -52,8 +52,9 @@ router.post('/register', async (req, res) => {
         // No front server like nginx.
         //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
         let ip = RequestUtil.getIp(req)
-        let data = await userService.registerUser(name, password, countryCode, phone, ip)
-        ResponseUtil.Ok(req, res, data)
+        let dat = await userService.registerUser(name, password, countryCode, phone, ip)
+        writeLoginMessage(req,dat)
+        ResponseUtil.Ok(req, res, dat)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
     }
@@ -172,73 +173,44 @@ router.post('/loginByMessage', async (req, res) => {
         let isMobile = false
         let dat = await userService.loginByPhone(countryCode, phone, isMobile)
 
-        // Validate Directly to User
-        // No front server like nginx.
-        //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
-        //let ip = RequestUtil.getIp(req)
-        //let data = await userService.registerUser(name, password, countryCode, phone, ip)
-        req.user = {
-            'uuid': dat.uuid,
-            'name': dat.name,
-            'email': dat.email,
-            'phone': dat.phone,
-            'lastLoginTime': dat.lastLoginTime,
-            'refreshTime': dat.refreshTime,
-            'version': dat.version
-        }
+        writeLoginMessage(req,dat)
         ResponseUtil.Ok(req, res, dat)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
     }
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     // login logic
-    let value = req.body['value']
-    let password = req.body['password']
-    let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig, '')
-    if (!countryCode) {
-        countryCode = '86'
-    }
-    if (StringUtil.isEmpty(value)) {
-        throw new ApiValidateException('Check value required', '{VALUE}_REQUIRED')
-    }
-    if (StringUtil.isEmpty(password)) {
-        throw new ApiValidateException('User password required', '{PASSWORD}_REQUIRED')
-    }
-    // Check email first.
-
-    var caller = undefined
-    if (validator.isEmail(value)) {
-        caller = userService.checkUserValidByEmail(value, password)
-    } else if (validator.isInt(value)) {
-        caller = userService.checkUserValidByPhone(countryCode, value, password)
-    } else {
-        caller = userService.checkUserValidByName(value, password)
-    }
-
-    // Access
-    caller.then(dat => {
-        // ResponseUtil.Error(req, res, error)
-        req.user = {
-            'uuid': dat.uuid,
-            'name': dat.name,
-            'email': dat.email,
-            'phone': dat.phone,
-            'lastLoginTime': dat.lastLoginTime,
-            'refreshTime': dat.refreshTime,
-            'version': dat.version
+    try {
+        let value = req.body['value']
+        let password = req.body['password']
+        let countryCode = (req.body['countryCode'] + '').replace(/[^0-9]/ig, '')
+        if (!countryCode) {
+            countryCode = '86'
         }
-        // console.log(req.user)
+        if (StringUtil.isEmpty(value)) {
+            throw new ApiValidateException('Check value required', '{VALUE}_REQUIRED')
+        }
+        if (StringUtil.isEmpty(password)) {
+            throw new ApiValidateException('User password required', '{PASSWORD}_REQUIRED')
+        }
+        // Check email first.
 
-        ResponseUtil.Ok(req, res, dat)
-    }).catch(error => {
-        if (error['innerCode']) {
-            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 401, 'LOGIN_FAILED'))
+        var caller = undefined
+        if (validator.isEmail(value)) {
+            caller = userService.checkUserValidByEmail(value, password)
+        } else if (validator.isInt(value)) {
+            caller = userService.checkUserValidByPhone(countryCode, value, password)
         } else {
-            ResponseUtil.Error(req, res, error)
+            caller = userService.checkUserValidByName(value, password)
         }
-    })
+        let dat = await caller
+        writeLoginMessage(req,dat)
+        ResponseUtil.Ok(req, res, dat)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
 })
 
 router.post('/check', (req, res) => {
@@ -360,7 +332,7 @@ router.post('/changePasswordByMessage', async (req, res) => {
         //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
         //let ip = RequestUtil.getIp(req)
         //let data = await userService.registerUser(name, password, countryCode, phone, ip)
-        
+
         ResponseUtil.Ok(req, res, succ)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
@@ -375,9 +347,15 @@ router.post('/:methodId', (req, res) => {
 })
 
 
-router.get('/test', (req, res) => {
-    let time = Date.now()
-    userService.test()
-    ResponseUtil.Ok(req, res, time)
-})
+let writeLoginMessage = (req, dat) => {
+    req.user = {
+        'uuid': dat.uuid,
+        'name': dat.name,
+        'email': dat.email,
+        'phone': dat.phone,
+        'lastLoginTime': dat.lastLoginTime,
+        'refreshTime': dat.refreshTime,
+        'version': dat.version
+    }
+}
 module.exports = router

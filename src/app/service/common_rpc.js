@@ -1,4 +1,4 @@
-const Ice = require("ice").Ice
+const Ice = require('ice').Ice
 //const ICE = require('../const/constants').ICE
 
 class CommonRpc{
