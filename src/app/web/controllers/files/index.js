@@ -236,7 +236,7 @@ router.post('/createDirectory',async (req, res) => {
             path = ''
         }
         //createDirectory(long userId, string path, string name,bool autoRename)
-        let data = await userFileService.createDirectory(userId, path,name,true)
+        let data = await userFileService.createDirectory(userId, path,name,false)
         ResponseUtil.Ok(req, res, data)
     }catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
