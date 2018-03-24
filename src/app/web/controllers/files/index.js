@@ -227,13 +227,22 @@ router.post('/createDirectory',async (req, res) => {
             parent = ''
         }
         let userId = req.user.uuid
-        var name = req.body['name']
+        let name = req.body['name']
         let path = req.body['path']
+        let autoRename = req.body['autoRename']
         if (!name && !path) {
             name = 'New Directory Created by:' + new Date()
         }
         if(!path){
             path = ''
+        }
+        if (!autoRename) {
+            autoRename = false
+        } else {
+            let cx = autoRename.toString()
+            if (cx == '1' || cx == 'true' || cx == 'yes') {
+                autoRename = true
+            }
         }
         //createDirectory(long userId, string path, string name,bool autoRename)
         let data = await userFileService.createDirectory(userId, path,name,false)
