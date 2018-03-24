@@ -327,12 +327,6 @@ router.post('/changePasswordByMessage', async (req, res) => {
         let newPassword = req.body['newPassword'] + ''
         let succ = await userService.changePasswordByMessage(userId, countryCode, phone, newPassword)
 
-        // Validate Directly to User
-        // No front server like nginx.
-        //let ip = req.headers['x-real-ip'] || req.connection.remoteAddress
-        //let ip = RequestUtil.getIp(req)
-        //let data = await userService.registerUser(name, password, countryCode, phone, ip)
-
         ResponseUtil.Ok(req, res, succ)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)

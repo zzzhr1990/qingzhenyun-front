@@ -22,23 +22,22 @@
 {
     const Ice = require("ice").Ice;
     const _ModuleRegistry = Ice._ModuleRegistry;
+    const common = require("common").common;
     const Slice = Ice.Slice;
 
     let userfile = _ModuleRegistry.module("userfile");
 
-    userfile.FileOperationException = class extends Ice.UserException
+    userfile.FileOperationException = class extends common.CommonRpcException
     {
-        constructor(innerCode = 0, innerMessage = "", fileType = 0, _cause = "")
+        constructor(innerCode, innerMessage, fileType = 0, _cause = "")
         {
-            super(_cause);
-            this.innerCode = innerCode;
-            this.innerMessage = innerMessage;
+            super(innerCode, innerMessage, _cause);
             this.fileType = fileType;
         }
 
         static get _parent()
         {
-            return Ice.UserException;
+            return common.CommonRpcException;
         }
 
         static get _id()
@@ -53,15 +52,11 @@
 
         _writeMemberImpl(ostr)
         {
-            ostr.writeInt(this.innerCode);
-            ostr.writeString(this.innerMessage);
             ostr.writeInt(this.fileType);
         }
 
         _readMemberImpl(istr)
         {
-            this.innerCode = istr.readInt();
-            this.innerMessage = istr.readString();
             this.fileType = istr.readInt();
         }
     };
@@ -73,12 +68,14 @@
 
     userfile.UserFileResponse = class extends Ice.Value
     {
-        constructor(uuid = "", storeId = "", userId = new Ice.Long(0, 0), size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", name = "", ext = "", preview = "", flag = 0, recycle = 0)
+        constructor(uuid = "", storeId = "", userId = new Ice.Long(0, 0), pathId = "", path = "", size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", from = 0, name = "", ext = "", preview = 0, flag = 0, recycle = 0)
         {
             super();
             this.uuid = uuid;
             this.storeId = storeId;
             this.userId = userId;
+            this.pathId = pathId;
+            this.path = path;
             this.size = size;
             this.parent = parent;
             this.mime = mime;
@@ -87,6 +84,7 @@
             this.mtime = mtime;
             this.ctime = ctime;
             this.alias = alias;
+            this.from = from;
             this.name = name;
             this.ext = ext;
             this.preview = preview;
@@ -99,6 +97,8 @@
             ostr.writeString(this.uuid);
             ostr.writeString(this.storeId);
             ostr.writeLong(this.userId);
+            ostr.writeString(this.pathId);
+            ostr.writeString(this.path);
             ostr.writeLong(this.size);
             ostr.writeString(this.parent);
             ostr.writeString(this.mime);
@@ -107,9 +107,10 @@
             ostr.writeLong(this.mtime);
             ostr.writeLong(this.ctime);
             ostr.writeString(this.alias);
+            ostr.writeInt(this.from);
             ostr.writeString(this.name);
             ostr.writeString(this.ext);
-            ostr.writeString(this.preview);
+            ostr.writeInt(this.preview);
             ostr.writeInt(this.flag);
             ostr.writeInt(this.recycle);
         }
@@ -119,6 +120,8 @@
             this.uuid = istr.readString();
             this.storeId = istr.readString();
             this.userId = istr.readLong();
+            this.pathId = istr.readString();
+            this.path = istr.readString();
             this.size = istr.readLong();
             this.parent = istr.readString();
             this.mime = istr.readString();
@@ -127,9 +130,10 @@
             this.mtime = istr.readLong();
             this.ctime = istr.readLong();
             this.alias = istr.readString();
+            this.from = istr.readInt();
             this.name = istr.readString();
             this.ext = istr.readString();
-            this.preview = istr.readString();
+            this.preview = istr.readInt();
             this.flag = istr.readInt();
             this.recycle = istr.readInt();
         }
@@ -145,81 +149,44 @@
 
     Slice.defineSequence(userfile, "UserFileResponseListHelper", "Ice.ObjectHelper", false, "userfile.UserFileResponse");
 
-    const iceC_userfile_UserFileResponseEx_ids = [
+    const iceC_userfile_UserFilePageResponse_ids = [
         "::Ice::Object",
-        "::userfile::UserFileResponse",
-        "::userfile::UserFileResponseEx"
+        "::common::CommonPage",
+        "::userfile::UserFilePageResponse"
     ];
 
-    userfile.UserFileResponseEx = class extends userfile.UserFileResponse
+    userfile.UserFilePageResponse = class extends common.CommonPage
     {
-        constructor(uuid, storeId, userId, size, parent, mime, type, atime, mtime, ctime, alias, name, ext, preview, flag, recycle, path = null)
+        constructor(page, pageSize, totalCount, totalPage, list = null, path = null, info = null)
         {
-            super(uuid, storeId, userId, size, parent, mime, type, atime, mtime, ctime, alias, name, ext, preview, flag, recycle);
-            this.path = path;
-        }
-
-        _iceWriteMemberImpl(ostr)
-        {
-            userfile.UserFileResponseListHelper.write(ostr, this.path);
-        }
-
-        _iceReadMemberImpl(istr)
-        {
-            this.path = userfile.UserFileResponseListHelper.read(istr);
-        }
-    };
-
-    Slice.defineValue(userfile.UserFileResponseEx, iceC_userfile_UserFileResponseEx_ids[2], false);
-
-    userfile.UserFileResponseExDisp = class extends userfile.UserFileResponseDisp
-    {
-    };
-
-    Slice.defineOperations(userfile.UserFileResponseExDisp, undefined, iceC_userfile_UserFileResponseEx_ids, 2);
-
-    userfile.UserFilePageResponse = class
-    {
-        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0, list = null, path = null, info = null)
-        {
-            this.page = page;
-            this.pageSize = pageSize;
-            this.totalCount = totalCount;
-            this.totalPage = totalPage;
+            super(page, pageSize, totalCount, totalPage);
             this.list = list;
             this.path = path;
             this.info = info;
         }
 
-        _write(ostr)
+        _iceWriteMemberImpl(ostr)
         {
-            ostr.writeInt(this.page);
-            ostr.writeInt(this.pageSize);
-            ostr.writeInt(this.totalCount);
-            ostr.writeInt(this.totalPage);
             userfile.UserFileResponseListHelper.write(ostr, this.list);
             userfile.UserFileResponseListHelper.write(ostr, this.path);
             ostr.writeValue(this.info);
         }
 
-        _read(istr)
+        _iceReadMemberImpl(istr)
         {
-            this.page = istr.readInt();
-            this.pageSize = istr.readInt();
-            this.totalCount = istr.readInt();
-            this.totalPage = istr.readInt();
             this.list = userfile.UserFileResponseListHelper.read(istr);
             this.path = userfile.UserFileResponseListHelper.read(istr);
             istr.readValue(obj => this.info = obj, userfile.UserFileResponse);
         }
-
-        static get minWireSize()
-        {
-            return  19;
-        }
     };
 
-    Slice.defineStruct(userfile.UserFilePageResponse, false, true);
+    Slice.defineValue(userfile.UserFilePageResponse, iceC_userfile_UserFilePageResponse_ids[2], false);
+
+    userfile.UserFilePageResponseDisp = class extends common.CommonPageDisp
+    {
+    };
+
+    Slice.defineOperations(userfile.UserFilePageResponseDisp, undefined, iceC_userfile_UserFilePageResponse_ids, 2);
 
     userfile.UserOfflineResponse = class
     {
@@ -272,44 +239,38 @@
 
     Slice.defineSequence(userfile, "UserOfflineResponseListHelper", "userfile.UserOfflineResponse", false);
 
-    userfile.UserOfflinePageResponse = class
+    const iceC_userfile_UserOfflinePageResponse_ids = [
+        "::Ice::Object",
+        "::common::CommonPage",
+        "::userfile::UserOfflinePageResponse"
+    ];
+
+    userfile.UserOfflinePageResponse = class extends common.CommonPage
     {
-        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0, list = null)
+        constructor(page, pageSize, totalCount, totalPage, list = null)
         {
-            this.page = page;
-            this.pageSize = pageSize;
-            this.totalCount = totalCount;
-            this.totalPage = totalPage;
+            super(page, pageSize, totalCount, totalPage);
             this.list = list;
         }
 
-        _write(ostr)
+        _iceWriteMemberImpl(ostr)
         {
-            ostr.writeInt(this.page);
-            ostr.writeInt(this.pageSize);
-            ostr.writeInt(this.totalCount);
-            ostr.writeInt(this.totalPage);
             userfile.UserOfflineResponseListHelper.write(ostr, this.list);
         }
 
-        _read(istr)
+        _iceReadMemberImpl(istr)
         {
-            this.page = istr.readInt();
-            this.pageSize = istr.readInt();
-            this.totalCount = istr.readInt();
-            this.totalPage = istr.readInt();
             this.list = userfile.UserOfflineResponseListHelper.read(istr);
-        }
-
-        static get minWireSize()
-        {
-            return  17;
         }
     };
 
-    Slice.defineStruct(userfile.UserOfflinePageResponse, true, true);
+    Slice.defineValue(userfile.UserOfflinePageResponse, iceC_userfile_UserOfflinePageResponse_ids[2], false);
 
-    Slice.defineSequence(userfile, "RemoveOfflineTaskListHelper", "Ice.StringHelper", false);
+    userfile.UserOfflinePageResponseDisp = class extends common.CommonPageDisp
+    {
+    };
+
+    Slice.defineOperations(userfile.UserOfflinePageResponseDisp, undefined, iceC_userfile_UserOfflinePageResponse_ids, 2);
 
     const iceC_userfile_UserFileServiceHandler_ids = [
         "::Ice::Object",
@@ -326,67 +287,23 @@
 
     Slice.defineOperations(userfile.UserFileServiceHandler, userfile.UserFileServiceHandlerPrx, iceC_userfile_UserFileServiceHandler_ids, 1,
     {
-        "removeOfflineTask": [, , , , [3], [[4], ["userfile.RemoveOfflineTaskListHelper"]], ,
+        "removeOfflineTask": [, , , , [3], [[4], ["common.StringListHelper"]], ,
         [
             userfile.FileOperationException
         ], , ],
-        "listDirectoryPage": [, , , , [userfile.UserFilePageResponse], [[7], [4], [3], [3], [3], [3]], ,
+        "listOfflinePage": [, , , , ["userfile.UserOfflinePageResponse", true], [[4], [3], [3], [3]], ,
         [
             userfile.FileOperationException
         ], , true],
-        "listOfflinePage": [, , , , [userfile.UserOfflinePageResponse], [[4], [3], [3], [3]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "getFilePath": [, , , , ["userfile.UserFileResponseListHelper"], [[7], [4]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "get": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "getWithoutPath": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "rename": [, , , , ["userfile.UserFileResponseEx", true], [[7], [4], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "couldCreateFile": [, , , , [1], [[7], [4], [7], [3]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "createUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [4], [7], [7], [4], [7], [3], [3], [1]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "move": [, , , , [3], [[7], [7], [4]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "batchMove": [, , , , [3], [["userfile.RemoveOfflineTaskListHelper"], [7], [4]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "recycle": [, , , , [3], [[7], [4]], ,
+        "createOfflineTask": [, , , , [userfile.UserOfflineResponse], [[4], [7], [7], [7], [7], [7]], ,
         [
             userfile.FileOperationException
         ], , ],
         "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , ],
-        "batchRecycle": [, , , , [3], [["userfile.RemoveOfflineTaskListHelper"], [4], [1]], ,
+        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7], [1]], ,
         [
             userfile.FileOperationException
-        ], , ],
-        "createOfflineTask": [, , , , [userfile.UserOfflineResponse], [[4], [7], [7], [7], [7], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , ]
+        ], , true]
     });
     exports.userfile = userfile;
 }
