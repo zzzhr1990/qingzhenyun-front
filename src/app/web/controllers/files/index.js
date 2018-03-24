@@ -13,6 +13,7 @@ let validator = require('validator')
 
 
 // List User Files...
+/*
 router.post('/list', (req, res) => {
     ResponseUtil.Ok(req, res, req.user)
 })
@@ -217,27 +218,29 @@ router.post('/page', (req, res) => {
             }
         })
 })
-
-router.post('/createDirectory', (req, res) => {
+*/
+router.post('/createDirectory',async (req, res) => {
     // ResponseUtil.Ok(req, res, req.user)
-    var parent = req.body['parent']
-    if (!parent) {
-        parent = ''
+    try{
+        var parent = req.body['parent']
+        if (!parent) {
+            parent = ''
+        }
+        let userId = req.user.uuid
+        var name = req.body['name']
+        let path = req.body['path']
+        if (!name && !path) {
+            name = 'New Directory Created by:' + new Date()
+        }
+        if(!path){
+            path = ''
+        }
+        //createDirectory(long userId, string path, string name,bool autoRename)
+        let data = await userFileService.createDirectory(userId, path,name,true)
+        ResponseUtil.Ok(req, res, data)
+    }catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
     }
-    let userId = req.user.uuid
-    var name = req.body['name']
-    if (!name) {
-        name = 'New Directory Created by:' + new Date()
-    }
-    // call rpc
-    userFileService.createDirectory(parent, userId, name).then((result) => ResponseUtil.Ok(req, res, result))
-        .catch((error) => {
-            if (error['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-            } else {
-                ResponseUtil.Error(req, res, error)
-            }
-        })
 })
 
 module.exports = router
