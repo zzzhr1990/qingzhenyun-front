@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router()
-const ApiException = require('../../../exception/api_exception')
-const ApiValidateException = require('../../../exception/api_validate_exception')
+//const ApiException = require('../../../exception/api_exception')
+//const ApiValidateException = require('../../../exception/api_validate_exception')
 // const _ = require('../../../util/string_util')
-const IceUtil = require('../../../util/ice_util')
+//const IceUtil = require('../../../util/ice_util')
 const ResponseUtil = require('../../../util/response_util')
 //let UserFileServiceRpc = require('../../../service/user_file')
 let userFileService = require('../../../const/rpc').userFileRpc
-let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
+//let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let validator = require('validator')
+let CONSTANTS = require('../../../const/constants')
 
 
 
@@ -178,64 +179,74 @@ router.post('/recycle', (req, res) => {
         })
 })
 
-router.post('/page', (req, res) => {
-    //ResponseUtil.Ok(req, res, req.user)
-    var pageStr = req.body['page'] ? req.body['page'] + '' : ''
-    if (!validator.isInt(pageStr)) {
-        pageStr = '1'
-    }
-    var page = parseInt(pageStr)
-    if (page < 1) {
-        page = 1
-    }
-    //
-    var pageSizeStr = req.body['pageSize'] ? req.body['pageSize'] + '' : ''
-    if (!validator.isInt(pageSizeStr)) {
-        pageSizeStr = '20'
-    }
-    var pageSize = parseInt(pageSizeStr)
-    if (pageSize < 1) {
-        pageSize = 20
-    }
-    if (pageSize > 999) {
-        pageSize = 999
-    }
-    var parent = req.body['parent']
-    if (!parent) {
-        parent = ''
-    }
-    var type = parseInt(req.body['type'])
-    if (isNaN(type)) {
-        type = -1
-    }
-    let userId = req.user.uuid
-    userFileService.listDirectoryPage(parent, userId, type, 0, page, pageSize).then((result) => ResponseUtil.Ok(req, res, result))
-        .catch((error) => {
-            if (error['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-            } else {
-                ResponseUtil.Error(req, res, error)
-            }
-        })
-})
 */
 
-router.post('/get',async (req, res) => {
+router.post('/page',async (req, res) => {
+    try {
+        let pageStr = req.body['page'] ? req.body['page'] + '' : ''
+        if (!validator.isInt(pageStr)) {
+            pageStr = '1'
+        }
+        let page = parseInt(pageStr)
+        if (page < 1) {
+            page = 1
+        }
+        let pageSizeStr = req.body['pageSize'] ? req.body['pageSize'] + '' : ''
+        if (!validator.isInt(pageSizeStr)) {
+            pageSizeStr = '20'
+        }
+        let pageSize = parseInt(pageSizeStr)
+        if (pageSize < 1) {
+            pageSize = 20
+        }
+        if (pageSize > 999) {
+            pageSize = 999
+        }
+        let parent = req.body['parent']
+        if (!parent) {
+            parent = ''
+        }else{
+            parent += ''
+        }
+        let path = req.body['path']
+        if (!path) {
+            path = ''
+        }else{
+            path += ''
+        }
+        let orderBy = parseInt(req.body['orderBy'])
+        if (isNaN(orderBy)) {
+            orderBy = -1
+        }
+        let recycle = parseInt(req.body['recycle'])
+        if (isNaN(recycle)) {
+            recycle = CONSTANTS.NO_RECYCLED
+        }
+        let type = CONSTANTS.DIRECTORY_TYPE
+        let userId = req.user.uuid
+        // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
+        let data = await userFileService.listDirectoryPage(userId,parent,path,type,recycle,page,pageSize,orderBy)
+        ResponseUtil.Ok(req, res, data)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
+router.post('/get', async (req, res) => {
     // get(userId: Long, uuid: String?, path: String?)
     try {
         var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
         var path = req.body['path'] ? req.body['path'] + '' : ''
         let userId = req.user.uuid
-        let data = await userFileService.get(userId,uuid, path)
+        let data = await userFileService.get(userId, uuid, path)
         ResponseUtil.Ok(req, res, data)
-    } catch(error) {
+    } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
     }
 })
 
-router.post('/createDirectory',async (req, res) => {
-    // ResponseUtil.Ok(req, res, req.user)
-    try{
+router.post('/createDirectory', async (req, res) => {
+    try {
         let parent = req.body['parent']
         if (!parent) {
             parent = ''
@@ -247,10 +258,10 @@ router.post('/createDirectory',async (req, res) => {
         if (!name && !path) {
             name = 'New Directory Created by:' + new Date()
         }
-        if(!name){
+        if (!name) {
             name = ''
         }
-        if(!path){
+        if (!path) {
             path = ''
         }
         if (!autoRename) {
@@ -263,9 +274,9 @@ router.post('/createDirectory',async (req, res) => {
         }
         //createDirectory(long userId, string path, string name,bool autoRename)
         //(userId: Long, parent:String,path: String?, name: String?, autoRename: Boolean
-        let data = await userFileService.createDirectory(userId,parent,path,name,false)
+        let data = await userFileService.createDirectory(userId, parent, path, name, false)
         ResponseUtil.Ok(req, res, data)
-    }catch (error) {
+    } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
     }
 })

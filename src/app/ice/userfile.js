@@ -157,24 +157,21 @@
 
     userfile.UserFilePageResponse = class extends common.CommonPage
     {
-        constructor(page, pageSize, totalCount, totalPage, list = null, path = null, info = null)
+        constructor(page, pageSize, totalCount, totalPage, path = null, info = null)
         {
             super(page, pageSize, totalCount, totalPage);
-            this.list = list;
             this.path = path;
             this.info = info;
         }
 
         _iceWriteMemberImpl(ostr)
         {
-            userfile.UserFileResponseListHelper.write(ostr, this.list);
             userfile.UserFileResponseListHelper.write(ostr, this.path);
             ostr.writeValue(this.info);
         }
 
         _iceReadMemberImpl(istr)
         {
-            this.list = userfile.UserFileResponseListHelper.read(istr);
             this.path = userfile.UserFileResponseListHelper.read(istr);
             istr.readValue(obj => this.info = obj, userfile.UserFileResponse);
         }
@@ -305,6 +302,10 @@
             userfile.FileOperationException
         ], , true],
         "get": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
+        "listDirectoryPage": [, , , , ["userfile.UserFilePageResponse", true], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
         [
             userfile.FileOperationException
         ], , true]
