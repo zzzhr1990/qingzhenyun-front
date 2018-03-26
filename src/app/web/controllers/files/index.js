@@ -276,7 +276,7 @@ router.post('/list',async (req, res) => {
         let type = CONSTANTS.DIRECTORY_TYPE
         let userId = req.user.uuid
         // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
-        let data = await userFileService.listDirectoryPage(userId,parent,path,type,recycle,start,size,orderBy)
+        let data = await userFileService.listDirectory(userId,parent,path,type,recycle,start,size,orderBy)
         ResponseUtil.Ok(req, res, data)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
