@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 //const ApiException = require('../../../exception/api_exception')
-//const ApiValidateException = require('../../../exception/api_validate_exception')
+const ApiValidateException = require('../../../exception/api_validate_exception')
 // const _ = require('../../../util/string_util')
 //const IceUtil = require('../../../util/ice_util')
 const ResponseUtil = require('../../../util/response_util')
@@ -263,6 +263,11 @@ router.post('/createDirectory', async (req, res) => {
         }
         if (!path) {
             path = ''
+        }
+        if(path){
+            if(path.length > 2048){
+                throw new ApiValidateException('File path too long', 'FILE_PATH_TOO_LONG')
+            }
         }
         if (!autoRename) {
             autoRename = false
