@@ -157,22 +157,22 @@
 
     userfile.UserFilePageResponse = class extends common.CommonPage
     {
-        constructor(page, pageSize, totalCount, totalPage, path = null, info = null)
+        constructor(page, pageSize, totalCount, totalPage, list = null, info = null)
         {
             super(page, pageSize, totalCount, totalPage);
-            this.path = path;
+            this.list = list;
             this.info = info;
         }
 
         _iceWriteMemberImpl(ostr)
         {
-            userfile.UserFileResponseListHelper.write(ostr, this.path);
+            userfile.UserFileResponseListHelper.write(ostr, this.list);
             ostr.writeValue(this.info);
         }
 
         _iceReadMemberImpl(istr)
         {
-            this.path = userfile.UserFileResponseListHelper.read(istr);
+            this.list = userfile.UserFileResponseListHelper.read(istr);
             istr.readValue(obj => this.info = obj, userfile.UserFileResponse);
         }
     };
