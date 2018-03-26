@@ -300,7 +300,11 @@
             userfile.FileOperationException
         ], , ],
         "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , ],
-        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7], [1]], ,
+        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7], [7], [1]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
+        "get": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7]], ,
         [
             userfile.FileOperationException
         ], , true]

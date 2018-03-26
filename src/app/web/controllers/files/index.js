@@ -219,10 +219,24 @@ router.post('/page', (req, res) => {
         })
 })
 */
+
+router.post('/get',async (req, res) => {
+    // get(userId: Long, uuid: String?, path: String?)
+    try {
+        var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
+        var path = req.body['path'] ? req.body['path'] + '' : ''
+        let userId = req.user.uuid
+        let data = await userFileService.get(userId,uuid, path)
+        ResponseUtil.Ok(req, res, data)
+    } catch(error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
 router.post('/createDirectory',async (req, res) => {
     // ResponseUtil.Ok(req, res, req.user)
     try{
-        var parent = req.body['parent']
+        let parent = req.body['parent']
         if (!parent) {
             parent = ''
         }
@@ -245,7 +259,8 @@ router.post('/createDirectory',async (req, res) => {
             }
         }
         //createDirectory(long userId, string path, string name,bool autoRename)
-        let data = await userFileService.createDirectory(userId, path,name,false)
+        //(userId: Long, parent:String,path: String?, name: String?, autoRename: Boolean
+        let data = await userFileService.createDirectory(userId,parent,path,name,false)
         ResponseUtil.Ok(req, res, data)
     }catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
