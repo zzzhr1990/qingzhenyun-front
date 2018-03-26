@@ -224,10 +224,6 @@ router.post('/page',async (req, res) => {
         }
         let type = CONSTANTS.DIRECTORY_TYPE
         let userId = req.user.uuid
-        
-        console.log('recb')
-        console.log(req.body['path'])
-        console.log(path)
         // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
         let data = await userFileService.listDirectoryPage(userId,parent,path,type,recycle,page,pageSize,orderBy)
         ResponseUtil.Ok(req, res, data)
