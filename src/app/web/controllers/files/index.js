@@ -247,6 +247,9 @@ router.post('/createDirectory',async (req, res) => {
         if (!name && !path) {
             name = 'New Directory Created by:' + new Date()
         }
+        if(!name){
+            name = ''
+        }
         if(!path){
             path = ''
         }
