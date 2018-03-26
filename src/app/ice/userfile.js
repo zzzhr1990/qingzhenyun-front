@@ -308,6 +308,10 @@
         "listDirectoryPage": [, , , , ["userfile.UserFilePageResponse", true], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
         [
             userfile.FileOperationException
+        ], , true],
+        "listDirectory": [, , , , ["userfile.UserFileResponseListHelper"], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
+        [
+            userfile.FileOperationException
         ], , true]
     });
     exports.userfile = userfile;

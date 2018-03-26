@@ -232,6 +232,57 @@ router.post('/page',async (req, res) => {
     }
 })
 
+router.post('/list',async (req, res) => {
+    try {
+        let startStr = req.body['start'] ? req.body['start'] + '' : ''
+        if (!validator.isInt(startStr)) {
+            startStr = '-1'
+        }
+        let start = parseInt(startStr)
+        if (start < -1) {
+            start = -1
+        }
+        let sizeStr = req.body['size'] ? req.body['size'] + '' : ''
+        if (!validator.isInt(sizeStr)) {
+            sizeStr = '20'
+        }
+        let size = parseInt(sizeStr)
+        if (size < 1) {
+            size = 20
+        }
+        if (size > 999) {
+            size = 999
+        }
+        let parent = req.body['parent']
+        if (!parent) {
+            parent = ''
+        }else{
+            parent += ''
+        }
+        let path = req.body['path']
+        if (!path) {
+            path = ''
+        }else{
+            path += ''
+        }
+        let orderBy = parseInt(req.body['orderBy'])
+        if (isNaN(orderBy)) {
+            orderBy = -1
+        }
+        let recycle = parseInt(req.body['recycle'])
+        if (isNaN(recycle)) {
+            recycle = CONSTANTS.NO_RECYCLED
+        }
+        let type = CONSTANTS.DIRECTORY_TYPE
+        let userId = req.user.uuid
+        // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
+        let data = await userFileService.listDirectoryPage(userId,parent,path,type,recycle,start,size,orderBy)
+        ResponseUtil.Ok(req, res, data)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
 router.post('/get', async (req, res) => {
     // get(userId: Long, uuid: String?, path: String?)
     try {
@@ -267,6 +318,11 @@ router.post('/createDirectory', async (req, res) => {
         if(path){
             if(path.length > 2048){
                 throw new ApiValidateException('File path too long', 'FILE_PATH_TOO_LONG')
+            }
+            let opath = path.replace(/\\/g,'/')
+            let pathSplit = opath.split('/')
+            if(pathSplit.length > 1024){
+                throw new ApiValidateException('File path too much', 'FILE_PATH_TOO_MATCH')
             }
         }
         if (!autoRename) {
