@@ -2,12 +2,11 @@
  * Module dependencies.
  */
 var app = require('./app')
-var debug = require('debug')('wxapp-monitor-server:server')
 var http = require('http')
 var program = require('commander')
 const Constants = require('./app/const/constants')
 const SmsSender = require('./app/service/sms_sender')
-
+const logger = require('log4js').getLogger('server')
 // get port
 program.version('0.1.0')
     .option('-p, --port <n>', 'Port, Default 3000')
@@ -21,17 +20,17 @@ let port = normalizePort(process.env.PORT || program.port || '3000')
 let appkey = program.appkey
 let appid = program.appid
 if(!appkey){
-    console.log('Set k first before run this application.')
+    logger.error('Set k first before run this application.')
     return
 }
 if(!appid){
-    console.log('Set i first before run this application.')
+    logger.error('Set i first before run this application.')
     return
 }
 Constants.SMS_SENDER = new SmsSender(appid,appkey)
 app.set('port', port)
 
-console.log('Server listen on %d.', port)
+logger.info('Starting server on %d.', port)
 
 /**
  * Create HTTP server.
@@ -82,14 +81,16 @@ function onError(error) {
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges')
-            process.exit(1)
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use')
-            process.exit(1)
-        default:
-            throw error
+    case 'EACCES':
+        logger.error(bind + ' requires elevated privileges')
+        process.exit(1)
+        return
+    case 'EADDRINUSE':
+        logger.error(bind + ' is already in use')
+        process.exit(1)
+        return
+    default:
+        throw error
     }
 }
 
@@ -102,5 +103,5 @@ function onListening() {
     var bind = typeof addr === 'string' ?
         'pipe ' + addr :
         'port ' + addr.port
-    debug('Listening on ' + bind)
+    logger.info('Listening on %s' , bind)
 }

@@ -1,6 +1,5 @@
 var express = require('express')
 // var path = require('path')
-// var favicon = require('serve-favicon')
 var helmet = require('helmet')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
@@ -15,19 +14,19 @@ const CommonRpc = require('./app/service/common_rpc')
 /** INIT RPCs **/
 const ice = require('ice').Ice
 const communicator = ice.initialize(process.argv)
-rpc.cloudStoreRpc = new CommonRpc(communicator, "CloudStoreServiceHandler", require('./app/ice/cloudstore')
+rpc.cloudStoreRpc = new CommonRpc(communicator, 'CloudStoreServiceHandler', require('./app/ice/cloudstore')
     .store.CloudStoreServiceHandlerPrx)
-rpc.userFileRpc = new CommonRpc(communicator, "UserFileServiceHandler", require('./app/ice/userfile')
+rpc.userFileRpc = new CommonRpc(communicator, 'UserFileServiceHandler', require('./app/ice/userfile')
     .userfile.UserFileServiceHandlerPrx)
-rpc.userRpc = new CommonRpc(communicator, "UserServiceHandler", require('./app/ice/userservice')
+rpc.userRpc = new CommonRpc(communicator, 'UserServiceHandler', require('./app/ice/userservice')
     .user.UserServiceHandlerPrx)
 //OfflineDownloadServiceHandler
-rpc.offlineRpc = new CommonRpc(communicator, "OfflineDownloadServiceHandler", require('./app/ice/offline')
+rpc.offlineRpc = new CommonRpc(communicator, 'OfflineDownloadServiceHandler', require('./app/ice/offline')
     .offline.OfflineDownloadServiceHandlerPrx)
 /** INIT RPCs **/
-var app = express()
+const app = express()
 const ResponseUtil = require('./app/util/response_util')
-
+const logger = require('log4js').getLogger('app.js')
 // session..
 /*
 app.use(session({
@@ -64,7 +63,7 @@ app.use(
                     if (/^Bearer$/i.test(scheme)) {
                         return credentials
                     } else {
-                        throw new ApiException('Format is Authorization: Bearer [token]', 401, "BEARER_AUTHORIZATION_HEADER_INVALID")
+                        throw new ApiException('Format is Authorization: Bearer [token]', 401, 'BEARER_AUTHORIZATION_HEADER_INVALID')
                     }
                 } else {
                     return undefined
@@ -145,7 +144,7 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
     if (!err['supress'] && err.name !== 'UnauthorizedError') {
-        console.error(err.stack)
+        logger.error(err.stack)
     }
     let status = err.status || 500
     res.status(status)

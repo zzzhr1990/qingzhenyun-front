@@ -286,8 +286,8 @@ router.post('/list',async (req, res) => {
 router.post('/get', async (req, res) => {
     // get(userId: Long, uuid: String?, path: String?)
     try {
-        var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
-        var path = req.body['path'] ? req.body['path'] + '' : ''
+        let uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
+        let path = req.body['path'] ? req.body['path'] + '' : ''
         let userId = req.user.uuid
         let data = await userFileService.get(userId, uuid, path)
         ResponseUtil.Ok(req, res, data)
