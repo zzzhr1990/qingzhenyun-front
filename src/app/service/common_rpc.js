@@ -1,6 +1,7 @@
 const Ice = require('ice').Ice
 //const ICE = require('../const/constants').ICE
 const logger = require('log4js').getLogger('CommonRpc')
+logger.level = 'info'
 
 class CommonRpc{
     constructor(ice,adapterName,prx){
