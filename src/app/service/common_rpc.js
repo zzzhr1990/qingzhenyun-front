@@ -1,5 +1,6 @@
 const Ice = require('ice').Ice
 //const ICE = require('../const/constants').ICE
+const logger = require('log4js').getLogger('CommonRpc')
 
 class CommonRpc{
     constructor(ice,adapterName,prx){
@@ -11,7 +12,8 @@ class CommonRpc{
             //get sth..
             if(data != null){
                 this._data = data
-                console.log('%s comfirmed.',adapterName)
+                
+                logger.info('%s comfirmed.',adapterName)
                 for(let xx in data){
                     let v = data[xx]
                     if(typeof(v) == 'function'){
@@ -22,13 +24,13 @@ class CommonRpc{
                 }
                 this._inited = true
             }else{
-                console.log('%s failed.(Server responses null)',adapterName)
+                logger.error('%s failed.(Server responses null)',adapterName)
                 this._inited = false
             }
 
         }).catch((ex)=>{
-            console.log('%s failed.',adapterName)
-            console.log(ex)
+            logger.error('%s failed.',adapterName)
+            logger.error(ex)
             this._inited = false
         })
     }

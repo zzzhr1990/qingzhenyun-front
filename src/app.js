@@ -26,7 +26,7 @@ rpc.offlineRpc = new CommonRpc(communicator, 'OfflineDownloadServiceHandler', re
 /** INIT RPCs **/
 const app = express()
 const ResponseUtil = require('./app/util/response_util')
-const logger = require('log4js').getLogger('app.js')
+const logger4j = require('log4js').getLogger('app.js')
 // session..
 /*
 app.use(session({
@@ -144,7 +144,7 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
     if (!err['supress'] && err.name !== 'UnauthorizedError') {
-        logger.error(err.stack)
+        logger4j.error(err.stack)
     }
     let status = err.status || 500
     res.status(status)
