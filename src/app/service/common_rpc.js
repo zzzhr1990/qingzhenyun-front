@@ -10,10 +10,8 @@ class CommonRpc{
         let base = ice.stringToProxy(adapterName)
         this._data = undefined
         prx.checkedCast(base).then(data => {
-            //get sth..
             if(data != null){
                 this._data = data
-                
                 logger.info('%s comfirmed.',adapterName)
                 for(let xx in data){
                     let v = data[xx]

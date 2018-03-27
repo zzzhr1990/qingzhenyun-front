@@ -93,6 +93,8 @@ app.use(
             '/v1/user/sendRegisterMessage',
             '/v1/user/loginByMessage',
             '/v1/user/sendLoginMessage',
+            '/v1/user/sendChangePasswordMessage',
+            '/v1/user/changePasswordByMessage',
             '/v1/store/callback/wcs',
             /^\/v1\/store\/callback\/wcsm3u8\/.*/,
             '/v1/store/callback/wcsm3u8',

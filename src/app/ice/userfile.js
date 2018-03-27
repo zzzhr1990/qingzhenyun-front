@@ -187,15 +187,17 @@
 
     userfile.UserOfflineResponse = class
     {
-        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", files = "", createTime = new Ice.Long(0, 0), uuid = "", progress = 0, status = 0)
+        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
         {
             this.userId = userId;
             this.taskHash = taskHash;
             this.path = path;
             this.name = name;
             this.files = files;
+            this.copied = copied;
             this.createTime = createTime;
             this.uuid = uuid;
+            this.destUuid = destUuid;
             this.progress = progress;
             this.status = status;
         }
@@ -207,8 +209,10 @@
             ostr.writeString(this.path);
             ostr.writeString(this.name);
             ostr.writeString(this.files);
+            ostr.writeString(this.copied);
             ostr.writeLong(this.createTime);
             ostr.writeString(this.uuid);
+            ostr.writeString(this.destUuid);
             ostr.writeInt(this.progress);
             ostr.writeInt(this.status);
         }
@@ -220,15 +224,17 @@
             this.path = istr.readString();
             this.name = istr.readString();
             this.files = istr.readString();
+            this.copied = istr.readString();
             this.createTime = istr.readLong();
             this.uuid = istr.readString();
+            this.destUuid = istr.readString();
             this.progress = istr.readInt();
             this.status = istr.readInt();
         }
 
         static get minWireSize()
         {
-            return  29;
+            return  31;
         }
     };
 
@@ -297,6 +303,10 @@
             userfile.FileOperationException
         ], , ],
         "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , ],
+        "copyStoreFileToPath": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
         "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7], [7], [1]], ,
         [
             userfile.FileOperationException
