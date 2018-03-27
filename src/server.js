@@ -7,6 +7,7 @@ var program = require('commander')
 const Constants = require('./app/const/constants')
 const SmsSender = require('./app/service/sms_sender')
 const logger = require('log4js').getLogger('server')
+logger.level = 'info'
 // get port
 program.version('0.1.0')
     .option('-p, --port <n>', 'Port, Default 3000')
