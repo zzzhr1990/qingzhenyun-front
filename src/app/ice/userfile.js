@@ -303,6 +303,7 @@
             userfile.FileOperationException
         ], , ],
         "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , ],
+        "reportFileCopied": [, , , , [1], [[4], [7], [7], [7]], , , , ],
         "copyStoreFileToPath": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [7]], ,
         [
             userfile.FileOperationException
