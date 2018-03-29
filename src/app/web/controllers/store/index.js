@@ -66,6 +66,19 @@ router.post('/token', async (req, res) => {
             }
         }
         // create file
+        if(hash){
+            try {
+                let fileData = await cloudStoreRpc.getFile(hash)
+                let createFile = await userFileRpc.copyStoreFileToUserFile(hash, fileData['mime'], fileData['fileSize'], fileData['preview'], userId, parent, path, name, override)
+                ResponseUtil.Ok(req, res, createFile)
+                return
+            } catch (error) {
+                if(!error['innerCode']){
+                    console.log('CALL RPC EXP')
+                }
+            }
+            
+        }
         // createUploadToken(userId: Long, parent: String,path:String, name: String, override: Int, current: Current?)
         let token = await cloudStoreRpc.createUploadToken(userId, parent, path, name, overrideFile)
         ResponseUtil.Ok(req, res, token)
