@@ -229,7 +229,7 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
 
 // copyStoreFileToUserFile(storeId: String?, mime: String?, size: Long, preview: Int, userId: Long, parent: String?, path: String?, name: String?, override: Boolean, current: Current?)
 router.post('/callback/wcs', async (req, res) => {
-    console.log('WCS Callback %s', req.body.callbackBody)
+    // console.log('WCS Callback %s', req.body.callbackBody)
     // save file
     try {
         let data = await cloudStoreRpc.uploadFile(req.body.callbackBody)
@@ -247,15 +247,6 @@ router.post('/callback/wcs', async (req, res) => {
         let override = (data.flag == 1)
         if (testUserId > -1) {
             //createUserFile(req, res, parent, userId, name, storeId, size, mime, preview, fileType,override)
-            console.log("%s",storeId)
-            console.log("%s",mime)
-            console.log("%s",size)
-            console.log("%s",preview)
-            console.log("%s",userId)
-            console.log("%s",parent)
-            console.log("%s",path)
-            console.log("%s",name)
-            console.log("%s",override)
             let createFile = await userFileRpc.copyStoreFileToUserFile(storeId, mime, size, preview, userId, parent, path, name, override)
             ResponseUtil.Ok(req, res, createFile)
         } else {
