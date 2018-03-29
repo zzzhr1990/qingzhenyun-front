@@ -240,7 +240,7 @@ router.post('/callback/wcs', async (req, res) => {
             ResponseUtil.Ok(req, res, data)
         }
     } catch (error) {
-        print(error)
+        console.log(error)
         ResponseUtil.ApiErrorAsOk(req, res, error)
     }
 })
