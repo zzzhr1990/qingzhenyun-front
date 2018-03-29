@@ -17,7 +17,7 @@ router.post(['/video', '/audio'], (req, res) => {
     }
     let userId = req.user.uuid
     //get
-    userFileRpc.get(uuid, userId, path).then((result) => {
+    userFileRpc.get(userId,uuid, path).then((result) => {
         // get file
         //
         let storeId = result['storeId']
