@@ -65,10 +65,11 @@
 
     store.CloudStoreTokenResponse = class
     {
-        constructor(name = "", parent = "", token = "", type = 0, uploadUrl = "", version = 0)
+        constructor(name = "", parent = "", path = "", token = "", type = 0, uploadUrl = "", version = 0)
         {
             this.name = name;
             this.parent = parent;
+            this.path = path;
             this.token = token;
             this.type = type;
             this.uploadUrl = uploadUrl;
@@ -79,6 +80,7 @@
         {
             ostr.writeString(this.name);
             ostr.writeString(this.parent);
+            ostr.writeString(this.path);
             ostr.writeString(this.token);
             ostr.writeInt(this.type);
             ostr.writeString(this.uploadUrl);
@@ -89,6 +91,7 @@
         {
             this.name = istr.readString();
             this.parent = istr.readString();
+            this.path = istr.readString();
             this.token = istr.readString();
             this.type = istr.readInt();
             this.uploadUrl = istr.readString();
@@ -97,7 +100,7 @@
 
         static get minWireSize()
         {
-            return  12;
+            return  13;
         }
     };
 
@@ -231,7 +234,7 @@
 
     Slice.defineOperations(store.CloudStoreServiceHandler, store.CloudStoreServiceHandlerPrx, iceC_store_CloudStoreServiceHandler_ids, 1,
     {
-        "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7], [3]], ,
+        "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7], [7], [3]], ,
         [
             store.RemoteOperationFailedException
         ], , ],
