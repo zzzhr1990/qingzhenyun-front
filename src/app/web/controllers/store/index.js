@@ -48,7 +48,10 @@ router.post('/token', async (req, res) => {
         if (!name && !path) {
             name = 'qzy-upload-noname.' + (new Date()).getTime().toString() + '.tmp'
         }
-        var overrideFile = 0
+        if(!name){
+            name = ''
+        }
+        let overrideFile = 0
         if (override == '1' || override == 'true' || override == 'yes') {
             overrideFile = 1
         }
@@ -61,7 +64,7 @@ router.post('/token', async (req, res) => {
         }
         // create file
         // createUploadToken(userId: Long, parent: String,path:String, name: String, override: Int, current: Current?)
-        let token = await cloudStoreRpc.createUploadToken(userId, parent, path, name, override)
+        let token = await cloudStoreRpc.createUploadToken(userId, parent, path, name, overrideFile)
         ResponseUtil.Ok(req, res, token)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
