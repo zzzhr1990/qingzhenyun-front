@@ -229,7 +229,7 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
 
 // copyStoreFileToUserFile(storeId: String?, mime: String?, size: Long, preview: Int, userId: Long, parent: String?, path: String?, name: String?, override: Boolean, current: Current?)
 router.post('/callback/wcs', async (req, res) => {
-    // console.log('WCS Callback %s', req.body.callbackBody)
+    console.log('WCS Callback %s', req.body.callbackBody)
     // save file
     try {
         let data = await cloudStoreRpc.uploadFile(req.body.callbackBody)
