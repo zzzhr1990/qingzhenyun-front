@@ -54,7 +54,7 @@ router.post('/token', async (req, res) => {
         }
         // check file exists.
         if (override !== 1) {
-            let exists = await userFileRpc.checkUserFileExists(userId, parent, path, name)
+            let exists = await userFileRpc.rpc.checkUserFileExists(userId, parent, path, name)
             if (exists) {
                 throw new ApiValidateException('File already exist.', 'FILE_AREADY_EXISTS')
             }
