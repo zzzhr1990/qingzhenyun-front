@@ -51,6 +51,9 @@ router.post('/token', async (req, res) => {
         if(!name){
             name = ''
         }
+        if(!path){
+            path = ''
+        }
         let overrideFile = 0
         if (override == '1' || override == 'true' || override == 'yes') {
             overrideFile = 1
