@@ -122,6 +122,47 @@
 
     Slice.defineStruct(offline.OfflineTaskAddResponse, true, false);
 
+    const iceC_offline_FakeCopyResponse_ids = [
+        "::Ice::Object",
+        "::offline::FakeCopyResponse"
+    ];
+
+    offline.FakeCopyResponse = class extends Ice.Value
+    {
+        constructor(taskHash = "", userId = new Ice.Long(0, 0), createTime = new Ice.Long(0, 0), flag = 0)
+        {
+            super();
+            this.taskHash = taskHash;
+            this.userId = userId;
+            this.createTime = createTime;
+            this.flag = flag;
+        }
+
+        _iceWriteMemberImpl(ostr)
+        {
+            ostr.writeString(this.taskHash);
+            ostr.writeLong(this.userId);
+            ostr.writeLong(this.createTime);
+            ostr.writeInt(this.flag);
+        }
+
+        _iceReadMemberImpl(istr)
+        {
+            this.taskHash = istr.readString();
+            this.userId = istr.readLong();
+            this.createTime = istr.readLong();
+            this.flag = istr.readInt();
+        }
+    };
+
+    Slice.defineValue(offline.FakeCopyResponse, iceC_offline_FakeCopyResponse_ids[1], false);
+
+    offline.FakeCopyResponseDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(offline.FakeCopyResponseDisp, undefined, iceC_offline_FakeCopyResponse_ids, 1);
+
     offline.OfflineTaskInfoResponse = class
     {
         constructor(taskHash = "", progress = 0, fileSize = new Ice.Long(0, 0), downloadSize = new Ice.Long(0, 0), speed = new Ice.Long(0, 0), name = "", type = 0, addon = "", serverId = "", localId = "", localPath = "", createTime = new Ice.Long(0, 0), updateTime = new Ice.Long(0, 0), cmds = "", status = 0, createUser = new Ice.Long(0, 0), createIp = "", flag = 0)
@@ -508,7 +549,12 @@
         "getTaskDetailList": [, , , , ["offline.TaskDetailResponseListHelper"], [[7]], ,
         [
             offline.OfflineOperationException
-        ], , ]
+        ], , ],
+        "getFakeCopy": [, , , , ["offline.FakeCopyResponse", true], [[4]], ,
+        [
+            offline.OfflineOperationException
+        ], , true],
+        "finishFakeCopy": [, , , , [1], [[7], [4]], , , , ]
     });
     exports.offline = offline;
 }

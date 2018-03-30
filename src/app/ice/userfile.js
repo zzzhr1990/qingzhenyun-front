@@ -185,10 +185,16 @@
 
     Slice.defineOperations(userfile.UserFilePageResponseDisp, undefined, iceC_userfile_UserFilePageResponse_ids, 2);
 
-    userfile.UserOfflineResponse = class
+    const iceC_userfile_UserOfflineResponse_ids = [
+        "::Ice::Object",
+        "::userfile::UserOfflineResponse"
+    ];
+
+    userfile.UserOfflineResponse = class extends Ice.Value
     {
         constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
         {
+            super();
             this.userId = userId;
             this.taskHash = taskHash;
             this.path = path;
@@ -202,7 +208,7 @@
             this.status = status;
         }
 
-        _write(ostr)
+        _iceWriteMemberImpl(ostr)
         {
             ostr.writeLong(this.userId);
             ostr.writeString(this.taskHash);
@@ -217,7 +223,7 @@
             ostr.writeInt(this.status);
         }
 
-        _read(istr)
+        _iceReadMemberImpl(istr)
         {
             this.userId = istr.readLong();
             this.taskHash = istr.readString();
@@ -231,16 +237,17 @@
             this.progress = istr.readInt();
             this.status = istr.readInt();
         }
-
-        static get minWireSize()
-        {
-            return  31;
-        }
     };
 
-    Slice.defineStruct(userfile.UserOfflineResponse, true, true);
+    Slice.defineValue(userfile.UserOfflineResponse, iceC_userfile_UserOfflineResponse_ids[1], false);
 
-    Slice.defineSequence(userfile, "UserOfflineResponseListHelper", "userfile.UserOfflineResponse", false);
+    userfile.UserOfflineResponseDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(userfile.UserOfflineResponseDisp, undefined, iceC_userfile_UserOfflineResponse_ids, 1);
+
+    Slice.defineSequence(userfile, "UserOfflineResponseListHelper", "Ice.ObjectHelper", false, "userfile.UserOfflineResponse");
 
     const iceC_userfile_UserOfflinePageResponse_ids = [
         "::Ice::Object",
@@ -298,12 +305,19 @@
         [
             userfile.FileOperationException
         ], , true],
-        "createOfflineTask": [, , , , [userfile.UserOfflineResponse], [[4], [7], [7], [7], [7], [7]], ,
+        "createOfflineTask": [, , , , ["userfile.UserOfflineResponse", true], [[4], [7], [7], [7], [7], [7]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
+        "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , true],
+        "fetchUserOfflineTaskById": [, , , , ["userfile.UserOfflineResponse", true], [[7], [4]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
+        "reportFileCopied": [, , , , [1], [[4], [7], [7], [7]], ,
         [
             userfile.FileOperationException
         ], , ],
-        "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , ],
-        "reportFileCopied": [, , , , [1], [[4], [7], [7], [7]], , , , ],
         "copyStoreFileToPath": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [7]], ,
         [
             userfile.FileOperationException
