@@ -312,10 +312,16 @@
 
     Slice.defineStruct(offline.TaskDetailResponse, true, true);
 
-    offline.TaskUploadResponse = class
+    const iceC_offline_TaskUploadResponse_ids = [
+        "::Ice::Object",
+        "::offline::TaskUploadResponse"
+    ];
+
+    offline.TaskUploadResponse = class extends Ice.Value
     {
         constructor(serverId = "", taskHash = "", taskIndex = 0, fileSize = new Ice.Long(0, 0), localPath = "", storeId = "", status = 0, lastUpdateTime = new Ice.Long(0, 0), taskSpeed = new Ice.Long(0, 0), taskType = 0)
         {
+            super();
             this.serverId = serverId;
             this.taskHash = taskHash;
             this.taskIndex = taskIndex;
@@ -328,7 +334,7 @@
             this.taskType = taskType;
         }
 
-        _write(ostr)
+        _iceWriteMemberImpl(ostr)
         {
             ostr.writeString(this.serverId);
             ostr.writeString(this.taskHash);
@@ -342,7 +348,7 @@
             ostr.writeInt(this.taskType);
         }
 
-        _read(istr)
+        _iceReadMemberImpl(istr)
         {
             this.serverId = istr.readString();
             this.taskHash = istr.readString();
@@ -355,14 +361,15 @@
             this.taskSpeed = istr.readLong();
             this.taskType = istr.readInt();
         }
-
-        static get minWireSize()
-        {
-            return  40;
-        }
     };
 
-    Slice.defineStruct(offline.TaskUploadResponse, true, true);
+    Slice.defineValue(offline.TaskUploadResponse, iceC_offline_TaskUploadResponse_ids[1], false);
+
+    offline.TaskUploadResponseDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(offline.TaskUploadResponseDisp, undefined, iceC_offline_TaskUploadResponse_ids, 1);
 
     offline.OfflineTaskListenerResponse = class
     {
@@ -404,7 +411,7 @@
 
     Slice.defineSequence(offline, "intListHelper", "Ice.IntHelper", true);
 
-    Slice.defineSequence(offline, "TaskUploadResponseListHelper", "offline.TaskUploadResponse", false);
+    Slice.defineSequence(offline, "TaskUploadResponseListHelper", "Ice.ObjectHelper", false, "offline.TaskUploadResponse");
 
     offline.DownloadStatusRefreshRequest = class
     {
@@ -489,18 +496,18 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "fetchUploadTask": [, , , , [offline.TaskUploadResponse], [[3], [3], [7]], ,
+        "fetchUploadTask": [, , , , ["offline.TaskUploadResponse", true], [[3], [3], [7]], ,
         [
             offline.OfflineOperationException
-        ], , ],
+        ], , true],
         "fetchUploadTaskList": [, , , , ["offline.TaskUploadResponseListHelper"], [[3], [3], [7]], ,
         [
             offline.OfflineOperationException
-        ], , ],
-        "fetchCopyTask": [, , , , [offline.TaskUploadResponse], [[3]], ,
+        ], , true],
+        "fetchCopyTask": [, , , , ["offline.TaskUploadResponse", true], [[3]], ,
         [
             offline.OfflineOperationException
-        ], , ],
+        ], , true],
         "finishCopyTask": [, , , , [1], [[7], [3]], ,
         [
             offline.OfflineOperationException
@@ -508,7 +515,7 @@
         "fetchCopyTaskList": [, , , , ["offline.TaskUploadResponseListHelper"], [[7]], ,
         [
             offline.OfflineOperationException
-        ], , ],
+        ], , true],
         "resetTaskStatus": [, , , , [1], [[7], [3], [7]], , , , ],
         "resetUploadTaskStatus": [, , , , [1], [[3], [3], [7]], ,
         [
