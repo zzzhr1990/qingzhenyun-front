@@ -444,7 +444,11 @@
         "remove": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
         [
             userfile.FileOperationException
-        ], true, ]
+        ], true, ],
+        "fetchAsyncTask": [, , , , ["userfile.UserAsyncTask", true], , , , , true],
+        "finishAsyncTask": [, , , , , [["userfile.UserAsyncTask", true]], , , true, ],
+        "fixParent": [, , , , , [[4], [7], [3]], , , , ],
+        "deleteByUuid": [, , , , , [[4], [7]], , , , ]
     });
     exports.userfile = userfile;
 }
