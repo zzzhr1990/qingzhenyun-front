@@ -222,7 +222,7 @@ router.post('/page', async (req, res) => {
         if (isNaN(recycle)) {
             recycle = CONSTANTS.NO_RECYCLED
         }
-        let typeStr = req.body['type'] ? req.body['type'] + '' : '-1'
+        let typeStr = req.body['type'] !== undefined ? req.body['type'] + '' : '-1'
         if (!validator.isInt(typeStr)) {
             typeStr = '-1'
         }
@@ -278,7 +278,7 @@ router.post('/list', async (req, res) => {
         if (isNaN(recycle)) {
             recycle = CONSTANTS.NO_RECYCLED
         }
-        let typeStr = req.body['type'] ? req.body['type'] + '' : '-1'
+        let typeStr = req.body['type'] !== undefined ? req.body['type'] + '' : '-1'
         if (!validator.isInt(typeStr)) {
             typeStr = '-1'
         }
