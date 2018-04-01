@@ -147,44 +147,37 @@
 
     Slice.defineOperations(userfile.UserFileResponseDisp, undefined, iceC_userfile_UserFileResponse_ids, 1);
 
-    const iceC_userfile_SimpleFile_ids = [
-        "::Ice::Object",
-        "::userfile::SimpleFile"
-    ];
-
-    userfile.SimpleFile = class extends Ice.Value
+    userfile.SimpleFile = class
     {
         constructor(uuid = "", path = "")
         {
-            super();
             this.uuid = uuid;
             this.path = path;
         }
 
-        _iceWriteMemberImpl(ostr)
+        _write(ostr)
         {
             ostr.writeString(this.uuid);
             ostr.writeString(this.path);
         }
 
-        _iceReadMemberImpl(istr)
+        _read(istr)
         {
             this.uuid = istr.readString();
             this.path = istr.readString();
         }
+
+        static get minWireSize()
+        {
+            return  2;
+        }
     };
 
-    Slice.defineValue(userfile.SimpleFile, iceC_userfile_SimpleFile_ids[1], false);
-
-    userfile.SimpleFileDisp = class extends Ice.Object
-    {
-    };
-
-    Slice.defineOperations(userfile.SimpleFileDisp, undefined, iceC_userfile_SimpleFile_ids, 1);
+    Slice.defineStruct(userfile.SimpleFile, true, true);
 
     Slice.defineSequence(userfile, "UserFileResponseListHelper", "Ice.ObjectHelper", false, "userfile.UserFileResponse");
 
-    Slice.defineSequence(userfile, "SimpleFileListHelper", "Ice.ObjectHelper", false, "userfile.SimpleFile");
+    Slice.defineSequence(userfile, "SimpleFileListHelper", "userfile.SimpleFile", false);
 
     const iceC_userfile_UserFilePageResponse_ids = [
         "::Ice::Object",
@@ -432,7 +425,7 @@
         "move": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"], [7], [7], [1]], ,
         [
             userfile.FileOperationException
-        ], true, ],
+        ], , ],
         "rename": [, , , , [1], [[4], [7], [7], [7], [1]], ,
         [
             userfile.FileOperationException
@@ -440,12 +433,12 @@
         "recycle": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
         [
             userfile.FileOperationException
-        ], true, ],
+        ], , ],
         "remove": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
         [
             userfile.FileOperationException
-        ], true, ],
-        "test": [, , , , [1], [["userfile.SimpleFileListHelper"]], , , true, ]
+        ], , ],
+        "test": [, , , , [1], [["userfile.SimpleFileListHelper"]], , , , ]
     });
     exports.userfile = userfile;
 }
