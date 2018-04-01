@@ -147,7 +147,44 @@
 
     Slice.defineOperations(userfile.UserFileResponseDisp, undefined, iceC_userfile_UserFileResponse_ids, 1);
 
+    const iceC_userfile_SimpleFile_ids = [
+        "::Ice::Object",
+        "::userfile::SimpleFile"
+    ];
+
+    userfile.SimpleFile = class extends Ice.Value
+    {
+        constructor(uuid = "", path = "")
+        {
+            super();
+            this.uuid = uuid;
+            this.path = path;
+        }
+
+        _iceWriteMemberImpl(ostr)
+        {
+            ostr.writeString(this.uuid);
+            ostr.writeString(this.path);
+        }
+
+        _iceReadMemberImpl(istr)
+        {
+            this.uuid = istr.readString();
+            this.path = istr.readString();
+        }
+    };
+
+    Slice.defineValue(userfile.SimpleFile, iceC_userfile_SimpleFile_ids[1], false);
+
+    userfile.SimpleFileDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(userfile.SimpleFileDisp, undefined, iceC_userfile_SimpleFile_ids, 1);
+
     Slice.defineSequence(userfile, "UserFileResponseListHelper", "Ice.ObjectHelper", false, "userfile.UserFileResponse");
+
+    Slice.defineSequence(userfile, "SimpleFileListHelper", "Ice.ObjectHelper", false, "userfile.SimpleFile");
 
     const iceC_userfile_UserFilePageResponse_ids = [
         "::Ice::Object",
@@ -192,12 +229,13 @@
 
     userfile.UserOfflineResponse = class extends Ice.Value
     {
-        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
+        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", size = new Ice.Long(0, 0), name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
         {
             super();
             this.userId = userId;
             this.taskHash = taskHash;
             this.path = path;
+            this.size = size;
             this.name = name;
             this.files = files;
             this.copied = copied;
@@ -213,6 +251,7 @@
             ostr.writeLong(this.userId);
             ostr.writeString(this.taskHash);
             ostr.writeString(this.path);
+            ostr.writeLong(this.size);
             ostr.writeString(this.name);
             ostr.writeString(this.files);
             ostr.writeString(this.copied);
@@ -228,6 +267,7 @@
             this.userId = istr.readLong();
             this.taskHash = istr.readString();
             this.path = istr.readString();
+            this.size = istr.readLong();
             this.name = istr.readString();
             this.files = istr.readString();
             this.copied = istr.readString();
@@ -301,6 +341,8 @@
         [
             userfile.FileOperationException
         ], , ],
+        "finishOfflineFileCopy": [, , , , , [[7], [4]], , , , ],
+        "finishAllOfflineFileCopy": [, , , , , [[7]], , , , ],
         "listOfflinePage": [, , , , ["userfile.UserOfflinePageResponse", true], [[4], [3], [3], [3]], ,
         [
             userfile.FileOperationException
@@ -314,7 +356,7 @@
         [
             userfile.FileOperationException
         ], , true],
-        "reportFileCopied": [, , , , [1], [[4], [7], [7], [7]], ,
+        "reportFileCopied": [, , , , [1], [[4], [7], [7], [7], [4]], ,
         [
             userfile.FileOperationException
         ], , ],
@@ -342,7 +384,11 @@
         [
             userfile.FileOperationException
         ], , true],
-        "checkUserFileExists": [, , , , [1], [[4], [7], [7], [7]], , , , ]
+        "checkUserFileExists": [, , , , [1], [[4], [7], [7], [7]], , , , ],
+        "move": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"], [7], [7], [1]], ,
+        [
+            userfile.FileOperationException
+        ], true, ]
     });
     exports.userfile = userfile;
 }
