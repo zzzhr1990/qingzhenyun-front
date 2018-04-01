@@ -22,7 +22,7 @@
 {
     const Ice = require("ice").Ice;
     const _ModuleRegistry = Ice._ModuleRegistry;
-    const common = require("common").common;
+    const common = require("./common").common;
     const Slice = Ice.Slice;
 
     let userfile = _ModuleRegistry.module("userfile");
