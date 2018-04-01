@@ -159,7 +159,7 @@ router.post('/recycle', (req, res) => {
 */
 router.post('/test', async (req, res) => {
     try {
-        let response = await userFileService.rpc.test([])
+        let response = await userFileService.rpc.test([new SimpleFile('a','b')])
         ResponseUtil.Ok(req, res, response)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
