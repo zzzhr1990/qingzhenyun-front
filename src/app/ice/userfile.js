@@ -287,6 +287,50 @@
 
     Slice.defineOperations(userfile.UserOfflineResponseDisp, undefined, iceC_userfile_UserOfflineResponse_ids, 1);
 
+    const iceC_userfile_UserAsyncTask_ids = [
+        "::Ice::Object",
+        "::userfile::UserAsyncTask"
+    ];
+
+    userfile.UserAsyncTask = class extends Ice.Value
+    {
+        constructor(userId = new Ice.Long(0, 0), uuid = "", destUuid = "", type = 0, createTime = new Ice.Long(0, 0))
+        {
+            super();
+            this.userId = userId;
+            this.uuid = uuid;
+            this.destUuid = destUuid;
+            this.type = type;
+            this.createTime = createTime;
+        }
+
+        _iceWriteMemberImpl(ostr)
+        {
+            ostr.writeLong(this.userId);
+            ostr.writeString(this.uuid);
+            ostr.writeString(this.destUuid);
+            ostr.writeInt(this.type);
+            ostr.writeLong(this.createTime);
+        }
+
+        _iceReadMemberImpl(istr)
+        {
+            this.userId = istr.readLong();
+            this.uuid = istr.readString();
+            this.destUuid = istr.readString();
+            this.type = istr.readInt();
+            this.createTime = istr.readLong();
+        }
+    };
+
+    Slice.defineValue(userfile.UserAsyncTask, iceC_userfile_UserAsyncTask_ids[1], false);
+
+    userfile.UserAsyncTaskDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(userfile.UserAsyncTaskDisp, undefined, iceC_userfile_UserAsyncTask_ids, 1);
+
     Slice.defineSequence(userfile, "UserOfflineResponseListHelper", "Ice.ObjectHelper", false, "userfile.UserOfflineResponse");
 
     const iceC_userfile_UserOfflinePageResponse_ids = [
@@ -386,6 +430,18 @@
         ], , true],
         "checkUserFileExists": [, , , , [1], [[4], [7], [7], [7]], , , , ],
         "move": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"], [7], [7], [1]], ,
+        [
+            userfile.FileOperationException
+        ], true, ],
+        "rename": [, , , , [1], [[4], [7], [7], [7], [1]], ,
+        [
+            userfile.FileOperationException
+        ], , ],
+        "recycle": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
+        [
+            userfile.FileOperationException
+        ], true, ],
+        "remove": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
         [
             userfile.FileOperationException
         ], true, ]

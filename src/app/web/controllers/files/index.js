@@ -7,6 +7,7 @@ const ApiValidateException = require('../../../exception/api_validate_exception'
 const ResponseUtil = require('../../../util/response_util')
 //let UserFileServiceRpc = require('../../../service/user_file')
 let userFileService = require('../../../const/rpc').userFileRpc
+let SimpleFile = require('../../../ice/userfile').userfile.SimpleFile
 //let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let validator = require('validator')
 let CONSTANTS = require('../../../const/constants')
@@ -98,31 +99,7 @@ router.post('/download', (req, res) => {
     })
 })
 
-router.post('/move', (req, res) => {
-    let uuid = req.body['uuid']
-    if (Array.isArray(uuid)) {
-        uuid = uuid.map(a => a.toString())
-    } else {
-        if (uuid) {
-            uuid = [uuid.toString()]
-        }
-    }
-    if (!uuid) {
-        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
-    }
-    let userId = req.user.uuid
-    let parent = req.body['parent'] ? req.body['parent'] + '' : ''
 
-    //get
-    userFileService.batchMove(uuid, parent, userId).then((result) => ResponseUtil.Ok(req, res, result))
-        .catch((error) => {
-            if (error['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-            } else {
-                ResponseUtil.Error(req, res, error)
-            }
-        })
-})
 
 router.post('/rename', (req, res) => {
     var uuid = req.body['uuid']
@@ -180,6 +157,115 @@ router.post('/recycle', (req, res) => {
 })
 
 */
+
+router.post('/move', async (req, res) => {
+    try {
+        let task = []
+        let uuid = req.body['uuid']
+        if (Array.isArray(uuid)) {
+            //uuid = uuid.map(a => a.toString())
+            uuid.forEach((k) => task.push(new SimpleFile(k,'')))
+            
+        } else {
+            if (uuid) {
+                task.push(new SimpleFile(uuid.toString(),''))
+            } 
+        } //
+        
+        let path = req.body['path']
+        if (Array.isArray(path)) {
+            //path = path.map(a => a.toString())
+            path.forEach((k) => task.push(new SimpleFile('',k)))
+        } else {
+            if (path) {
+                task.push(new SimpleFile('',path.toString()))
+            } 
+        } //
+        let userId = req.user.uuid
+        let parent = req.body['parent'] ? req.body['parent'] + '' : ''
+        let destPath = req.body['destPath'] ? req.body['destPath'] + '' : ''
+        let overwrite = req.body['overwrite']
+        if (!overwrite) {
+            overwrite = false
+        } else {
+            let cx = overwrite.toString()
+            if (cx == '1' || cx == 'true' || cx == 'yes') {
+                overwrite = true
+            }
+        }
+        //get
+        let response = await userFileService.rpc.move(userId, task, parent, destPath, overwrite)
+        ResponseUtil.Ok(req, res, response)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
+router.post('/recycle', async (req, res) => {
+    try {
+        let task = []
+        let uuid = req.body['uuid']
+        if (Array.isArray(uuid)) {
+            //uuid = uuid.map(a => a.toString())
+            uuid.forEach((k) => task.push(new SimpleFile(k,'')))
+            
+        } else {
+            if (uuid) {
+                task.push(new SimpleFile(uuid.toString(),''))
+            } 
+        } //
+        
+        let path = req.body['path']
+        if (Array.isArray(path)) {
+            //path = path.map(a => a.toString())
+            path.forEach((k) => task.push(new SimpleFile('',k)))
+        } else {
+            if (path) {
+                task.push(new SimpleFile('',path.toString()))
+            } 
+        } //
+        let userId = req.user.uuid
+        
+        //get
+        let response = await userFileService.rpc.recycle(userId, task, task)
+        ResponseUtil.Ok(req, res, response)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
+router.post('/remove', async (req, res) => {
+    try {
+        let task = []
+        let uuid = req.body['uuid']
+        if (Array.isArray(uuid)) {
+            //uuid = uuid.map(a => a.toString())
+            uuid.forEach((k) => task.push(new SimpleFile(k,'')))
+            
+        } else {
+            if (uuid) {
+                task.push(new SimpleFile(uuid.toString(),''))
+            } 
+        } //
+        
+        let path = req.body['path']
+        if (Array.isArray(path)) {
+            //path = path.map(a => a.toString())
+            path.forEach((k) => task.push(new SimpleFile('',k)))
+        } else {
+            if (path) {
+                task.push(new SimpleFile('',path.toString()))
+            } 
+        } //
+        let userId = req.user.uuid
+        
+        //get
+        let response = await userFileService.rpc.remove(userId, task, task)
+        ResponseUtil.Ok(req, res, response)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
 
 router.post('/page', async (req, res) => {
     try {
