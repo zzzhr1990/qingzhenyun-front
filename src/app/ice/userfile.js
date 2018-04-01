@@ -444,9 +444,7 @@
         "remove": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
         [
             userfile.FileOperationException
-        ], true, ],
-        "test": [, , , , [1], [["userfile.SimpleFileListHelper"]], , , true, ],
-        "test2": [, , , , [1], [["userfile.SimpleFile", true]], , , true, ]
+        ], true, ]
     });
     exports.userfile = userfile;
 }
