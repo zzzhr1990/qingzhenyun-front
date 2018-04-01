@@ -181,7 +181,7 @@ router.post('/recycle', (req, res) => {
 
 */
 
-router.post('/page',async (req, res) => {
+router.post('/page', async (req, res) => {
     try {
         let pageStr = req.body['page'] ? req.body['page'] + '' : ''
         if (!validator.isInt(pageStr)) {
@@ -205,13 +205,13 @@ router.post('/page',async (req, res) => {
         let parent = req.body['parent']
         if (!parent) {
             parent = ''
-        }else{
+        } else {
             parent += ''
         }
         let path = req.body['path']
         if (!path) {
             path = ''
-        }else{
+        } else {
             path += ''
         }
         let orderBy = parseInt(req.body['orderBy'])
@@ -222,17 +222,22 @@ router.post('/page',async (req, res) => {
         if (isNaN(recycle)) {
             recycle = CONSTANTS.NO_RECYCLED
         }
-        let type = CONSTANTS.DIRECTORY_TYPE
+        let typeStr = req.body['type'] ? req.body['type'] + '' : '-1'
+        if (!validator.isInt(typeStr)) {
+            typeStr = '-1'
+        }
+        let type = parseInt(typeStr)
+        // let type = CONSTANTS.DIRECTORY_TYPE
         let userId = req.user.uuid
         // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
-        let data = await userFileService.listDirectoryPage(userId,parent,path,type,recycle,page,pageSize,orderBy)
+        let data = await userFileService.listDirectoryPage(userId, parent, path, type, recycle, page, pageSize, orderBy)
         ResponseUtil.Ok(req, res, data)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
     }
 })
 
-router.post('/list',async (req, res) => {
+router.post('/list', async (req, res) => {
     try {
         let startStr = req.body['start'] ? req.body['start'] + '' : ''
         if (!validator.isInt(startStr)) {
@@ -256,13 +261,13 @@ router.post('/list',async (req, res) => {
         let parent = req.body['parent']
         if (!parent) {
             parent = ''
-        }else{
+        } else {
             parent += ''
         }
         let path = req.body['path']
         if (!path) {
             path = ''
-        }else{
+        } else {
             path += ''
         }
         let orderBy = parseInt(req.body['orderBy'])
@@ -273,10 +278,14 @@ router.post('/list',async (req, res) => {
         if (isNaN(recycle)) {
             recycle = CONSTANTS.NO_RECYCLED
         }
-        let type = CONSTANTS.DIRECTORY_TYPE
+        let typeStr = req.body['type'] ? req.body['type'] + '' : '-1'
+        if (!validator.isInt(typeStr)) {
+            typeStr = '-1'
+        }
+        let type = parseInt(typeStr)
         let userId = req.user.uuid
         // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
-        let data = await userFileService.listDirectory(userId,parent,path,type,recycle,start,size,orderBy)
+        let data = await userFileService.listDirectory(userId, parent, path, type, recycle, start, size, orderBy)
         ResponseUtil.Ok(req, res, data)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
@@ -315,13 +324,13 @@ router.post('/createDirectory', async (req, res) => {
         if (!path) {
             path = ''
         }
-        if(path){
-            if(path.length > 2048){
+        if (path) {
+            if (path.length > 2048) {
                 throw new ApiValidateException('File path too long', 'FILE_PATH_TOO_LONG')
             }
-            let opath = path.replace(/\\/g,'/')
+            let opath = path.replace(/\\/g, '/')
             let pathSplit = opath.split('/')
-            if(pathSplit.length > 1024){
+            if (pathSplit.length > 1024) {
                 throw new ApiValidateException('File path too much', 'FILE_PATH_TOO_MATCH')
             }
         }

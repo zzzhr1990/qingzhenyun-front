@@ -109,7 +109,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
-            .toString('utf8')
+                .toString('utf8')
         )
         let callback = JSON.parse(
             AwesomeBase64.decode(req.body).toString('utf8')
