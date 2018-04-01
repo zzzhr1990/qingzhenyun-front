@@ -166,6 +166,15 @@ router.post('/test', async (req, res) => {
     }
 })
 
+router.post('/test2', async (req, res) => {
+    try {
+        let response = await userFileService.rpc.test2(new SimpleFile('a','b'))
+        ResponseUtil.Ok(req, res, response)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
 router.post('/move', async (req, res) => {
     try {
         let task = []

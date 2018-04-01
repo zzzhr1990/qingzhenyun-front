@@ -445,7 +445,8 @@
         [
             userfile.FileOperationException
         ], true, ],
-        "test": [, , , , [1], [["userfile.SimpleFileListHelper"]], , , true, ]
+        "test": [, , , , [1], [["userfile.SimpleFileListHelper"]], , , true, ],
+        "test2": [, , , , [1], [["userfile.SimpleFile", true]], , , true, ]
     });
     exports.userfile = userfile;
 }
