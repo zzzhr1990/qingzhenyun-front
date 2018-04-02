@@ -229,13 +229,14 @@
 
     userfile.UserOfflineResponse = class extends Ice.Value
     {
-        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", size = new Ice.Long(0, 0), name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
+        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", size = new Ice.Long(0, 0), mime = "", name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
         {
             super();
             this.userId = userId;
             this.taskHash = taskHash;
             this.path = path;
             this.size = size;
+            this.mime = mime;
             this.name = name;
             this.files = files;
             this.copied = copied;
@@ -252,6 +253,7 @@
             ostr.writeString(this.taskHash);
             ostr.writeString(this.path);
             ostr.writeLong(this.size);
+            ostr.writeString(this.mime);
             ostr.writeString(this.name);
             ostr.writeString(this.files);
             ostr.writeString(this.copied);
@@ -268,6 +270,7 @@
             this.taskHash = istr.readString();
             this.path = istr.readString();
             this.size = istr.readLong();
+            this.mime = istr.readString();
             this.name = istr.readString();
             this.files = istr.readString();
             this.copied = istr.readString();
