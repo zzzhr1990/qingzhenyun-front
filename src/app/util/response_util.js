@@ -1,14 +1,14 @@
 const ApiException = require('../exception/api_exception')
 const jwt = require('jsonwebtoken')
 const Constants = require('../const/constants')
-const Long = require('ice').Ice.Long
+// const Long = require('ice').Ice.Long
 const IceUtil = require('./ice_util')
 class ResponseUtil {
     static Ok(req, res, data) {
         ResponseUtil.json(req, res, {
             status: 200,
             result: data,
-            code: "OK",
+            code: 'OK',
             success: true
         })
     }
@@ -36,7 +36,7 @@ class ResponseUtil {
         ResponseUtil.json(req, res, {
             status: 200,
             result: data,
-            code: "OK",
+            code: 'OK',
             success: true
         })
     }
@@ -48,7 +48,7 @@ class ResponseUtil {
         res.status(500)
         ResponseUtil.json(req, res, {
             status: 500,
-            code: "INTERNAL_ERROR",
+            code: 'INTERNAL_ERROR',
             success: false
         })
         //throw new ApiException('Internal Server Error', undefined, undefined, false)
@@ -60,7 +60,7 @@ class ResponseUtil {
             ResponseUtil.Error(req, res, err)
             return
         }
-        if (!err["supress"]) {
+        if (!err['supress']) {
             console.error(err.stack)
         }
         let status = err.status || 500
@@ -70,7 +70,7 @@ class ResponseUtil {
             message: err.message
         }
         if (err['code']) {
-            data.code = err["code"]
+            data.code = err['code']
         } else {
             data.code = 'INTERNAL_SERVER_ERROR'
         }
@@ -85,7 +85,7 @@ class ResponseUtil {
             ResponseUtil.Ok(req, res, err)
             return
         }
-        if (!err["supress"]) {
+        if (!err['supress']) {
             console.error(err.stack)
         }
         let status = err.status || 500
@@ -95,7 +95,7 @@ class ResponseUtil {
             message: err.message
         }
         if (err['code']) {
-            data.code = err["code"]
+            data.code = err['code']
         } else {
             data.code = 'INTERNAL_SERVER_ERROR'
         }
