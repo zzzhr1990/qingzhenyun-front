@@ -3,12 +3,12 @@ const router = express.Router()
 //const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 // const _ = require('../../../util/string_util')
-//const IceUtil = require('../../../util/ice_util')
+const IceUtil = require('../../../util/ice_util')
 const ResponseUtil = require('../../../util/response_util')
 //let UserFileServiceRpc = require('../../../service/user_file')
 let userFileService = require('../../../const/rpc').userFileRpc
 let SimpleFile = require('../../../ice/userfile').userfile.SimpleFile
-//let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
+let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let validator = require('validator')
 let CONSTANTS = require('../../../const/constants')
 
@@ -38,66 +38,7 @@ router.post('/get', (req, res) => {
         })
 })
 
-router.post('/download', (req, res) => {
-    var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
-    var name = req.body['name'] ? req.body['name'] + '' : ''
-    if (!uuid && !name) {
-        throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
-    }
-    let userId = req.user.uuid
-    //get
-    userFileService.get(uuid, userId, name).then((result) => {
-        // get file
-        //
-        let storeId = result['storeId']
-        if (!storeId) {
-            if (result['type'] !== 0) {
-                ResponseUtil.ApiError(req, res,
-                    new ApiException('DOWNLOAD_DIRECTORY_NOT_SUPPORTED',
-                        400,
-                        'DOWNLOAD_DIRECTORY_NOT_SUPPORTED')
-                )
-                return
-            }
-            ResponseUtil.ApiError(req, res, new ApiException('FILE_NOT_FOUND',
-                400,
-                'FILE_NOT_FOUND'))
-            return
-        }
-        cloudStoreRpc.getFile(storeId).then(fileData => {
-            let time = (new Date()).getTime().toString()
-            let fileKey = fileData['fileKey']
-            let fileHash = storeId
-            let fileSize = fileData['fileSize']
-            let mime = fileData['mime']
-            let url = 'http://other.qiecdn.com/' +
-                fileKey +
-                '?key=' +
-                time +
-                '&userId=' + IceUtil.iceLong2Number(userId).toString()
-            let name = result['name']
-            ResponseUtil.Ok(req, res, {
-                'fileSize': fileSize,
-                'hash': fileHash,
-                'name': name,
-                'mime': mime,
-                'url': url
-            })
-        }).catch((error) => {
-            if (error['innerCode']) {
-                ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-            } else {
-                ResponseUtil.Error(req, res, error)
-            }
-        })
-    }).catch((error) => {
-        if (error['innerCode']) {
-            ResponseUtil.ApiError(req, res, new ApiException(error['innerMessage'], 400, error['innerMessage']))
-        } else {
-            ResponseUtil.Error(req, res, error)
-        }
-    })
-})
+
 
 
 
@@ -201,6 +142,46 @@ router.post('/move', async (req, res) => {
     }
 })
 
+router.post('/download',async (req, res) => {
+    try{
+        let uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
+        let path = req.body['path'] ? req.body['path'] + '' : ''
+        if (!uuid && !path) {
+            throw new ApiValidateException('File uuid required', 'FILE_UUID_OR_PATH_REQUIRED')
+        }
+        let userId = req.user.uuid
+        let result = await userFileService.get(userId, uuid, path)
+        let storeId = result['storeId']
+        if (!storeId) {
+            if (result['type'] !== 0) {
+                throw new ApiValidateException('DOWNLOAD_DIRECTORY_NOT_SUPPORTED',
+                    'DOWNLOAD_DIRECTORY_NOT_SUPPORTED')
+            }
+            throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
+        }
+        let fileData = await cloudStoreRpc.getFile(storeId)
+        let time = (new Date()).getTime().toString()
+        let fileKey = fileData['fileKey']
+        let fileHash = storeId
+        let fileSize = fileData['fileSize']
+        let mime = fileData['mime']
+        let url = 'http://other.qiecdn.com/' +
+                fileKey +
+                '?key=' +
+                time +
+                '&userId=' + IceUtil.iceLong2Number(userId).toString()
+        let name = result['name']
+        ResponseUtil.Ok(req, res, {
+            'fileSize': fileSize,
+            'hash': fileHash,
+            'name': name,
+            'mime': mime,
+            'url': url
+        })
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
 
 router.post('/rename', async (req, res) => {
     try {
