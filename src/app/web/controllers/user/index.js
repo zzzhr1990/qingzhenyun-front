@@ -267,6 +267,9 @@ router.post('/sendChangePasswordMessage', async (req, res) => {
         })
         let userId = req.user.uuid
         let userInfo = await userService.getUserByUuid(userId)
+        if(!userInfo){
+            throw new ApiValidateException('User not found', 'USER_NOT_FOUND')
+        }
         let countryCode = userInfo.countryCode
         let phone = userInfo.phone
         if (!phone || !(typeof (phone) === 'string')) {
@@ -406,6 +409,9 @@ router.post('/changePasswordByMessage2', async (req, res) => {
         }
         //validate user exists first.
         let userInfo = await userService.getUserByPhone(countryCode, phone)
+        if(!userInfo){
+            throw new ApiValidateException('User not found', 'USER_NOT_FOUND')
+        }
         let newPassword = req.body['newPassword'] + ''
         let succ = await userService.changePasswordByMessage(userInfo.uuid, countryCode, phone, newPassword)
         ResponseUtil.Ok(req, res, succ)

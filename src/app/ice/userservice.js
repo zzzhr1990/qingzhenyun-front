@@ -100,10 +100,16 @@
         }
     };
 
-    user.UserResponse = class
+    const iceC_user_UserResponse_ids = [
+        "::Ice::Object",
+        "::user::UserResponse"
+    ];
+
+    user.UserResponse = class extends Ice.Value
     {
         constructor(uuid = new Ice.Long(0, 0), name = "", email = "", countryCode = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", ssidMobile = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
         {
+            super();
             this.uuid = uuid;
             this.name = name;
             this.email = email;
@@ -123,7 +129,7 @@
             this.version = version;
         }
 
-        _write(ostr)
+        _iceWriteMemberImpl(ostr)
         {
             ostr.writeLong(this.uuid);
             ostr.writeString(this.name);
@@ -144,7 +150,7 @@
             ostr.writeInt(this.version);
         }
 
-        _read(istr)
+        _iceReadMemberImpl(istr)
         {
             this.uuid = istr.readLong();
             this.name = istr.readString();
@@ -164,14 +170,15 @@
             this.validate = istr.readInt();
             this.version = istr.readInt();
         }
-
-        static get minWireSize()
-        {
-            return  67;
-        }
     };
 
-    Slice.defineStruct(user.UserResponse, true, true);
+    Slice.defineValue(user.UserResponse, iceC_user_UserResponse_ids[1], false);
+
+    user.UserResponseDisp = class extends Ice.Object
+    {
+    };
+
+    Slice.defineOperations(user.UserResponseDisp, undefined, iceC_user_UserResponse_ids, 1);
 
     const iceC_user_UserServiceHandler_ids = [
         "::Ice::Object",
@@ -188,10 +195,11 @@
 
     Slice.defineOperations(user.UserServiceHandler, user.UserServiceHandlerPrx, iceC_user_UserServiceHandler_ids, 1,
     {
-        "registerUser": [, , , , [user.UserResponse], [[7], [7], [7], [7], [7]], ,
+        "registerUser": [, , , , ["user.UserResponse", true], [[7], [7], [7], [7], [7]], ,
         [
             user.RegisterFailedException
-        ], , ],
+        ], , true],
+        "getNextUser": [, , , , ["user.UserResponse", true], [[4]], , , , true],
         "sendMessage": [, , , , [3], [[7], [7], [3], [7], [3]], ,
         [
             user.RegisterFailedException
@@ -200,29 +208,29 @@
         [
             user.RegisterFailedException
         ], , ],
-        "getUserByUuid": [, , , , [user.UserResponse], [[4]], , , , ],
-        "getUserByPhone": [, , , , [user.UserResponse], [[7], [7]], , , , ],
+        "getUserByUuid": [, , , , ["user.UserResponse", true], [[4]], , , , true],
+        "getUserByPhone": [, , , , ["user.UserResponse", true], [[7], [7]], , , , true],
         "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
         "checkUserExistsByPhone": [, , , , [1], [[7], [7]], , , , ],
         "changePassword": [, , , , [1], [[4], [7], [7]], , , , ],
         "changePasswordByMessage": [, , , , [1], [[4], [7], [7], [7]], , , , ],
-        "loginByPhone": [, , , , [user.UserResponse], [[7], [7], [1]], ,
+        "loginByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [1]], ,
         [
             user.LoginFailedException
-        ], , ],
-        "checkUserValidByName": [, , , , [user.UserResponse], [[7], [7]], ,
+        ], , true],
+        "checkUserValidByName": [, , , , ["user.UserResponse", true], [[7], [7]], ,
         [
             user.LoginFailedException
-        ], , ],
-        "checkUserValidByEmail": [, , , , [user.UserResponse], [[7], [7]], ,
+        ], , true],
+        "checkUserValidByEmail": [, , , , ["user.UserResponse", true], [[7], [7]], ,
         [
             user.LoginFailedException
-        ], , ],
-        "checkUserValidByPhone": [, , , , [user.UserResponse], [[7], [7], [7]], ,
+        ], , true],
+        "checkUserValidByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [7]], ,
         [
             user.LoginFailedException
-        ], , ]
+        ], , true]
     });
     exports.user = user;
 }
