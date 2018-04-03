@@ -12,14 +12,16 @@ const userFileRpc = require('../../../const/rpc').userFileRpc
 const offlineRpc = require('../../../const/rpc').offlineRpc
 const TaskDetailResponse = require('../../../ice/offline').offline.TaskDetailResponse
 const OfflineTaskInfoResponse = require('../../../ice/offline').offline.OfflineTaskInfoResponse
-const CONSTANTS = require('../../../const/constants')
+//const CONSTANTS = require('../../../const/constants')
 const download = require('download')
 const parseTorrent = require('parse-torrent')
 const md5 = require('md5')
 const TASK_HASH_VALIDATE_KEY = '6065772'
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 const HASH_SPLIT = '.qzy-sp-token@6cs92d-token.'
-let validator = require('validator')
+let validator = require('offline-controller')
+const logger = require('log4js').getLogger('server')
+logger.level = 'info'
 
 
 const calcTaskHash = ((taskHash, fileId, taskName) => {
@@ -78,11 +80,13 @@ router.post('/page', (req, res) => {
         pageSize = 999
     }
     let userId = req.user.uuid
-    var orderStr = req.body['order'] ? req.body['order'] + '' : ''
+    var orderStr = req.body['orderBy'] ? req.body['orderBy'] + '' : ''
     if (!validator.isInt(orderStr)) {
         orderStr = '0'
     }
-    userFileRpc.listOfflinePage(userId, page, pageSize, parseInt(orderStr)).then(data => {
+    let orderBy = parseInt(orderStr)
+    userFileRpc.listOfflinePage(userId, page, pageSize, orderBy).then(data => {
+        data['orderBy'] = orderBy
         ResponseUtil.Ok(req, res, data)
     }).catch(ex => ResponseUtil.RenderStandardRpcError(req, res, ex))
 })
@@ -170,7 +174,7 @@ router.post('/parseMagnet', (req, res) => {
             ResponseUtil.Ok(req, res, result)
         }
     }).catch(offlineError => {
-        console.error(offlineError)
+        logger.error(offlineError)
         ResponseUtil.Ok(req, res, result)
     })
     //decode first
@@ -265,7 +269,7 @@ router.post('/start', (req, res) => {
                 }
             }
         } else {
-            console.warn('Cannot decode %s', url)
+            logger.warn('Cannot decode %s', url)
             throw new ApiValidateException('Url not supported.',
                 'URL_INVALID')
         }
@@ -407,7 +411,7 @@ const downloadTorrentFile = (req, res, hash, url, size) => {
         */
 
     }).catch(error => {
-        console.error(error)
+        logger.error(error)
         ResponseUtil.ApiError(req, res, new ApiException('FETCH_TORRENT_FAILED', 500, 'Download torrent failed.'))
     })
 }
