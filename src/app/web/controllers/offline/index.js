@@ -285,7 +285,7 @@ router.post('/start', (req, res) => {
         savePath == '' ? null : savePath,
         name ? name : taskHash, files,
         saveUuid == '' ? null : saveUuid)
-        .then(_ => {
+        .then(_ => { // eslint-disable-line no-unused-vars
             let current = IceUtil.number2IceLong((new Date().getTime()))
             let createReq = new OfflineTaskInfoResponse(
                 taskHash,
@@ -336,7 +336,7 @@ const getTorrentFileData = (req, res, fileHash) => {
     }).catch(error => ResponseUtil.RenderStandardRpcError(req, res, error))
 }
 
-const downloadTorrentFile = (req, res, hash, url, size) => {
+const downloadTorrentFile = (req, res, hash, url, size) => { // eslint-disable-line no-unused-vars
     //let fileSize = IceUtil.iceLong2Number(size)
     download(url).then(data => {
         //fs.writeFileSync('dist/foo.jpg', data)
