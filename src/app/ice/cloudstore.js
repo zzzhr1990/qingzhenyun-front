@@ -18,49 +18,55 @@
 // </auto-generated>
 //
 
-(function (module, require, exports) {
+(function(module, require, exports)
+{
     const Ice = require("ice").Ice;
     const _ModuleRegistry = Ice._ModuleRegistry;
     const Slice = Ice.Slice;
 
     let store = _ModuleRegistry.module("store");
 
-    store.RemoteOperationFailedException = class extends Ice.UserException {
-        static get _parent() {
-            return Ice.UserException;
-        }
-
-        static get _id() {
-            return "::store::RemoteOperationFailedException";
-        }
-
-        constructor(innerCode = 0, innerMessage = "", _cause = "") {
+    store.RemoteOperationFailedException = class extends Ice.UserException
+    {
+        constructor(innerCode = 0, innerMessage = "", _cause = "")
+        {
             super(_cause);
             this.innerCode = innerCode;
             this.innerMessage = innerMessage;
         }
 
-        _mostDerivedType() {
+        static get _parent()
+        {
+            return Ice.UserException;
+        }
+
+        static get _id()
+        {
+            return "::store::RemoteOperationFailedException";
+        }
+
+        _mostDerivedType()
+        {
             return store.RemoteOperationFailedException;
         }
 
-        _writeMemberImpl(ostr) {
+        _writeMemberImpl(ostr)
+        {
             ostr.writeInt(this.innerCode);
             ostr.writeString(this.innerMessage);
         }
 
-        _readMemberImpl(istr) {
+        _readMemberImpl(istr)
+        {
             this.innerCode = istr.readInt();
             this.innerMessage = istr.readString();
         }
     };
 
-    store.CloudStoreTokenResponse = class {
-        static get minWireSize() {
-            return 13;
-        }
-
-        constructor(name = "", parent = "", path = "", token = "", type = 0, uploadUrl = "", version = 0) {
+    store.CloudStoreTokenResponse = class
+    {
+        constructor(name = "", parent = "", path = "", token = "", type = 0, uploadUrl = "", version = 0)
+        {
             this.name = name;
             this.parent = parent;
             this.path = path;
@@ -70,7 +76,8 @@
             this.version = version;
         }
 
-        _write(ostr) {
+        _write(ostr)
+        {
             ostr.writeString(this.name);
             ostr.writeString(this.parent);
             ostr.writeString(this.path);
@@ -80,7 +87,8 @@
             ostr.writeInt(this.version);
         }
 
-        _read(istr) {
+        _read(istr)
+        {
             this.name = istr.readString();
             this.parent = istr.readString();
             this.path = istr.readString();
@@ -89,16 +97,25 @@
             this.uploadUrl = istr.readString();
             this.version = istr.readInt();
         }
+
+        static get minWireSize()
+        {
+            return  13;
+        }
     };
 
     Slice.defineStruct(store.CloudStoreTokenResponse, true, true);
 
-    store.CloudStoreResponse = class {
-        static get minWireSize() {
-            return 43;
-        }
+    const iceC_store_CloudStoreResponse_ids = [
+        "::Ice::Object",
+        "::store::CloudStoreResponse"
+    ];
 
-        constructor(fileHash = "", fileSize = new Ice.Long(0, 0), mime = "", uploadUser = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), originalFilename = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, previewAddon = "", uploadIp = "", flag = 0) {
+    store.CloudStoreResponse = class extends Ice.Value
+    {
+        constructor(fileHash = "", fileSize = new Ice.Long(0, 0), mime = "", uploadUser = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), originalFilename = "", fileBucket = "", fileKey = "", storeType = 0, preview = 0, previewAddon = "", uploadIp = "", flag = 0)
+        {
+            super();
             this.fileHash = fileHash;
             this.fileSize = fileSize;
             this.mime = mime;
@@ -114,7 +131,8 @@
             this.flag = flag;
         }
 
-        _write(ostr) {
+        _iceWriteMemberImpl(ostr)
+        {
             ostr.writeString(this.fileHash);
             ostr.writeLong(this.fileSize);
             ostr.writeString(this.mime);
@@ -130,7 +148,8 @@
             ostr.writeInt(this.flag);
         }
 
-        _read(istr) {
+        _iceReadMemberImpl(istr)
+        {
             this.fileHash = istr.readString();
             this.fileSize = istr.readLong();
             this.mime = istr.readString();
@@ -147,14 +166,18 @@
         }
     };
 
-    Slice.defineStruct(store.CloudStoreResponse, true, true);
+    Slice.defineValue(store.CloudStoreResponse, iceC_store_CloudStoreResponse_ids[1], false);
 
-    store.PreviewTaskResponse = class {
-        static get minWireSize() {
-            return 33;
-        }
+    store.CloudStoreResponseDisp = class extends Ice.Object
+    {
+    };
 
-        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", originalName = "", storeType = 0, preview = 0, previewType = 0, actionTime = new Ice.Long(0, 0)) {
+    Slice.defineOperations(store.CloudStoreResponseDisp, undefined, iceC_store_CloudStoreResponse_ids, 1);
+
+    store.PreviewTaskResponse = class
+    {
+        constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", originalName = "", storeType = 0, preview = 0, previewType = 0, actionTime = new Ice.Long(0, 0))
+        {
             this.taskId = taskId;
             this.fileHash = fileHash;
             this.mime = mime;
@@ -167,7 +190,8 @@
             this.actionTime = actionTime;
         }
 
-        _write(ostr) {
+        _write(ostr)
+        {
             ostr.writeLong(this.taskId);
             ostr.writeString(this.fileHash);
             ostr.writeString(this.mime);
@@ -180,7 +204,8 @@
             ostr.writeLong(this.actionTime);
         }
 
-        _read(istr) {
+        _read(istr)
+        {
             this.taskId = istr.readLong();
             this.fileHash = istr.readString();
             this.mime = istr.readString();
@@ -192,6 +217,11 @@
             this.previewType = istr.readInt();
             this.actionTime = istr.readLong();
         }
+
+        static get minWireSize()
+        {
+            return  33;
+        }
     };
 
     Slice.defineStruct(store.PreviewTaskResponse, true, true);
@@ -201,43 +231,43 @@
         "::store::CloudStoreServiceHandler"
     ];
 
-    store.CloudStoreServiceHandler = class extends Ice.Object {
+    store.CloudStoreServiceHandler = class extends Ice.Object
+    {
     };
 
-    store.CloudStoreServiceHandlerPrx = class extends Ice.ObjectPrx {
+    store.CloudStoreServiceHandlerPrx = class extends Ice.ObjectPrx
+    {
     };
 
     Slice.defineOperations(store.CloudStoreServiceHandler, store.CloudStoreServiceHandlerPrx, iceC_store_CloudStoreServiceHandler_ids, 1,
-        {
-            "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7], [7], [3]], ,
-                [
-                    store.RemoteOperationFailedException
-                ], ,],
-            "uploadFile": [, , , , [store.CloudStoreResponse], [[7]], ,
-                [
-                    store.RemoteOperationFailedException
-                ], ,],
-            "getFile": [, , , , [store.CloudStoreResponse], [[7]], ,
-                [
-                    store.RemoteOperationFailedException
-                ], ,],
-            "updateFilePreviewStatus": [, , , , [store.CloudStoreResponse], [[4], [7], [7], [3], [7], [7], [7], [3], [3]], ,
-                [
-                    store.RemoteOperationFailedException
-                ], ,],
-            "fetchPreviewTask": [, , , , [store.PreviewTaskResponse], [[3], [3], [3]], ,
-                [
-                    store.RemoteOperationFailedException
-                ], ,],
-            "updatePreviewTaskStatus": [, , , , [store.PreviewTaskResponse], [[4], [7], [3], [3], [7]], ,
-                [
-                    store.RemoteOperationFailedException
-                ], ,]
-        });
+    {
+        "createUploadToken": [, , , , [store.CloudStoreTokenResponse], [[4], [7], [7], [7], [3]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
+        "uploadFile": [, , , , ["store.CloudStoreResponse", true], [[7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , true],
+        "getFile": [, , , , ["store.CloudStoreResponse", true], [[7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , true],
+        "updateFilePreviewStatus": [, , , , ["store.CloudStoreResponse", true], [[4], [7], [7], [3], [7], [7], [7], [3], [3]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , true],
+        "fetchPreviewTask": [, , , , [store.PreviewTaskResponse], [[3], [3], [3]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ],
+        "updatePreviewTaskStatus": [, , , , [store.PreviewTaskResponse], [[4], [7], [3], [3], [7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , ]
+    });
     exports.store = store;
-};
+}
 (typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? module : undefined,
-    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
-    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this)
-)
-;
+ typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
+ typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this));
