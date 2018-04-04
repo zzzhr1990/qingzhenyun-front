@@ -10,7 +10,7 @@ let userFileRpc = require('../../../const/rpc').userFileRpc
 //const CONSTANTS = require('../../../const/constants')
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 const cors = require('cors')
-const logger = require('log4js').getLogger('offline-controller')
+const logger = require('log4js').getLogger('store-controller')
 //logger.level = 'info'
 
 var corsOptions = {
@@ -178,7 +178,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         })
 
     } catch (error) {
-        logger.log(error)
+        logger.error('m3u8e %s',error)
     }
     ResponseUtil.Ok(req, res, {})
 })
