@@ -36,6 +36,12 @@ router.post(['/video', '/audio'], (req, res) => {
             return
         }
         cloudStoreRpc.getFile(storeId).then(fileData => {
+            if(!fileData){
+                ResponseUtil.ApiError(req, res, new ApiException('FILE_NOT_FOUND',
+                    400,
+                    'PREVIEW_NOT_SUCCESS'))
+                return
+            }
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
             if (preview != 100 && preview != 200) {

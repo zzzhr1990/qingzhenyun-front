@@ -324,7 +324,9 @@ const getTorrentFileData = (req, res, fileHash) => {
     // get detail.
     cloudStoreRpc.getFile(fileHash).then(torrentFileData => {
         // get files.
-
+        if(!torrentFileData){
+            ResponseUtil.RenderStandardRpcError(req, res, new ApiValidateException('File not found', 'FILE_NOT_FOUND'))
+        }
         let fileKey = torrentFileData['fileKey']
         let fileSize = torrentFileData['fileSize']
         // let mime = torrentFileData['mime']

@@ -18,83 +18,68 @@
 // </auto-generated>
 //
 
-(function(module, require, exports)
-{
+(function (module, require, exports) {
     const Ice = require("ice").Ice;
     const _ModuleRegistry = Ice._ModuleRegistry;
     const Slice = Ice.Slice;
 
     let user = _ModuleRegistry.module("user");
 
-    user.RegisterFailedException = class extends Ice.UserException
-    {
-        constructor(innerCode = 0, innerMessage = "", _cause = "")
-        {
+    user.RegisterFailedException = class extends Ice.UserException {
+        static get _parent() {
+            return Ice.UserException;
+        }
+
+        static get _id() {
+            return "::user::RegisterFailedException";
+        }
+
+        constructor(innerCode = 0, innerMessage = "", _cause = "") {
             super(_cause);
             this.innerCode = innerCode;
             this.innerMessage = innerMessage;
         }
 
-        static get _parent()
-        {
-            return Ice.UserException;
-        }
-
-        static get _id()
-        {
-            return "::user::RegisterFailedException";
-        }
-
-        _mostDerivedType()
-        {
+        _mostDerivedType() {
             return user.RegisterFailedException;
         }
 
-        _writeMemberImpl(ostr)
-        {
+        _writeMemberImpl(ostr) {
             ostr.writeInt(this.innerCode);
             ostr.writeString(this.innerMessage);
         }
 
-        _readMemberImpl(istr)
-        {
+        _readMemberImpl(istr) {
             this.innerCode = istr.readInt();
             this.innerMessage = istr.readString();
         }
     };
 
-    user.LoginFailedException = class extends Ice.UserException
-    {
-        constructor(innerCode = 0, innerMessage = "", _cause = "")
-        {
+    user.LoginFailedException = class extends Ice.UserException {
+        static get _parent() {
+            return Ice.UserException;
+        }
+
+        static get _id() {
+            return "::user::LoginFailedException";
+        }
+
+        constructor(innerCode = 0, innerMessage = "", _cause = "") {
             super(_cause);
             this.innerCode = innerCode;
             this.innerMessage = innerMessage;
         }
 
-        static get _parent()
-        {
-            return Ice.UserException;
-        }
-
-        static get _id()
-        {
-            return "::user::LoginFailedException";
-        }
-
-        _mostDerivedType()
-        {
+        _mostDerivedType() {
             return user.LoginFailedException;
         }
 
-        _writeMemberImpl(ostr)
-        {
+        _writeMemberImpl(ostr) {
             ostr.writeInt(this.innerCode);
             ostr.writeString(this.innerMessage);
         }
 
-        _readMemberImpl(istr)
-        {
+        _readMemberImpl(istr) {
             this.innerCode = istr.readInt();
             this.innerMessage = istr.readString();
         }
@@ -105,10 +90,8 @@
         "::user::UserResponse"
     ];
 
-    user.UserResponse = class extends Ice.Value
-    {
-        constructor(uuid = new Ice.Long(0, 0), name = "", email = "", countryCode = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", ssidMobile = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0)
-        {
+    user.UserResponse = class extends Ice.Value {
+        constructor(uuid = new Ice.Long(0, 0), name = "", email = "", countryCode = "", phone = "", createTime = new Ice.Long(0, 0), ssid = "", ssidMobile = "", level = 0, type = 0, ban = 0, banTime = new Ice.Long(0, 0), refreshTime = new Ice.Long(0, 0), lastLoginTime = new Ice.Long(0, 0), validateAddon = "", validate = 0, version = 0) {
             super();
             this.uuid = uuid;
             this.name = name;
@@ -129,8 +112,7 @@
             this.version = version;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             ostr.writeLong(this.uuid);
             ostr.writeString(this.name);
             ostr.writeString(this.email);
@@ -150,8 +132,7 @@
             ostr.writeInt(this.version);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.uuid = istr.readLong();
             this.name = istr.readString();
             this.email = istr.readString();
@@ -174,8 +155,7 @@
 
     Slice.defineValue(user.UserResponse, iceC_user_UserResponse_ids[1], false);
 
-    user.UserResponseDisp = class extends Ice.Object
-    {
+    user.UserResponseDisp = class extends Ice.Object {
     };
 
     Slice.defineOperations(user.UserResponseDisp, undefined, iceC_user_UserResponse_ids, 1);
@@ -185,55 +165,55 @@
         "::user::UserServiceHandler"
     ];
 
-    user.UserServiceHandler = class extends Ice.Object
-    {
+    user.UserServiceHandler = class extends Ice.Object {
     };
 
-    user.UserServiceHandlerPrx = class extends Ice.ObjectPrx
-    {
+    user.UserServiceHandlerPrx = class extends Ice.ObjectPrx {
     };
 
     Slice.defineOperations(user.UserServiceHandler, user.UserServiceHandlerPrx, iceC_user_UserServiceHandler_ids, 1,
-    {
-        "registerUser": [, , , , ["user.UserResponse", true], [[7], [7], [7], [7], [7]], ,
-        [
-            user.RegisterFailedException
-        ], , true],
-        "getNextUser": [, , , , ["user.UserResponse", true], [[4]], , , , true],
-        "sendMessage": [, , , , [3], [[7], [7], [3], [7], [3]], ,
-        [
-            user.RegisterFailedException
-        ], , ],
-        "validateMessage": [, , , , [1], [[7], [7], [3], [7], [1]], ,
-        [
-            user.RegisterFailedException
-        ], , ],
-        "getUserByUuid": [, , , , ["user.UserResponse", true], [[4]], , , , true],
-        "getUserByPhone": [, , , , ["user.UserResponse", true], [[7], [7]], , , , true],
-        "checkUserExistsByName": [, , , , [1], [[7]], , , , ],
-        "checkUserExistsByEmail": [, , , , [1], [[7]], , , , ],
-        "checkUserExistsByPhone": [, , , , [1], [[7], [7]], , , , ],
-        "changePassword": [, , , , [1], [[4], [7], [7]], , , , ],
-        "changePasswordByMessage": [, , , , [1], [[4], [7], [7], [7]], , , , ],
-        "loginByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [1]], ,
-        [
-            user.LoginFailedException
-        ], , true],
-        "checkUserValidByName": [, , , , ["user.UserResponse", true], [[7], [7]], ,
-        [
-            user.LoginFailedException
-        ], , true],
-        "checkUserValidByEmail": [, , , , ["user.UserResponse", true], [[7], [7]], ,
-        [
-            user.LoginFailedException
-        ], , true],
-        "checkUserValidByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [7]], ,
-        [
-            user.LoginFailedException
-        ], , true]
-    });
+        {
+            "registerUser": [, , , , ["user.UserResponse", true], [[7], [7], [7], [7], [7]], ,
+                [
+                    user.RegisterFailedException
+                ], , true],
+            "getNextUser": [, , , , ["user.UserResponse", true], [[4]], , , , true],
+            "sendMessage": [, , , , [3], [[7], [7], [3], [7], [3]], ,
+                [
+                    user.RegisterFailedException
+                ], ,],
+            "validateMessage": [, , , , [1], [[7], [7], [3], [7], [1]], ,
+                [
+                    user.RegisterFailedException
+                ], ,],
+            "getUserByUuid": [, , , , ["user.UserResponse", true], [[4]], , , , true],
+            "getUserByPhone": [, , , , ["user.UserResponse", true], [[7], [7]], , , , true],
+            "checkUserExistsByName": [, , , , [1], [[7]], , , ,],
+            "checkUserExistsByEmail": [, , , , [1], [[7]], , , ,],
+            "checkUserExistsByPhone": [, , , , [1], [[7], [7]], , , ,],
+            "changePassword": [, , , , [1], [[4], [7], [7]], , , ,],
+            "changePasswordByMessage": [, , , , [1], [[4], [7], [7], [7]], , , ,],
+            "loginByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [1]], ,
+                [
+                    user.LoginFailedException
+                ], , true],
+            "checkUserValidByName": [, , , , ["user.UserResponse", true], [[7], [7]], ,
+                [
+                    user.LoginFailedException
+                ], , true],
+            "checkUserValidByEmail": [, , , , ["user.UserResponse", true], [[7], [7]], ,
+                [
+                    user.LoginFailedException
+                ], , true],
+            "checkUserValidByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [7]], ,
+                [
+                    user.LoginFailedException
+                ], , true]
+        });
     exports.user = user;
-}
+};
 (typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? module : undefined,
- typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
- typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this));
+    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
+    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this)
+)
+;

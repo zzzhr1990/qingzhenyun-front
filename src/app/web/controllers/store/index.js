@@ -1,15 +1,17 @@
 const express = require('express')
 const router = express.Router()
-const ApiException = require('../../../exception/api_exception')
+//const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 const StringUtil = require('../../../util/string_util')
 const ResponseUtil = require('../../../util/response_util')
 const IceUtil = require('../../../util/ice_util')
 let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
-const CONSTANTS = require('../../../const/constants')
+//const CONSTANTS = require('../../../const/constants')
 const AwesomeBase64 = require('awesome-urlsafe-base64')
 const cors = require('cors')
+const logger = require('log4js').getLogger('offline-controller')
+//logger.level = 'info'
 
 var corsOptions = {
     /*
@@ -69,12 +71,15 @@ router.post('/token', async (req, res) => {
         if(hash){
             try {
                 let fileData = await cloudStoreRpc.getFile(hash)
+                if(!fileData){
+                    throw new ApiValidateException('File not found.', 'FILE_NOT_FOUND')
+                }
                 let createFile = await userFileRpc.copyStoreFileToUserFile(hash, fileData['mime'], fileData['fileSize'], fileData['preview'], userId, parent, path, name, override)
                 ResponseUtil.Ok(req, res, createFile)
                 return
             } catch (error) {
                 if(!error['innerCode']){
-                    console.log('CALL RPC EXP')
+                    logger.log('CALL RPC EXP')
                 }
             }
             
@@ -91,18 +96,10 @@ router.post('/token', async (req, res) => {
 
 
 
-router.post('/callback/wcsm3u8', (req, res) => {
-    if (!req.body) {
-        console.warn('Wcs callback empty.')
-    }
-    jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
-    console.log(jsonStr)
-    ResponseUtil.Ok(req, res, {})
-})
 
 router.post('/callback/wcsm3u8/:encoded', (req, res) => {
     if (!req.body) {
-        console.warn('Wcs callback empty.')
+        logger.warn('Wcs callback empty.')
     }
 
     //jsonStr = Buffer.from(req.body, 'base64').toString('utf8')
@@ -118,14 +115,14 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let taskId = encode['task_id']
         let maxReslov = encode['reslov']
         let fileHash = encode['hash']
-        let fileBucket = encode['hash']
+        //let fileBucket = encode['hash']
         let encodeKey = encode['key']
         let convertType = encode['type']
         var success = false
-        let wcsTaskId = callback['id']
+        //let wcsTaskId = callback['id']
         let callbackCode = callback['code']
         if (callbackCode != 3) {
-            console.error('Task %s failed convert(code %s). info %s',
+            logger.error('Task %s failed convert(code %s). info %s',
                 taskId, callbackCode, JSON.stringify(callback))
         }
         let previewData = {
@@ -137,7 +134,7 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         let videos = []
         for (let single of callback['items']) {
             if (single['code'] != '3' || !single['key']) {
-                console.error('Task piece %s failed convert.code %s info %s',
+                logger.error('Task piece %s failed convert.code %s info %s',
                     taskId, single['code'],
                     JSON.stringify(single))
             } else {
@@ -174,14 +171,14 @@ router.post('/callback/wcsm3u8/:encoded', (req, res) => {
         // PreviewTaskResponse updatePreviewTaskStatus(long taskId,string fileHash,int preview,int previewType,string message) throws RemoteOperationFailedException;
         cloudStoreRpc.updatePreviewTaskStatus(IceUtil.number2IceLong(taskId), fileHash, successCode, previewType, previewAddonData).then(data => {
             if (data['fileHash'] != fileHash) {
-                console.error('%s file hash does not match.', taskId)
+                logger.error('%s file hash does not match.', taskId)
             }
         }).catch(error => {
-            console.error(error)
+            logger.error(error)
         })
 
     } catch (error) {
-        console.log(error)
+        logger.log(error)
     }
     ResponseUtil.Ok(req, res, {})
 })
@@ -194,10 +191,14 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
     try {
         let encode = JSON.parse(
             AwesomeBase64.decode(req.params.encoded)
-            .toString('utf8')
+                .toString('utf8')
         )
         let fileHash = encode['hash']
         cloudStoreRpc.getFile(fileHash).then(fileData => {
+            if(!fileData){
+                logger.error('%s file not found',fileHash)
+                res.send(key)
+            }
             let previewAddon = fileData['previewAddon']
             let preview = fileData['preview']
             if (preview != 100 && preview != 200) {
@@ -208,7 +209,7 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
             try {
                 decodeObj = JSON.parse(previewAddon)
             } catch (err) {
-                console.error(err)
+                logger.error(err)
                 res.send(key)
                 return
             }
@@ -217,11 +218,11 @@ router.get('/play/:encoded', cors(corsOptions), (req, res) => {
             }
             res.send(key)
         }).catch(error => {
-            console.error(error)
+            logger.error(error)
             res.send(key)
         })
     } catch (error) {
-        console.error(error)
+        logger.error(error)
         res.send(key)
     }
 })
@@ -253,7 +254,7 @@ router.post('/callback/wcs', async (req, res) => {
             ResponseUtil.Ok(req, res, data)
         }
     } catch (error) {
-        console.log(error)
+        logger.error(error)
         ResponseUtil.ApiErrorAsOk(req, res, error)
     }
 })

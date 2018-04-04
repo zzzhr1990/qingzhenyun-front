@@ -18,8 +18,7 @@
 // </auto-generated>
 //
 
-(function(module, require, exports)
-{
+(function (module, require, exports) {
     const Ice = require("ice").Ice;
     const _ModuleRegistry = Ice._ModuleRegistry;
     const Slice = Ice.Slice;
@@ -31,10 +30,8 @@
         "::common::CommonPage"
     ];
 
-    common.CommonPage = class extends Ice.Value
-    {
-        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0)
-        {
+    common.CommonPage = class extends Ice.Value {
+        constructor(page = 0, pageSize = 0, totalCount = 0, totalPage = 0) {
             super();
             this.page = page;
             this.pageSize = pageSize;
@@ -42,16 +39,14 @@
             this.totalPage = totalPage;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             ostr.writeInt(this.page);
             ostr.writeInt(this.pageSize);
             ostr.writeInt(this.totalCount);
             ostr.writeInt(this.totalPage);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.page = istr.readInt();
             this.pageSize = istr.readInt();
             this.totalCount = istr.readInt();
@@ -61,44 +56,36 @@
 
     Slice.defineValue(common.CommonPage, iceC_common_CommonPage_ids[1], false);
 
-    common.CommonPageDisp = class extends Ice.Object
-    {
+    common.CommonPageDisp = class extends Ice.Object {
     };
 
     Slice.defineOperations(common.CommonPageDisp, undefined, iceC_common_CommonPage_ids, 1);
 
-    common.CommonRpcException = class extends Ice.UserException
-    {
-        constructor(innerCode = 0, innerMessage = "", _cause = "")
-        {
+    common.CommonRpcException = class extends Ice.UserException {
+        static get _parent() {
+            return Ice.UserException;
+        }
+
+        static get _id() {
+            return "::common::CommonRpcException";
+        }
+
+        constructor(innerCode = 0, innerMessage = "", _cause = "") {
             super(_cause);
             this.innerCode = innerCode;
             this.innerMessage = innerMessage;
         }
 
-        static get _parent()
-        {
-            return Ice.UserException;
-        }
-
-        static get _id()
-        {
-            return "::common::CommonRpcException";
-        }
-
-        _mostDerivedType()
-        {
+        _mostDerivedType() {
             return common.CommonRpcException;
         }
 
-        _writeMemberImpl(ostr)
-        {
+        _writeMemberImpl(ostr) {
             ostr.writeInt(this.innerCode);
             ostr.writeString(this.innerMessage);
         }
 
-        _readMemberImpl(istr)
-        {
+        _readMemberImpl(istr) {
             this.innerCode = istr.readInt();
             this.innerMessage = istr.readString();
         }
@@ -106,7 +93,9 @@
 
     Slice.defineSequence(common, "StringListHelper", "Ice.StringHelper", false);
     exports.common = common;
-}
+};
 (typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? module : undefined,
- typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
- typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this));
+    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
+    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this)
+)
+;

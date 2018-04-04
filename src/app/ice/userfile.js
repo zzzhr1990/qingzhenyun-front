@@ -18,8 +18,7 @@
 // </auto-generated>
 //
 
-(function(module, require, exports)
-{
+(function (module, require, exports) {
     const Ice = require("ice").Ice;
     const _ModuleRegistry = Ice._ModuleRegistry;
     const common = require("./common").common;
@@ -27,36 +26,29 @@
 
     let userfile = _ModuleRegistry.module("userfile");
 
-    userfile.FileOperationException = class extends common.CommonRpcException
-    {
-        constructor(innerCode, innerMessage, fileType = 0, _cause = "")
-        {
+    userfile.FileOperationException = class extends common.CommonRpcException {
+        static get _parent() {
+            return common.CommonRpcException;
+        }
+
+        static get _id() {
+            return "::userfile::FileOperationException";
+        }
+
+        constructor(innerCode, innerMessage, fileType = 0, _cause = "") {
             super(innerCode, innerMessage, _cause);
             this.fileType = fileType;
         }
 
-        static get _parent()
-        {
-            return common.CommonRpcException;
-        }
-
-        static get _id()
-        {
-            return "::userfile::FileOperationException";
-        }
-
-        _mostDerivedType()
-        {
+        _mostDerivedType() {
             return userfile.FileOperationException;
         }
 
-        _writeMemberImpl(ostr)
-        {
+        _writeMemberImpl(ostr) {
             ostr.writeInt(this.fileType);
         }
 
-        _readMemberImpl(istr)
-        {
+        _readMemberImpl(istr) {
             this.fileType = istr.readInt();
         }
     };
@@ -66,10 +58,8 @@
         "::userfile::UserFileResponse"
     ];
 
-    userfile.UserFileResponse = class extends Ice.Value
-    {
-        constructor(uuid = "", storeId = "", userId = new Ice.Long(0, 0), pathId = "", path = "", size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", from = 0, name = "", ext = "", preview = 0, flag = 0, recycle = 0)
-        {
+    userfile.UserFileResponse = class extends Ice.Value {
+        constructor(uuid = "", storeId = "", userId = new Ice.Long(0, 0), pathId = "", path = "", size = new Ice.Long(0, 0), parent = "", mime = "", type = 0, atime = new Ice.Long(0, 0), mtime = new Ice.Long(0, 0), ctime = new Ice.Long(0, 0), alias = "", from = 0, name = "", ext = "", preview = 0, flag = 0, recycle = 0) {
             super();
             this.uuid = uuid;
             this.storeId = storeId;
@@ -92,8 +82,7 @@
             this.recycle = recycle;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             ostr.writeString(this.uuid);
             ostr.writeString(this.storeId);
             ostr.writeLong(this.userId);
@@ -115,8 +104,7 @@
             ostr.writeInt(this.recycle);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.uuid = istr.readString();
             this.storeId = istr.readString();
             this.userId = istr.readLong();
@@ -141,8 +129,7 @@
 
     Slice.defineValue(userfile.UserFileResponse, iceC_userfile_UserFileResponse_ids[1], false);
 
-    userfile.UserFileResponseDisp = class extends Ice.Object
-    {
+    userfile.UserFileResponseDisp = class extends Ice.Object {
     };
 
     Slice.defineOperations(userfile.UserFileResponseDisp, undefined, iceC_userfile_UserFileResponse_ids, 1);
@@ -152,23 +139,19 @@
         "::userfile::SimpleFile"
     ];
 
-    userfile.SimpleFile = class extends Ice.Value
-    {
-        constructor(uuid = "", path = "")
-        {
+    userfile.SimpleFile = class extends Ice.Value {
+        constructor(uuid = "", path = "") {
             super();
             this.uuid = uuid;
             this.path = path;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             ostr.writeString(this.uuid);
             ostr.writeString(this.path);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.uuid = istr.readString();
             this.path = istr.readString();
         }
@@ -176,8 +159,7 @@
 
     Slice.defineValue(userfile.SimpleFile, iceC_userfile_SimpleFile_ids[1], false);
 
-    userfile.SimpleFileDisp = class extends Ice.Object
-    {
+    userfile.SimpleFileDisp = class extends Ice.Object {
     };
 
     Slice.defineOperations(userfile.SimpleFileDisp, undefined, iceC_userfile_SimpleFile_ids, 1);
@@ -192,32 +174,28 @@
         "::userfile::UserFilePageResponse"
     ];
 
-    userfile.UserFilePageResponse = class extends common.CommonPage
-    {
-        constructor(page, pageSize, totalCount, totalPage, list = null, info = null)
-        {
+    userfile.UserFilePageResponse = class extends common.CommonPage {
+        constructor(page, pageSize, totalCount, totalPage, list = null, info = null) {
             super(page, pageSize, totalCount, totalPage);
             this.list = list;
             this.info = info;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             userfile.UserFileResponseListHelper.write(ostr, this.list);
             ostr.writeValue(this.info);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.list = userfile.UserFileResponseListHelper.read(istr);
-            istr.readValue(obj => this.info = obj, userfile.UserFileResponse);
+            istr.readValue(obj = > this.info = obj, userfile.UserFileResponse;
+        )
         }
     };
 
     Slice.defineValue(userfile.UserFilePageResponse, iceC_userfile_UserFilePageResponse_ids[2], false);
 
-    userfile.UserFilePageResponseDisp = class extends common.CommonPageDisp
-    {
+    userfile.UserFilePageResponseDisp = class extends common.CommonPageDisp {
     };
 
     Slice.defineOperations(userfile.UserFilePageResponseDisp, undefined, iceC_userfile_UserFilePageResponse_ids, 2);
@@ -227,10 +205,8 @@
         "::userfile::UserOfflineResponse"
     ];
 
-    userfile.UserOfflineResponse = class extends Ice.Value
-    {
-        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", size = new Ice.Long(0, 0), mime = "", name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0)
-        {
+    userfile.UserOfflineResponse = class extends Ice.Value {
+        constructor(userId = new Ice.Long(0, 0), taskHash = "", path = "", size = new Ice.Long(0, 0), mime = "", name = "", files = "", copied = "", createTime = new Ice.Long(0, 0), uuid = "", destUuid = "", progress = 0, status = 0) {
             super();
             this.userId = userId;
             this.taskHash = taskHash;
@@ -247,8 +223,7 @@
             this.status = status;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             ostr.writeLong(this.userId);
             ostr.writeString(this.taskHash);
             ostr.writeString(this.path);
@@ -264,8 +239,7 @@
             ostr.writeInt(this.status);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.userId = istr.readLong();
             this.taskHash = istr.readString();
             this.path = istr.readString();
@@ -284,8 +258,7 @@
 
     Slice.defineValue(userfile.UserOfflineResponse, iceC_userfile_UserOfflineResponse_ids[1], false);
 
-    userfile.UserOfflineResponseDisp = class extends Ice.Object
-    {
+    userfile.UserOfflineResponseDisp = class extends Ice.Object {
     };
 
     Slice.defineOperations(userfile.UserOfflineResponseDisp, undefined, iceC_userfile_UserOfflineResponse_ids, 1);
@@ -295,10 +268,8 @@
         "::userfile::UserAsyncTask"
     ];
 
-    userfile.UserAsyncTask = class extends Ice.Value
-    {
-        constructor(userId = new Ice.Long(0, 0), uuid = "", destUuid = "", type = 0, createTime = new Ice.Long(0, 0))
-        {
+    userfile.UserAsyncTask = class extends Ice.Value {
+        constructor(userId = new Ice.Long(0, 0), uuid = "", destUuid = "", type = 0, createTime = new Ice.Long(0, 0)) {
             super();
             this.userId = userId;
             this.uuid = uuid;
@@ -307,8 +278,7 @@
             this.createTime = createTime;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             ostr.writeLong(this.userId);
             ostr.writeString(this.uuid);
             ostr.writeString(this.destUuid);
@@ -316,8 +286,7 @@
             ostr.writeLong(this.createTime);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.userId = istr.readLong();
             this.uuid = istr.readString();
             this.destUuid = istr.readString();
@@ -328,8 +297,7 @@
 
     Slice.defineValue(userfile.UserAsyncTask, iceC_userfile_UserAsyncTask_ids[1], false);
 
-    userfile.UserAsyncTaskDisp = class extends Ice.Object
-    {
+    userfile.UserAsyncTaskDisp = class extends Ice.Object {
     };
 
     Slice.defineOperations(userfile.UserAsyncTaskDisp, undefined, iceC_userfile_UserAsyncTask_ids, 1);
@@ -342,29 +310,24 @@
         "::userfile::UserOfflinePageResponse"
     ];
 
-    userfile.UserOfflinePageResponse = class extends common.CommonPage
-    {
-        constructor(page, pageSize, totalCount, totalPage, list = null)
-        {
+    userfile.UserOfflinePageResponse = class extends common.CommonPage {
+        constructor(page, pageSize, totalCount, totalPage, list = null) {
             super(page, pageSize, totalCount, totalPage);
             this.list = list;
         }
 
-        _iceWriteMemberImpl(ostr)
-        {
+        _iceWriteMemberImpl(ostr) {
             userfile.UserOfflineResponseListHelper.write(ostr, this.list);
         }
 
-        _iceReadMemberImpl(istr)
-        {
+        _iceReadMemberImpl(istr) {
             this.list = userfile.UserOfflineResponseListHelper.read(istr);
         }
     };
 
     Slice.defineValue(userfile.UserOfflinePageResponse, iceC_userfile_UserOfflinePageResponse_ids[2], false);
 
-    userfile.UserOfflinePageResponseDisp = class extends common.CommonPageDisp
-    {
+    userfile.UserOfflinePageResponseDisp = class extends common.CommonPageDisp {
     };
 
     Slice.defineOperations(userfile.UserOfflinePageResponseDisp, undefined, iceC_userfile_UserOfflinePageResponse_ids, 2);
@@ -374,87 +337,87 @@
         "::userfile::UserFileServiceHandler"
     ];
 
-    userfile.UserFileServiceHandler = class extends Ice.Object
-    {
+    userfile.UserFileServiceHandler = class extends Ice.Object {
     };
 
-    userfile.UserFileServiceHandlerPrx = class extends Ice.ObjectPrx
-    {
+    userfile.UserFileServiceHandlerPrx = class extends Ice.ObjectPrx {
     };
 
     Slice.defineOperations(userfile.UserFileServiceHandler, userfile.UserFileServiceHandlerPrx, iceC_userfile_UserFileServiceHandler_ids, 1,
-    {
-        "removeOfflineTask": [, , , , [3], [[4], ["common.StringListHelper"]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "finishOfflineFileCopy": [, , , , , [[7], [4]], , , , ],
-        "finishAllOfflineFileCopy": [, , , , , [[7]], , , , ],
-        "listOfflinePage": [, , , , ["userfile.UserOfflinePageResponse", true], [[4], [3], [3], [3]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "createOfflineTask": [, , , , ["userfile.UserOfflineResponse", true], [[4], [7], [7], [7], [7], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , true],
-        "fetchUserOfflineTaskById": [, , , , ["userfile.UserOfflineResponse", true], [[7], [4]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "reportFileCopied": [, , , , [1], [[4], [7], [7], [7], [7], [4]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "copyStoreFileToPath": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7], [7], [1]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "get": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "listDirectoryPage": [, , , , ["userfile.UserFilePageResponse", true], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "listDirectory": [, , , , ["userfile.UserFileResponseListHelper"], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "copyStoreFileToUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [1]], ,
-        [
-            userfile.FileOperationException
-        ], , true],
-        "checkUserFileExists": [, , , , [1], [[4], [7], [7], [7]], , , , ],
-        "move": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"], [7], [7], [1]], ,
-        [
-            userfile.FileOperationException
-        ], true, ],
-        "rename": [, , , , [1], [[4], [7], [7], [7], [1]], ,
-        [
-            userfile.FileOperationException
-        ], , ],
-        "recycle": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
-        [
-            userfile.FileOperationException
-        ], true, ],
-        "remove": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
-        [
-            userfile.FileOperationException
-        ], true, ],
-        "fetchAsyncTask": [, , , , ["userfile.UserAsyncTask", true], , , , , true],
-        "finishAsyncTask": [, , , , , [["userfile.UserAsyncTask", true]], , , true, ],
-        "fixParent": [, , , , , [[4], [7], [3]], , , , ],
-        "deleteByUuid": [, , , , , [[4], [7]], , , , ]
-    });
+        {
+            "removeOfflineTask": [, , , , [3], [[4], ["common.StringListHelper"]], ,
+                [
+                    userfile.FileOperationException
+                ], ,],
+            "finishOfflineFileCopy": [, , , , , [[7], [4]], , , ,],
+            "finishAllOfflineFileCopy": [, , , , , [[7]], , , ,],
+            "listOfflinePage": [, , , , ["userfile.UserOfflinePageResponse", true], [[4], [3], [3], [3]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "createOfflineTask": [, , , , ["userfile.UserOfflineResponse", true], [[4], [7], [7], [7], [7], [7]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "fetchUserOfflineTask": [, , , , ["userfile.UserOfflineResponseListHelper"], [[7]], , , , true],
+            "fetchUserOfflineTaskById": [, , , , ["userfile.UserOfflineResponse", true], [[7], [4]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "reportFileCopied": [, , , , [1], [[4], [7], [7], [7], [7], [4]], ,
+                [
+                    userfile.FileOperationException
+                ], ,],
+            "copyStoreFileToPath": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [7]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "createDirectory": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7], [7], [1]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "get": [, , , , ["userfile.UserFileResponse", true], [[4], [7], [7]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "listDirectoryPage": [, , , , ["userfile.UserFilePageResponse", true], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "listDirectory": [, , , , ["userfile.UserFileResponseListHelper"], [[4], [7], [7], [3], [3], [3], [3], [3]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "copyStoreFileToUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [1]], ,
+                [
+                    userfile.FileOperationException
+                ], , true],
+            "checkUserFileExists": [, , , , [1], [[4], [7], [7], [7]], , , ,],
+            "move": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"], [7], [7], [1]], ,
+                [
+                    userfile.FileOperationException
+                ], true,],
+            "rename": [, , , , [1], [[4], [7], [7], [7], [1]], ,
+                [
+                    userfile.FileOperationException
+                ], ,],
+            "recycle": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
+                [
+                    userfile.FileOperationException
+                ], true,],
+            "remove": [, , , , [1], [[4], ["userfile.SimpleFileListHelper"]], ,
+                [
+                    userfile.FileOperationException
+                ], true,],
+            "fetchAsyncTask": [, , , , ["userfile.UserAsyncTask", true], , , , , true],
+            "finishAsyncTask": [, , , , , [["userfile.UserAsyncTask", true]], , , true,],
+            "fixParent": [, , , , , [[4], [7], [3]], , , ,],
+            "deleteByUuid": [, , , , , [[4], [7]], , , ,]
+        });
     exports.userfile = userfile;
-}
+};
 (typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? module : undefined,
- typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
- typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this));
+    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? require : this.Ice._require,
+    typeof(global) !== "undefined" && typeof(global.process) !== "undefined" ? exports : this)
+)
+;

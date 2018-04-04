@@ -160,6 +160,9 @@ router.post('/download',async (req, res) => {
             throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
         }
         let fileData = await cloudStoreRpc.getFile(storeId)
+        if(!fileData){
+            throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
+        }
         let time = (new Date()).getTime().toString()
         let fileKey = fileData['fileKey']
         let fileHash = storeId
