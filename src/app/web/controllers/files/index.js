@@ -3,7 +3,7 @@ const router = express.Router()
 //const ApiException = require('../../../exception/api_exception')
 const ApiValidateException = require('../../../exception/api_validate_exception')
 // const _ = require('../../../util/string_util')
-const IceUtil = require('../../../util/ice_util')
+//const IceUtil = require('../../../util/ice_util')
 const ResponseUtil = require('../../../util/response_util')
 //let UserFileServiceRpc = require('../../../service/user_file')
 let userFileService = require('../../../const/rpc').userFileRpc
@@ -159,20 +159,16 @@ router.post('/download',async (req, res) => {
             }
             throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
         }
-        let fileData = await cloudStoreRpc.getFile(storeId)
+        let fileData = await cloudStoreRpc.getFileEx(storeId,userId)
         if(!fileData){
             throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
         }
-        let time = (new Date()).getTime().toString()
-        let fileKey = fileData['fileKey']
+        //let time = (new Date()).getTime().toString()
+        //let fileKey = fileData['fileKey']
         let fileHash = storeId
         let fileSize = fileData['fileSize']
         let mime = fileData['mime']
-        let url = 'http://other.qiecdn.com/' +
-                fileKey +
-                '?key=' +
-                time +
-                '&userId=' + IceUtil.iceLong2Number(userId).toString()
+        let url = fileData['downloadAddress']
         let name = result['name']
         ResponseUtil.Ok(req, res, {
             'fileSize': fileSize,
