@@ -174,6 +174,39 @@
 
     Slice.defineOperations(store.CloudStoreResponseDisp, undefined, iceC_store_CloudStoreResponse_ids, 1);
 
+    const iceC_store_CloudStoreResponseEx_ids = [
+        "::Ice::Object",
+        "::store::CloudStoreResponse",
+        "::store::CloudStoreResponseEx"
+    ];
+
+    store.CloudStoreResponseEx = class extends store.CloudStoreResponse
+    {
+        constructor(fileHash, fileSize, mime, uploadUser, ctime, originalFilename, fileBucket, fileKey, storeType, preview, previewAddon, uploadIp, flag, downloadAddress = "")
+        {
+            super(fileHash, fileSize, mime, uploadUser, ctime, originalFilename, fileBucket, fileKey, storeType, preview, previewAddon, uploadIp, flag);
+            this.downloadAddress = downloadAddress;
+        }
+
+        _iceWriteMemberImpl(ostr)
+        {
+            ostr.writeString(this.downloadAddress);
+        }
+
+        _iceReadMemberImpl(istr)
+        {
+            this.downloadAddress = istr.readString();
+        }
+    };
+
+    Slice.defineValue(store.CloudStoreResponseEx, iceC_store_CloudStoreResponseEx_ids[2], false);
+
+    store.CloudStoreResponseExDisp = class extends store.CloudStoreResponseDisp
+    {
+    };
+
+    Slice.defineOperations(store.CloudStoreResponseExDisp, undefined, iceC_store_CloudStoreResponseEx_ids, 2);
+
     store.PreviewTaskResponse = class
     {
         constructor(taskId = new Ice.Long(0, 0), fileHash = "", mime = "", fileBucket = "", fileKey = "", originalName = "", storeType = 0, preview = 0, previewType = 0, actionTime = new Ice.Long(0, 0))
@@ -250,6 +283,10 @@
             store.RemoteOperationFailedException
         ], , true],
         "getFile": [, , , , ["store.CloudStoreResponse", true], [[7]], ,
+        [
+            store.RemoteOperationFailedException
+        ], , true],
+        "getFileEx": [, , , , ["store.CloudStoreResponseEx", true], [[7], [4]], ,
         [
             store.RemoteOperationFailedException
         ], , true],
