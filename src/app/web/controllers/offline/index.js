@@ -119,7 +119,7 @@ router.post('/parseTorrent', (req, res) => {
     }
     let userId = req.user.uuid
     //get
-    userFileRpc.get(uuid, userId, path).then((result) => {
+    userFileRpc.get(userId,uuid, path).then((result) => {
         // first,try to parse.
         getTorrentFileData(req, res, result['storeId'])
     }).catch(error => {
