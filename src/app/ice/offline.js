@@ -519,6 +519,10 @@
         [
             offline.OfflineOperationException
         ], , ],
+        "downloadError": [, , , , [1], [[7], [3], [7], [3], [7]], ,
+        [
+            offline.OfflineOperationException
+        ], , ],
         "fetchCopyTaskList": [, , , , ["offline.TaskUploadResponseListHelper"], [[7]], ,
         [
             offline.OfflineOperationException
@@ -528,7 +532,7 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "singleFileUpload": [, , , , [1], [[7], [3], [7]], ,
+        "singleFileUpload": [, , , , [1], [[7], [3], [7], [7], [7], [4]], ,
         [
             offline.OfflineOperationException
         ], , ],
@@ -544,7 +548,7 @@
         [
             offline.OfflineOperationException
         ], , ],
-        "refreshDownloadMetaData": [, , , , [1], [[offline.DownloadStatusRefreshRequest]], ,
+        "refreshDownloadMetaData": [, , , , [1], [[offline.DownloadStatusRefreshRequest], [1]], ,
         [
             offline.OfflineOperationException
         ], true, ],

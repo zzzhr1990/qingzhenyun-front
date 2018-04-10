@@ -8,6 +8,53 @@ let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
 
+router.post(['/pdf', '/image'], async (req, res) => {
+    try {
+        let uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
+        let path = req.body['path'] ? req.body['path'] + '' : ''
+        if (!uuid && !path) {
+            throw new ApiValidateException('File uuid required', '{UUID}_REQUIRED')
+        }
+        let userId = req.user.uuid
+        //get
+        let result = await userFileRpc.get(userId, uuid, path)
+        if (!result) {
+            throw new ApiValidateException('File not found', 'FILE_NOT_FOUND')
+        }
+        let storeId = result['storeId']
+        if (result['type'] !== 0) {
+            throw new ApiException('PREVIEW_DIRECTORY_NOT_SUPPORTED',
+                400,
+                'PREVIEW_DIRECTORY_NOT_SUPPORTED')
+        }
+        let fileData = await cloudStoreRpc.getFileEx(storeId, userId)
+        if (!fileData) {
+            throw new ApiValidateException('File not found', 'FILE_NOT_FOUND')
+        }
+        let preview = fileData['preview']
+        if (preview != 300 && preview != 400) {
+            throw new ApiException('PREVIEW_NOT_SUCCESS',
+                400,
+                'PREVIEW_NOT_SUCCESS')
+        }
+        //
+        let fileHash = storeId
+        let fileSize = fileData['fileSize']
+        let mime = fileData['mime']
+        let url = fileData['downloadAddress']
+        let name = result['name']
+        let respData = {
+            'fileSize': fileSize,
+            'hash': fileHash,
+            'name': name,
+            'mime': mime,
+            'url': url
+        }
+        ResponseUtil.Ok(req, res, respData)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
 
 router.post(['/video', '/audio'], (req, res) => {
     var uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
@@ -17,7 +64,7 @@ router.post(['/video', '/audio'], (req, res) => {
     }
     let userId = req.user.uuid
     //get
-    userFileRpc.get(userId,uuid, path).then((result) => {
+    userFileRpc.get(userId, uuid, path).then((result) => {
         // get file
         //
         let storeId = result['storeId']
@@ -36,7 +83,7 @@ router.post(['/video', '/audio'], (req, res) => {
             return
         }
         cloudStoreRpc.getFile(storeId).then(fileData => {
-            if(!fileData){
+            if (!fileData) {
                 ResponseUtil.ApiError(req, res, new ApiException('FILE_NOT_FOUND',
                     400,
                     'PREVIEW_NOT_SUCCESS'))
