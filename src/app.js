@@ -5,6 +5,7 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 let ApiException = require('./app/exception/api_exception')
+const RequestUtil = require('./app/util/request_util')
 //let session = require('express-session');
 //let RedisStore = require('connect-redis')(session);
 let jwt = require('express-jwt')
@@ -41,6 +42,11 @@ app.use(
     jwt({
         secret: Constants.JWT_SECRET_KEY,
         'getToken': (req) => {
+            let data = RequestUtil.getToken(req)
+            if(data){
+                logger4j.info('Token %s',data)
+                logger4j.info('Get UA %s',req.headers['user-agent'])
+            }
             /*
             var parts = req.headers.authorization.split(' ');
             if (parts.length == 2) {
@@ -54,24 +60,10 @@ app.use(
                 return undefined
             }
             */
-            logger4j.info('Get token %s',req.query.token)
-            logger4j.info('Get UA %s',req.headers['user-agent'])
+            //logger4j.info('Get token %s',req.query.token)
+            //logger4j.info('Get UA %s',req.headers['user-agent'])
             // logger4j.info('', )
-            var pre = req.headers.authorization ? req.headers.authorization : (req.headers.Authorization ? req.headers.Authorization : undefined)
-            if (pre) {
-                let parts = pre.split(' ')
-                if (parts.length == 2) {
-                    var scheme = parts[0]
-                    var credentials = parts[1]
-                    if (/^Bearer$/i.test(scheme)) {
-                        return credentials
-                    } else {
-                        throw new ApiException('Format is Authorization: Bearer [token]', 401, 'BEARER_AUTHORIZATION_HEADER_INVALID')
-                    }
-                } else {
-                    return undefined
-                }
-            }
+            
             /*
             if (req.headers.Authorization) {
                 return req.headers.Authorization
@@ -80,13 +72,7 @@ app.use(
                 return req.query.authorization;
             }
             */
-            if (req.query && req.query.auth) {
-                return req.query.auth
-            }
-            if (req.query && req.query.token) {
-                return req.query.token
-            }
-            return null
+            
         }
     }).unless({
         path: ['/v1/user/login',
