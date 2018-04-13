@@ -1,4 +1,4 @@
-const ApiException = require('./app/exception/api_exception')
+const ApiException = require('../exception/api_exception')
 
 class RequestUtil {
     static getIp(req) {
