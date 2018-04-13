@@ -181,6 +181,17 @@ router.post('/loginByMessage', async (req, res) => {
     }
 })
 
+router.post('/logout', async (req,res) => {
+    try {
+        let isMobile = false
+        let userId = req.user.uuid
+        let succ = await userService.logout(userId, isMobile)
+        ResponseUtil.Ok(req, res, succ)
+    } catch (error) {
+        ResponseUtil.RenderStandardRpcError(req, res, error)
+    }
+})
+
 router.post('/login', async (req, res) => {
     // login logic
     try {
@@ -198,13 +209,14 @@ router.post('/login', async (req, res) => {
         }
         // Check email first.
 
-        var caller = undefined
+        let caller = undefined
+        let isMobile = false
         if (validator.isEmail(value)) {
-            caller = userService.checkUserValidByEmail(value, password)
+            caller = userService.checkUserValidByEmail(value, password,isMobile)
         } else if (validator.isInt(value)) {
-            caller = userService.checkUserValidByPhone(countryCode, value, password)
+            caller = userService.checkUserValidByPhone(countryCode, value, password,isMobile)
         } else {
-            caller = userService.checkUserValidByName(value, password)
+            caller = userService.checkUserValidByName(value, password,isMobile)
         }
         let dat = await caller
         writeLoginMessage(req,dat)

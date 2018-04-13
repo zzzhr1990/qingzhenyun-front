@@ -27,6 +27,7 @@ rpc.offlineRpc = new CommonRpc(communicator, 'OfflineDownloadServiceHandler', re
 const app = express()
 const ResponseUtil = require('./app/util/response_util')
 const logger4j = require('log4js').getLogger('app.js')
+logger4j.level = 'info'
 // session..
 /*
 app.use(session({
@@ -53,13 +54,15 @@ app.use(
                 return undefined
             }
             */
+            logger4j.info('Get token %s',req.query.token)
+            logger4j.info('Get UA %s',req.headers['user-agent'])
+            // logger4j.info('', )
             var pre = req.headers.authorization ? req.headers.authorization : (req.headers.Authorization ? req.headers.Authorization : undefined)
             if (pre) {
                 let parts = pre.split(' ')
                 if (parts.length == 2) {
                     var scheme = parts[0]
                     var credentials = parts[1]
-
                     if (/^Bearer$/i.test(scheme)) {
                         return credentials
                     } else {

@@ -8,7 +8,7 @@ let cloudStoreRpc = require('../../../const/rpc').cloudStoreRpc
 let userFileRpc = require('../../../const/rpc').userFileRpc
 const CONSTANTS = require('../../../const/constants')
 
-router.post(['/pdf', '/image'], async (req, res) => {
+router.post(['/pdf', '/image','/text'], async (req, res) => {
     try {
         let uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
         let path = req.body['path'] ? req.body['path'] + '' : ''

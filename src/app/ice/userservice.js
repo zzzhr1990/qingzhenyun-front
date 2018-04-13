@@ -219,15 +219,19 @@
         [
             user.LoginFailedException
         ], , true],
-        "checkUserValidByName": [, , , , ["user.UserResponse", true], [[7], [7]], ,
+        "logout": [, , , , [1], [[4], [1]], ,
+        [
+            user.LoginFailedException
+        ], , ],
+        "checkUserValidByName": [, , , , ["user.UserResponse", true], [[7], [7], [1]], ,
         [
             user.LoginFailedException
         ], , true],
-        "checkUserValidByEmail": [, , , , ["user.UserResponse", true], [[7], [7]], ,
+        "checkUserValidByEmail": [, , , , ["user.UserResponse", true], [[7], [7], [1]], ,
         [
             user.LoginFailedException
         ], , true],
-        "checkUserValidByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [7]], ,
+        "checkUserValidByPhone": [, , , , ["user.UserResponse", true], [[7], [7], [7], [1]], ,
         [
             user.LoginFailedException
         ], , true]
