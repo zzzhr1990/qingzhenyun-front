@@ -47,11 +47,8 @@ router.post('/token', async (req, res) => {
         if (!parent) {
             parent = ''
         }
-        if (!name && !path) {
+        if (!name) {
             name = 'qzy-upload-noname.' + (new Date()).getTime().toString() + '.tmp'
-        }
-        if(!name){
-            name = ''
         }
         if(!path){
             path = ''
