@@ -1,8 +1,14 @@
 const ApiException = require('../exception/api_exception')
+const REG_MOBILE_CLIENT = /CFNetwork|okhttp/i
 
 class RequestUtil {
     static getIp(req) {
         return req.headers['x-real-ip'] || req.connection.remoteAddress
+    }
+
+    static isMobile(req){
+        let ua = req.headers['user-agent']
+        return REG_MOBILE_CLIENT.test(ua)
     }
 
     static getToken(req) {

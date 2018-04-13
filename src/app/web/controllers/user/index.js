@@ -171,7 +171,7 @@ router.post('/loginByMessage', async (req, res) => {
         if (!validateResult) {
             throw new ApiValidateException('Code not valid', '{CODE}_NOT_VALID')
         }
-        let isMobile = false
+        let isMobile = RequestUtil.isMobile(req)
         let dat = await userService.loginByPhone(countryCode, phone, isMobile)
 
         writeLoginMessage(req,dat)
@@ -183,7 +183,7 @@ router.post('/loginByMessage', async (req, res) => {
 
 router.post('/logout', async (req,res) => {
     try {
-        let isMobile = false
+        let isMobile = RequestUtil.isMobile(req)
         let userId = req.user.uuid
         let succ = await userService.logout(userId, isMobile)
         ResponseUtil.Ok(req, res, succ)
@@ -210,7 +210,7 @@ router.post('/login', async (req, res) => {
         // Check email first.
 
         let caller = undefined
-        let isMobile = false
+        let isMobile = RequestUtil.isMobile(req)
         if (validator.isEmail(value)) {
             caller = userService.checkUserValidByEmail(value, password,isMobile)
         } else if (validator.isInt(value)) {
