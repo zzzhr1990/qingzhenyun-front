@@ -47,6 +47,7 @@ app.use(
                 logger4j.info('Token %s',data)
                 logger4j.info('Get UA %s',req.headers['user-agent'])
             }
+            return data
             /*
             var parts = req.headers.authorization.split(' ');
             if (parts.length == 2) {
