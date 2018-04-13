@@ -186,6 +186,7 @@ router.post('/logout', async (req,res) => {
         let isMobile = RequestUtil.isMobile(req)
         let userId = req.user.uuid
         let succ = await userService.logout(userId, isMobile)
+        delete req.user
         ResponseUtil.Ok(req, res, succ)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
