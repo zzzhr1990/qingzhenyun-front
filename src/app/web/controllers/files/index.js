@@ -142,8 +142,8 @@ router.post('/move', async (req, res) => {
     }
 })
 
-router.post('/download',async (req, res) => {
-    try{
+router.post('/download', async (req, res) => {
+    try {
         let uuid = req.body['uuid'] ? req.body['uuid'] + '' : ''
         let path = req.body['path'] ? req.body['path'] + '' : ''
         if (!uuid && !path) {
@@ -157,11 +157,11 @@ router.post('/download',async (req, res) => {
                 throw new ApiValidateException('DOWNLOAD_DIRECTORY_NOT_SUPPORTED',
                     'DOWNLOAD_DIRECTORY_NOT_SUPPORTED')
             }
-            throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
+            throw new ApiValidateException('FILE_NOT_FOUND', 'FILE_NOT_FOUND')
         }
-        let fileData = await cloudStoreRpc.getFileEx(storeId,userId)
-        if(!fileData){
-            throw new ApiValidateException('FILE_NOT_FOUND','FILE_NOT_FOUND')
+        let fileData = await cloudStoreRpc.getFileEx(storeId, userId)
+        if (!fileData) {
+            throw new ApiValidateException('FILE_NOT_FOUND', 'FILE_NOT_FOUND')
         }
         //let time = (new Date()).getTime().toString()
         //let fileKey = fileData['fileKey']
@@ -391,9 +391,15 @@ router.post('/list', async (req, res) => {
             typeStr = '-1'
         }
         let type = parseInt(typeStr)
+        let mime = req.body['mime']
+        if (!mime) {
+            mime = ''
+        } else {
+            mime += ''
+        }
         let userId = req.user.uuid
         // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
-        let data = await userFileService.listDirectory(userId, parent, path, type, recycle, start, size, orderBy)
+        let data = await userFileService.listDirectoryBymime(userId, parent, path, type, recycle, mime, start, size, orderBy)
         ResponseUtil.Ok(req, res, data)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)

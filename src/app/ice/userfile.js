@@ -427,6 +427,10 @@
         [
             userfile.FileOperationException
         ], , true],
+        "listDirectoryByMime": [, , , , ["userfile.UserFileResponseListHelper"], [[4], [7], [7], [3], [3], [7], [3], [3], [3]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
         "copyStoreFileToUserFile": [, , , , ["userfile.UserFileResponse", true], [[7], [7], [4], [3], [4], [7], [7], [7], [1]], ,
         [
             userfile.FileOperationException
