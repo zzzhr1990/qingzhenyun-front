@@ -399,7 +399,7 @@ router.post('/list', async (req, res) => {
         }
         let userId = req.user.uuid
         // listDirectoryPage(userId: Long, parent: String?, path: String?, fileType: Int, recycle: Int, page: Int, pageSize: Int, orderBy: Int
-        let data = await userFileService.listDirectoryBymime(userId, parent, path, type, recycle, mime, start, size, orderBy)
+        let data = await userFileService.listDirectoryByMime(userId, parent, path, type, recycle, mime, start, size, orderBy)
         ResponseUtil.Ok(req, res, data)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)

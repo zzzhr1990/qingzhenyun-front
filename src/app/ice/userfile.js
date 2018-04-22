@@ -427,6 +427,10 @@
         [
             userfile.FileOperationException
         ], , true],
+        "listDirectoryByPreview": [, , , , ["userfile.UserFileResponseListHelper"], [[4], [7], [7], [3], [3], [3], [3], [3], [3]], ,
+        [
+            userfile.FileOperationException
+        ], , true],
         "listDirectoryByMime": [, , , , ["userfile.UserFileResponseListHelper"], [[4], [7], [7], [3], [3], [7], [3], [3], [3]], ,
         [
             userfile.FileOperationException
