@@ -310,6 +310,9 @@ router.post('/page', async (req, res) => {
             pageSize = 999
         }
         let parent = req.body['parent']
+        if(!parent){
+            parent = req.body['uuid']
+        }
         if (!parent) {
             parent = ''
         } else {
@@ -367,6 +370,9 @@ router.post('/list', async (req, res) => {
             size = 999
         }
         let parent = req.body['parent']
+        if(!parent){
+            parent = req.body['uuid']
+        }
         if (!parent) {
             parent = ''
         } else {
