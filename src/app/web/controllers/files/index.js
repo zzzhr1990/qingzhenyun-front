@@ -248,7 +248,7 @@ router.post('/recycle', async (req, res) => {
         let userId = req.user.uuid
 
         //get
-        let response = await userFileService.rpc.recycle(userId, task, task)
+        let response = await userFileService.rpc.recycle(userId, task)
         ResponseUtil.Ok(req, res, response)
     } catch (error) {
         ResponseUtil.RenderStandardRpcError(req, res, error)
