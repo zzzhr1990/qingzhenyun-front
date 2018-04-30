@@ -79,7 +79,6 @@ app.use(
         path: ['/v1/user/login',
             '/v1/user/register',
             '/v1/user/check',
-            '/v1/user/logout',
             '/v1/user/sendRegisterMessage',
             '/v1/user/loginByMessage',
             '/v1/user/sendLoginMessage',
